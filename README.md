@@ -1,40 +1,82 @@
-# 🎬 Gestor de Películas y Series – TFG
+# Gestor de Películas y Series 🎬
 
-Aplicación web desarrollada como parte del Trabajo Final del ciclo **Desarrollo de Aplicaciones Web**. Permite a los usuarios registrarse, iniciar sesión y gestionar contenido.
+Este proyecto es una aplicación web full-stack para gestionar, valorar y descubrir películas y series. Incluye autenticación con JWT, conexión con la API de TMDb, y una interfaz moderna y temática inspirada en el cine.
+
+## 🛠 Tecnologías Utilizadas
+
+### Frontend
+- React
+- Bootstrap 5
+- Axios
+- HTML5 + CSS3
+
+### Backend
+- Node.js
+- Express.js
+- JWT (Json Web Token)
+- Bcrypt
+
+### Base de Datos
+- MySQL
+
+## 🚀 Funcionalidades Principales
+
+- Registro e inicio de sesión seguro con JWT
+- Búsqueda de películas y series mediante la API de TMDb (futuro)
+- Carrusel visual con temática cinematográfica (pendiente de mejora)
+- Valoración, comentarios, listas personalizadas y favoritos (en desarrollo)
+- Sistema de etiquetas propias
+- Visualización de contenido público de otros usuarios
+
+## 🔐 Seguridad
+
+- Contraseñas cifradas con bcrypt
+- Validaciones en frontend y backend
+- Autenticación con JWT
+- Protección de rutas privadas
+
+## 🧩 Estructura del Proyecto
+
+```
+/client        → Frontend en React
+/server        → Backend en Node.js + Express
+/db            → Scripts y estructura de base de datos
+```
+
+## 🖥 Instrucciones de Uso
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/Cristobal-agora/gestor-pelis.git
+cd gestor-pelis
+```
+
+### 2. Configurar el backend
+
+```bash
+cd server
+npm install
+# Crea un archivo .env con los datos de conexión a MySQL y JWT_SECRET
+npm run dev
+```
+
+### 3. Configurar el frontend
+
+```bash
+cd ../client
+npm install
+npm run dev
+```
+
+## 📁 Estructura Actual (Primera entrega)
+
+- Proyecto dividido en frontend y backend
+- Registro e inicio de sesión funcional
+- Diseño visual con cabecera personalizada y carrusel
+- Proyecto subido a GitHub
 
 ---
 
-## 📌 Funcionalidades de la primera entrega
-
-- ✅ Estructura del proyecto fullstack
-- ✅ Backend con Node.js + Express
-- ✅ Base de datos MySQL conectada y tabla `usuarios` creada
-- ✅ Registro e inicio de sesión con JWT
-- ✅ Validación en frontend (React + Bootstrap)
-- ✅ Código organizado en carpetas `client/` y `server/`
-
----
-
-## 🛠 Tecnologías usadas
-
-| Parte         | Tecnología              |
-|---------------|--------------------------|
-| Frontend      | React + Bootstrap        |
-| Backend       | Node.js + Express        |
-| Base de datos | MySQL                    |
-| Autenticación | JWT + bcrypt             |
-| API externa   | TMDb (en futuras fases)  |
-
----
-
-## 📂 Estructura del proyecto
-
-gestor-pelis/ ├── client/ # React + Bootstrap ├── server/ # Node.js + Express + MySQL │ ├── routes/ # Rutas del backend (registro, login) │ ├── db.js # Conexión a MySQL │ ├── .env # Variables de entorno (no se sube) ├── README.md
-
----
-
-## 👨‍💻 Autor
-
-**Cristóbal Muñoz Granado**  
-Trabajo Final – Desarrollo de Aplicaciones Web  
-Abril 2025
+🧠 Autor: Cristóbal  
+📅 Estado actual: Primera entrega completada (8 de abril)
