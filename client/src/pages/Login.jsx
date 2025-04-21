@@ -32,6 +32,7 @@ const registrado = location.state?.registrado || false;
   
       // Guardar token y redirigir
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('usuario', JSON.stringify(res.data.usuario));
       navigate('/home'); // <--- aquí se usa
     } catch (error) {
       console.error(error);

@@ -13,18 +13,17 @@ const MovieDetail = () => {
     }
   
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/favoritos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          peliculaId: pelicula.id,
-          titulo: pelicula.title,
-          poster: pelicula.poster_path
-        })
-      });
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/favoritos`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              id_pelicula: pelicula.id
+            })
+          });
+          
   
       if (res.ok) {
         setEsFavorito(!esFavorito);
