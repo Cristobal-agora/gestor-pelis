@@ -7,8 +7,9 @@ const app = express(); // ✅ Esto tiene que ir primero
 const authRoutes = require('./routes/auth.routes');
 const usuarioRoutes = require('./routes/usuario.routes');
 const db = require('./config/db'); // Conexión a la base de datos
-
 const PORT = process.env.PORT || 5000;
+const favoritosRoutes = require('./routes/favoritos.routes');
+
 
 // Middlewares
 const corsOptions = {
@@ -24,6 +25,7 @@ app.use(express.json());
 // Rutas
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api', authRoutes);
+app.use('/api/favoritos', favoritosRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
