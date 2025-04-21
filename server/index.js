@@ -11,7 +11,14 @@ const db = require('./config/db'); // Conexión a la base de datos
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
-app.use(cors());
+const corsOptions = {
+  origin: 'https://gestor-pelis.vercel.app', // permite tu frontend en producción
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true, // si usas cookies o headers personalizados
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // Rutas
