@@ -17,26 +17,23 @@ Este proyecto es una aplicación web full-stack para gestionar, valorar y descub
 - Bcrypt
 
 ### Base de Datos
-- MySQL
+- PostgreSQL (anteriormente MySQL)
 
 ## 🚀 Funcionalidades Principales
-
 - Registro e inicio de sesión seguro con JWT
-- Búsqueda de películas y series mediante la API de TMDb (futuro)
-- Carrusel visual con temática cinematográfica (pendiente de mejora)
+- Búsqueda de películas y series mediante la API de TMDb
+- Carrusel visual con temática cinematográfica
 - Valoración, comentarios, listas personalizadas y favoritos (en desarrollo)
 - Sistema de etiquetas propias
 - Visualización de contenido público de otros usuarios
 
 ## 🔐 Seguridad
-
 - Contraseñas cifradas con bcrypt
 - Validaciones en frontend y backend
 - Autenticación con JWT
 - Protección de rutas privadas
 
 ## 🧩 Estructura del Proyecto
-
 ```
 /client        → Frontend en React
 /server        → Backend en Node.js + Express
@@ -46,37 +43,37 @@ Este proyecto es una aplicación web full-stack para gestionar, valorar y descub
 ## 🖥 Instrucciones de Uso
 
 ### 1. Clonar el repositorio
-
 ```bash
 git clone https://github.com/Cristobal-agora/gestor-pelis.git
 cd gestor-pelis
 ```
 
 ### 2. Configurar el backend
-
 ```bash
 cd server
 npm install
-# Crea un archivo .env con los datos de conexión a MySQL y JWT_SECRET
+# Crea un archivo .env con los datos de conexión a PostgreSQL y JWT_SECRET
 npm run dev
 ```
 
 ### 3. Configurar el frontend
-
 ```bash
 cd ../client
 npm install
 npm run dev
 ```
 
-## 📁 Estructura Actual (Primera entrega)
-
+## 📁 Estado del Proyecto
 - Proyecto dividido en frontend y backend
 - Registro e inicio de sesión funcional
-- Diseño visual con cabecera personalizada y carrusel
+- Carrusel visual implementado
+- Seguridad implementada
+- API de películas integrada con búsqueda por nombre y categoría
 - Proyecto subido a GitHub
+- Despliegue: Backend y BDD en Railway, Frontend en Vercel
 
----
+## 🧠 Autor
+Cristóbal Muñoz Granado
 
-🧠 Autor: Cristóbal  
-📅 Estado actual: Primera entrega completada (8 de abril)
+## 📅 Estado actual
+Segunda entrega completada (8 de mayo)
