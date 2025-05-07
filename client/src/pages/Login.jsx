@@ -26,12 +26,13 @@ const registrado = location.state?.registrado || false;
     e.preventDefault();
   
     try {
-      const res = await axios.post('http://localhost:5000/api/login', formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, formData);
       setMensaje(res.data.mensaje);
       setToken(res.data.token);
   
       // Guardar token y redirigir
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('usuario', JSON.stringify(res.data.usuario));
       navigate('/home'); // <--- aquí se usa
     } catch (error) {
       console.error(error);

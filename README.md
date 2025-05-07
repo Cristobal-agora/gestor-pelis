@@ -21,8 +21,8 @@ Este proyecto es una aplicación web full-stack para gestionar, valorar y descub
 
 ## 🚀 Funcionalidades Principales
 - Registro e inicio de sesión seguro con JWT
-- Búsqueda de películas y series mediante la API de TMDb (en desarrollo)
-- Carrusel visual con temática cinematográfica
+- Búsqueda de películas y series mediante la API de TMDb (futuro)
+- Carrusel visual con temática cinematográfica (pendiente de mejora)
 - Valoración, comentarios, listas personalizadas y favoritos (en desarrollo)
 - Sistema de etiquetas propias
 - Visualización de contenido público de otros usuarios
@@ -66,14 +66,12 @@ npm run dev
 ## 📁 Estado del Proyecto
 - Proyecto dividido en frontend y backend
 - Registro e inicio de sesión funcional
-- Carrusel visual implementado
-- API de películas integrada con búsqueda incluida
-- Seguridad implementada
+- Diseño visual con cabecera personalizada y carrusel
 - Proyecto subido a GitHub
 - Despliegue: Backend y BDD en Railway, Frontend en Vercel
 
 ## 🧠 Autor
 Cristóbal Muñoz Granado
 
-## 📅 Estado actual
-Segunda entrega completada (8 de mayo)
+🧠 Autor: Cristóbal  
+📅 Estado actual: Primera entrega completada (8 de abril)
