@@ -1,21 +1,21 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
 
 const app = express(); // ✅ Esto tiene que ir primero
-
-const authRoutes = require('./routes/auth.routes');
-const usuarioRoutes = require('./routes/usuario.routes');
-const db = require('./config/db'); // Conexión a la base de datos
+const authRoutes = require("./routes/auth.routes");
+const usuarioRoutes = require("./routes/usuario.routes");
+const db = require("./config/db"); // Conexión a la base de datos
 const PORT = process.env.PORT || 5000;
-const favoritosRoutes = require('./routes/favoritos.routes');
-
+const favoritosRoutes = require("./routes/favoritos.routes");
+const listasRoutes = require("./routes/listas.routes");
+const valoracionesRoutes = require("./routes/valoraciones.routes");
 
 // Middlewares
 const corsOptions = {
-  origin: 'https://gestor-pelis.vercel.app', // permite tu frontend en producción
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true, // si usas cookies o headers personalizados
+  origin: ["http://localhost:5173", "https://gestor-pelis.vercel.app"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -23,13 +23,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Rutas
-app.use('/api/usuarios', usuarioRoutes);
-app.use('/api', authRoutes);
-app.use('/api/favoritos', favoritosRoutes);
+app.use("/api/usuarios", usuarioRoutes);
+app.use("/api", authRoutes);
+app.use("/api/favoritos", favoritosRoutes);
+app.use("/api/listas", listasRoutes);
+app.use("/api/valoraciones", valoracionesRoutes);
+
 
 // Ruta de prueba
-app.get('/', (req, res) => {
-  res.send('Servidor backend funcionando correctamente ✅');
+app.get("/", (req, res) => {
+  res.send("Servidor backend funcionando correctamente ✅");
 });
 
 // Iniciar servidor

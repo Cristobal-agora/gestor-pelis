@@ -1,0 +1,50 @@
+.carrusel-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  height: 400px;
+  margin: 0 auto 40px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.carrusel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 0;
+}
+
+.carrusel-item.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.carrusel-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  text-align: center;
+}
+
+.carrusel-overlay h2 {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  font-family: var(--fuente);
+}

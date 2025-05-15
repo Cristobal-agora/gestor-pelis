@@ -1,0 +1,26 @@
+.auth-background {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.auth-video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: blur(8px) brightness(0.4);
+  z-index: -1;
+  pointer-events: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
