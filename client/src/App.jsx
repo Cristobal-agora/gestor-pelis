@@ -2,7 +2,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation
+  useLocation,
 } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -33,7 +33,7 @@ function AppContent() {
       {estaEnSinSesion ? (
         // Sin container en login/register
         <Routes>
-            <Route path="/" element={<div />} />
+          <Route path="/" element={<div />} />
           <Route
             path="/register"
             element={<Register mostrarVideoFondo={true} />}
@@ -43,7 +43,6 @@ function AppContent() {
       ) : (
         // Con container en el resto
         <div className="container mt-2 pt-3">
-
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/populares" element={<PopularMovies />} />

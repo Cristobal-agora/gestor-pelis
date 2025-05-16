@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 5000;
 const favoritosRoutes = require("./routes/favoritos.routes");
 const listasRoutes = require("./routes/listas.routes");
 const valoracionesRoutes = require("./routes/valoraciones.routes");
+const seguimientoRoutes = require("./routes/seguimiento.routes");
 
 // Middlewares
 const corsOptions = {
@@ -28,7 +29,7 @@ app.use("/api", authRoutes);
 app.use("/api/favoritos", favoritosRoutes);
 app.use("/api/listas", listasRoutes);
 app.use("/api/valoraciones", valoracionesRoutes);
-
+app.use("/api/seguimiento", seguimientoRoutes);
 
 // Ruta de prueba
 app.get("/", (req, res) => {

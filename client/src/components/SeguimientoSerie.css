@@ -1,0 +1,149 @@
+/* Contenedor principal */
+.seguimiento-wrapper {
+  background-color: #111;
+  padding: 1rem;
+  border-radius: 12px;
+  color: #e0e0e0;
+}
+
+/* Encabezado de temporada */
+h6.text-info {
+  color: #00bfff;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Bloque por temporada */
+.mb-3 {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Transiciones */
+.transition-collapse {
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.transition-collapse.collapsed {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.transition-collapse.expanded {
+  max-height: 999px;
+  opacity: 1;
+}
+
+/* Lista episodios */
+.list-group {
+  padding: 0;
+  margin: 0;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border: none;
+  border-bottom: 1px solid #222;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover gris claro translúcido */
+.list-group-item:hover {
+  background-color: rgba(197, 238, 252, 0.705);
+  cursor: pointer;
+}
+
+/* Episodios vistos */
+.visto-episodio {
+  background-color: rgba(0, 191, 255, 0.07);
+  border-left: 4px solid #00bfff;
+  color: #7dd3fc;
+}
+
+.visto-episodio span {
+  text-decoration: line-through;
+  opacity: 0.9;
+}
+
+/* Episodios no vistos */
+.list-group-item:not(.visto-episodio) {
+  background-color: transparent;
+  color: #ddd;
+  border-left: 4px solid transparent;
+}
+
+/* Checkbox personalizado estilo CineStash */
+/* Checkbox personalizado uniforme */
+.list-group-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  border: 2px solid #00bfff;
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.list-group-item input[type="checkbox"]:checked {
+  background-color: #00bfff;
+}
+
+.list-group-item input[type="checkbox"]:checked::after {
+  content: "✔";
+  color: #000;
+  font-size: 13px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-48%, -50%); /* leve ajuste más fino */
+  line-height: 1;
+}
+
+/* Botones */
+.btn-outline-success {
+  color: #00ffcc;
+  border-color: #00ffcc;
+}
+
+.btn-outline-success:hover {
+  background-color: #00ffcc;
+  color: #000;
+}
+
+.btn-outline-light {
+  color: #aaa;
+  border-color: #444;
+}
+
+.btn-outline-light:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.btn-outline-danger {
+  color: #ff4d4d;
+  border-color: #ff4d4d;
+}
+
+.btn-outline-danger:hover {
+  background-color: #ff4d4d;
+  color: #000;
+}

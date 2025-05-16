@@ -117,14 +117,12 @@ const Header = () => {
     </header>
   );
 
-function cerrarSesion() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("usuario");
-  sessionStorage.removeItem("cineStashState");
-  window.location.href = "/"; // fuerza reload completo
-}
-
-
+  function cerrarSesion() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    sessionStorage.removeItem("cineStashState");
+    window.location.href = "/"; // fuerza reload completo
+  }
 };
 
 export default Header;

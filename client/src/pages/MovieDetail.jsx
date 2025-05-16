@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import DetalleItem from "../components/DetalleItem";
 import ValoracionUsuario from "../components/ValoracionUsuario";
 import ValoracionesBloque from "../components/ValoracionesBloque";
+import TextoColapsado from "../components/TextoColapsado";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -12,7 +13,7 @@ const MovieDetail = () => {
   const [listaSeleccionada, setListaSeleccionada] = useState("");
   const [listasIncluye, setListasIncluye] = useState([]);
   const [actualizarValoraciones, setActualizarValoraciones] = useState(0);
-
+  const [plataformas, setPlataformas] = useState({ items: [], link: null });
 
   const token = localStorage.getItem("token");
 
@@ -23,7 +24,23 @@ const MovieDetail = () => {
       }&language=es-ES`
     )
       .then((res) => res.json())
-      .then((data) => setPelicula(data));
+      .then(async (data) => {
+        setPelicula(data);
+
+        try {
+          const resProv = await fetch(
+            `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${
+              import.meta.env.VITE_TMDB_API_KEY
+            }`
+          );
+          const provData = await resProv.json();
+          const disponibles = provData.results?.ES?.flatrate || [];
+          const link = provData.results?.ES?.link || null;
+          setPlataformas({ items: disponibles, link });
+        } catch (err) {
+          console.error("Error al obtener plataformas:", err);
+        }
+      });
 
     if (token) {
       fetch(`${import.meta.env.VITE_API_URL}/api/favoritos`, {
@@ -123,6 +140,15 @@ const MovieDetail = () => {
               objectFit: "cover",
             }}
           />
+          {token && (
+            <ValoracionUsuario
+              tmdb_id={pelicula.id}
+              tipo="movie"
+              onValoracionGuardada={() =>
+                setActualizarValoraciones((prev) => prev + 1)
+              }
+            />
+          )}
         </div>
 
         <div className="col-md-8">
@@ -241,11 +267,11 @@ const MovieDetail = () => {
           )}
 
           <ValoracionesBloque
-  tmdb_id={pelicula.id}
-  tipo="movie"
-  tmdb_score={pelicula.vote_average}
-  trigger={actualizarValoraciones}
-/>
+            tmdb_id={pelicula.id}
+            tipo="movie"
+            tmdb_score={pelicula.vote_average}
+            trigger={actualizarValoraciones}
+          />
 
           <br></br>
           <DetalleItem
@@ -256,8 +282,11 @@ const MovieDetail = () => {
           <DetalleItem
             icono="📝"
             etiqueta="Resumen:"
-            valor={pelicula.overview}
+            valor={
+              <TextoColapsado texto={pelicula.overview || "No disponible."} />
+            }
           />
+
           <DetalleItem
             icono="🎭"
             etiqueta="Género:"
@@ -268,16 +297,43 @@ const MovieDetail = () => {
             etiqueta="Duración:"
             valor={`${pelicula.runtime} min`}
           />
-          <br />
 
-         {token && (
-  <ValoracionUsuario
-    tmdb_id={pelicula.id}
-    tipo="movie"
-    onValoracionGuardada={() => setActualizarValoraciones((prev) => prev + 1)}
-  />
-)}
-
+          {plataformas.items.length > 0 ? (
+            <DetalleItem
+              icono="📡"
+              etiqueta="Disponible en:"
+              valor={
+                <a
+                  href={plataformas.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="d-flex flex-wrap gap-2 align-items-center"
+                  style={{ textDecoration: "none" }}
+                >
+                  {plataformas.items.map((p) => (
+                    <img
+                      key={p.provider_id}
+                      src={`https://image.tmdb.org/t/p/w45${p.logo_path}`}
+                      alt={p.provider_name}
+                      title={p.provider_name}
+                      className="rounded"
+                      style={{
+                        backgroundColor: "#fff",
+                        padding: "2px",
+                        height: "30px",
+                      }}
+                    />
+                  ))}
+                </a>
+              }
+            />
+          ) : (
+            <DetalleItem
+              icono="📡"
+              etiqueta="Disponible en:"
+              valor="No disponible en plataformas en España"
+            />
+          )}
         </div>
       </div>
     </div>

@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import Cartelera from "../components/Cartelera";
+// <Cartelera />
 
 const Home = () => {
- const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [peliculas, setPeliculas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -16,20 +19,20 @@ const Home = () => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [orden, setOrden] = useState("popularity.desc");
   const [buscando, setBuscando] = useState(false);
-
+  const [restaurando, setRestaurando] = useState(true);
 
   useEffect(() => {
-  const checkToken = () => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-    if (!storedToken) {
-      navigate("/login", { replace: true });
-    }
-  };
+    const checkToken = () => {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+      if (!storedToken) {
+        navigate("/login", { replace: true });
+      }
+    };
 
-  window.addEventListener("popstate", checkToken);
-  return () => window.removeEventListener("popstate", checkToken);
-}, [navigate]);
+    window.addEventListener("popstate", checkToken);
+    return () => window.removeEventListener("popstate", checkToken);
+  }, [navigate]);
 
   useEffect(() => {
     if (!token) {
@@ -49,6 +52,7 @@ const Home = () => {
         orden,
         buscando,
       } = JSON.parse(savedState);
+
       setBusqueda(busqueda);
       setGeneroSeleccionado(generoSeleccionado);
       setTipo(tipo);
@@ -56,15 +60,13 @@ const Home = () => {
       setPagina(pagina);
       setOrden(orden);
       setBuscando(buscando);
-
-      // Lanza la búsqueda si estaba buscando
-      if (buscando) {
-        setTimeout(() => {
-          buscarPeliculas();
-        }, 0);
-      }
+    } else {
+      setBuscando(false);
     }
-  }, []);
+
+    // Muy importante: avisamos que ya hemos restaurado el estado
+    setRestaurando(false);
+  }, [location.key]);
 
   useEffect(() => {
     const state = {
@@ -210,12 +212,14 @@ const Home = () => {
   ]);
 
   useEffect(() => {
+    if (restaurando) return; // Evita ejecutar antes de restaurar
+
     if (buscando) {
       buscarPeliculas();
     } else {
       fetchPopulares();
     }
-  }, [pagina, buscando, buscarPeliculas, fetchPopulares]);
+  }, [pagina, buscando, buscarPeliculas, fetchPopulares, restaurando]);
 
   useEffect(() => {
     fetch(
@@ -250,17 +254,24 @@ const Home = () => {
     sessionStorage.setItem("cineStashState", JSON.stringify(state));
   }, [busqueda, generoSeleccionado, tipo, modoBusqueda, pagina, orden]);
 
+  const mostrarCartelera =
+    !buscando &&
+    tipo === "movie" &&
+    !busqueda &&
+    !generoSeleccionado &&
+    pagina === 1;
+
   return (
     <div className="container mt-4 text-light">
+      {mostrarCartelera && (
+        <div className="mb-5">
+          <Cartelera />
+          <hr className="my-5 text-secondary" />
+        </div>
+      )}
       <h2 className="mb-2 text-primary">
         Explora {tipo === "movie" ? "Películas" : "Series"}
       </h2>
-
-      {token ? (
-        <p className="text-success">Has iniciado sesión correctamente.</p>
-      ) : (
-        <p className="text-warning">No tienes sesión iniciada.</p>
-      )}
 
       <div className="input-group mb-3">
         <input
@@ -287,7 +298,6 @@ const Home = () => {
           onClick={() => {
             setPagina(1); // reinicia a página 1
             setBuscando(true); // activa modo búsqueda
-            buscarPeliculas(); // ejecuta búsqueda
           }}
         >
           Buscar
