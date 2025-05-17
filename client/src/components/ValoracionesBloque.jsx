@@ -12,7 +12,7 @@ const ValoracionesBloque = ({ tmdb_id, tipo, tmdb_score, trigger  }) => {
       if (!token) return;
 
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/valoraciones/resumen/${tipo}/${tmdb_id}`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/valoraciones/resumen/${tipo}/${tmdb_id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

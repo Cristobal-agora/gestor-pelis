@@ -11,7 +11,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
     if (!token) return;
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/seguimiento/tv/${tmdbId}`,
+        `${import.meta.env.VITE_API_URL}/seguimiento/tv/${tmdbId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -68,7 +68,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
     const nuevoEstado = !vista[key];
     setVista((prev) => ({ ...prev, [key]: nuevoEstado }));
 
-    const url = `${import.meta.env.VITE_API_URL}/api/seguimiento`;
+    const url = `${import.meta.env.VITE_API_URL}/seguimiento`;
     const payload = {
       serie_tmdb_id: tmdbId,
       temporada: temp,

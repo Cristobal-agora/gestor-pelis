@@ -70,7 +70,7 @@ const SerieDetail = () => {
 
       if (token) {
         const favoritosRes = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/favoritos`,
+          `${import.meta.env.VITE_API_URL}/favoritos`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -83,7 +83,7 @@ const SerieDetail = () => {
         );
 
         const listasRes = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/listas`,
+          `${import.meta.env.VITE_API_URL}/listas`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -99,7 +99,7 @@ const SerieDetail = () => {
   useEffect(() => {
     if (token && serie?.id) {
       fetch(
-        `${import.meta.env.VITE_API_URL}/api/listas/incluye/tv/${serie.id}`,
+        `${import.meta.env.VITE_API_URL}/listas/incluye/tv/${serie.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -126,7 +126,7 @@ const SerieDetail = () => {
   const toggleFavorito = async () => {
     if (!token || !serie) return;
 
-    const url = `${import.meta.env.VITE_API_URL}/api/favoritos${
+    const url = `${import.meta.env.VITE_API_URL}/favoritos${
       esFavorito ? `/${id}` : ""
     }`;
     const res = await fetch(url, {
@@ -259,7 +259,7 @@ const SerieDetail = () => {
                       const res = await fetch(
                         `${
                           import.meta.env.VITE_API_URL
-                        }/api/listas/${listaSeleccionada}/contenido`,
+                        }/listas/${listaSeleccionada}/contenido`,
                         {
                           method: "POST",
                           headers: {

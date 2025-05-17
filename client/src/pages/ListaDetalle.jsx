@@ -10,7 +10,7 @@ const ListaDetalle = () => {
     const cargarContenido = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/listas/${id}`,
+          `${import.meta.env.VITE_API_URL}/listas/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -52,7 +52,7 @@ const ListaDetalle = () => {
       const res = await fetch(
         `${
           import.meta.env.VITE_API_URL
-        }/api/listas/${id}/contenido/${peliculaId}`,
+        }/listas/${id}/contenido/${peliculaId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

@@ -69,7 +69,7 @@ const MovieDetail = () => {
   useEffect(() => {
     if (token && pelicula?.id) {
       fetch(
-        `${import.meta.env.VITE_API_URL}/api/listas/incluye/movie/${
+        `${import.meta.env.VITE_API_URL}/listas/incluye/movie/${
           pelicula.id
         }`,
         {
@@ -97,7 +97,7 @@ const MovieDetail = () => {
     }
 
     try {
-      const url = `${import.meta.env.VITE_API_URL}/api/favoritos${
+      const url = `${import.meta.env.VITE_API_URL}/favoritos${
         esFavorito ? `/${id}` : ""
       }`;
       const res = await fetch(url, {
@@ -216,7 +216,7 @@ const MovieDetail = () => {
                       const res = await fetch(
                         `${
                           import.meta.env.VITE_API_URL
-                        }/api/listas/${listaSeleccionada}/contenido`,
+                        }/listas/${listaSeleccionada}/contenido`,
                         {
                           method: "POST",
                           headers: {

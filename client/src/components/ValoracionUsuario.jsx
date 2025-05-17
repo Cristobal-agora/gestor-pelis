@@ -9,7 +9,7 @@ const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada  }) => {
     if (!token) return;
     const fetchValoracion = async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/valoraciones/${tipo}/${tmdb_id}/mia`,
+        `${import.meta.env.VITE_API_URL}/valoraciones/${tipo}/${tmdb_id}/mia`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -54,7 +54,7 @@ const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada  }) => {
     const confirm = window.confirm("¿Eliminar tu valoración?");
     if (!confirm) return;
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/valoraciones/${tipo}/${tmdb_id}`,
+      `${import.meta.env.VITE_API_URL}/valoraciones/${tipo}/${tmdb_id}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
