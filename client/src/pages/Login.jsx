@@ -23,7 +23,8 @@ const Login = ({ mostrarVideoFondo }) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, formData);
+      const res = await axios.post("https://gestor-pelis-production.up.railway.app/api/login", formData);
+
       setMensaje(res.data.mensaje);
 
       localStorage.setItem('token', res.data.token);
