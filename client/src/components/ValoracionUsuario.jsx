@@ -28,7 +28,7 @@ const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada  }) => {
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/valoraciones`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/valoraciones`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

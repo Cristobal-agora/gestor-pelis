@@ -43,7 +43,7 @@ const MovieDetail = () => {
       });
 
     if (token) {
-      fetch(`${import.meta.env.VITE_API_URL}/api/favoritos`, {
+      fetch(`${import.meta.env.VITE_API_URL}/favoritos`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())
@@ -55,7 +55,7 @@ const MovieDetail = () => {
           );
         });
 
-      fetch(`${import.meta.env.VITE_API_URL}/api/listas`, {
+      fetch(`${import.meta.env.VITE_API_URL}/listas`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())

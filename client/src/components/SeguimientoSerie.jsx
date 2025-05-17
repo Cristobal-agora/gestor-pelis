@@ -108,7 +108,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
     }));
 
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/seguimiento/varios`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/seguimiento/varios`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -134,7 +134,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
     }));
 
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/seguimiento/varios`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/seguimiento/varios`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

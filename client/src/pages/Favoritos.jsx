@@ -11,7 +11,7 @@ const Favoritos = () => {
     if (!token) return;
     setItems([]);
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/favoritos`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/favoritos`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const favoritos = await res.json();
@@ -35,7 +35,7 @@ const Favoritos = () => {
   const eliminarFavorito = async (id) => {
     if (!token) return;
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/favoritos/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/favoritos/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

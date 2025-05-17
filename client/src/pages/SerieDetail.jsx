@@ -108,7 +108,7 @@ const SerieDetail = () => {
         .then((data) => setListasIncluye(data))
         .catch((err) => console.error("Error al cargar listas:", err));
 
-      fetch(`${import.meta.env.VITE_API_URL}/api/seguimiento/tv/${serie.id}`, {
+      fetch(`${import.meta.env.VITE_API_URL}/seguimiento/tv/${serie.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())

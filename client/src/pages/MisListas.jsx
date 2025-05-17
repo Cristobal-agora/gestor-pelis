@@ -11,7 +11,7 @@ const MisListas = () => {
   const obtenerListas = useCallback(async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listas`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/listas`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('No se pudieron cargar las listas');
@@ -28,7 +28,7 @@ const MisListas = () => {
     if (!nuevaLista.trim()) return;
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listas`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/listas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ const MisListas = () => {
       if (!confirmar) return;
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listas/${lista.id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listas/${lista.id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` },
         });
