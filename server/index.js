@@ -31,10 +31,18 @@ app.use("/api/listas", listasRoutes);
 app.use("/api/valoraciones", valoracionesRoutes);
 app.use("/api/seguimiento", seguimientoRoutes);
 
+app.use((err, req, res, next) => {
+  console.error("❌ Error inesperado:", err.stack);
+  res.status(500).send("Error interno en el servidor");
+});
+
+
 // Ruta de prueba
 app.get("/", (req, res) => {
-  res.send("Servidor backend funcionando correctamente ✅");
+  console.log("✅ Se ha accedido a la ruta /");
+  res.status(200).send("Servidor backend funcionando correctamente ✅");
 });
+
 
 // Iniciar servidor
 app.listen(PORT, () => {
