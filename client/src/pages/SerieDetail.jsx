@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import DetalleItem from "../components/DetalleItem";
 import ValoracionUsuario from "../components/ValoracionUsuario";
 import ValoracionesBloque from "../components/ValoracionesBloque";
-import SeguimientoSerie from "../components/SeguimientoSerie";
 import ModalSeguimiento from "../components/ModalSeguimiento";
 import TextoColapsado from "../components/TextoColapsado";
 
