@@ -28,8 +28,9 @@ const Login = ({ mostrarVideoFondo }) => {
 
       setMensaje(res.data.mensaje);
 
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('usuario', JSON.stringify(res.data.usuario));
+     sessionStorage.setItem('token', res.data.token);
+sessionStorage.setItem('usuario', JSON.stringify(res.data.usuario));
+
       navigate('/home');
     } catch (error) {
       console.error(error);

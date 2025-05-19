@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./SeguimientoSerie.css";
 
 const SeguimientoSerie = ({ tmdbId }) => {
   const [temporadas, setTemporadas] = useState([]);
   const [vista, setVista] = useState({});
   const [visibles, setVisibles] = useState({});
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
-  const cargarVistos = async () => {
+  const cargarVistos = useCallback(async () => {
     if (!token) return;
     try {
       const res = await fetch(
@@ -25,11 +25,39 @@ const SeguimientoSerie = ({ tmdbId }) => {
     } catch (error) {
       console.error("Error al cargar vistos:", error);
     }
+  }, [tmdbId, token]);
+
+  const marcarSerieComoVista = async () => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/historial`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ tmdb_id: tmdbId, tipo: "tv" }),
+      });
+    } catch (err) {
+      console.error("Error al registrar serie como vista:", err);
+    }
+  };
+
+  const eliminarSerieDelHistorial = async () => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/historial/${tmdbId}/tv`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (err) {
+      console.error("Error al eliminar serie del historial:", err);
+    }
   };
 
   useEffect(() => {
     cargarVistos();
-  }, [tmdbId, token]);
+  }, [cargarVistos]);
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -87,6 +115,17 @@ const SeguimientoSerie = ({ tmdbId }) => {
 
       if (!res.ok) {
         console.error("Error al guardar seguimiento:", await res.text());
+      } else if (nuevoEstado) {
+        await marcarSerieComoVista();
+      } else {
+        const episodiosVistos = Object.values({
+          ...vista,
+          [key]: nuevoEstado,
+        }).filter(Boolean).length;
+
+        if (episodiosVistos === 0) {
+          await eliminarSerieDelHistorial();
+        }
       }
     } catch (err) {
       console.error("Error de conexión con el backend:", err);
@@ -118,6 +157,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
       });
 
       await cargarVistos(); // Carga desde el backend
+      await marcarSerieComoVista();
     } catch (error) {
       console.error("Error al marcar temporada completa:", error);
     }
@@ -144,6 +184,10 @@ const SeguimientoSerie = ({ tmdbId }) => {
       });
 
       await cargarVistos(); // Asegura consistencia con lo que hay en la base de datos
+      const totalVistos = Object.values(vista).filter(Boolean).length;
+      if (totalVistos === 0) {
+        await eliminarSerieDelHistorial();
+      }
     } catch (error) {
       console.error("Error al desmarcar temporada completa:", error);
     }

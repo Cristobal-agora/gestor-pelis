@@ -8,7 +8,7 @@ const ValoracionesBloque = ({ tmdb_id, tipo, tmdb_score, trigger }) => {
 
   useEffect(() => {
     const fetchValoraciones = async () => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       if (!token) return;
 
       try {

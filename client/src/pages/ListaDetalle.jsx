@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 
 const ListaDetalle = () => {
   const { id } = useParams();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const [elementos, setElementos] = useState([]);
 
   useEffect(() => {

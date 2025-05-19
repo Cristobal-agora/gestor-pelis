@@ -5,7 +5,7 @@ const MisListas = () => {
   const [listas, setListas] = useState([]);
   const [nuevaLista, setNuevaLista] = useState('');
   const [error, setError] = useState('');
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const navigate = useNavigate();
 
   const obtenerListas = useCallback(async () => {
@@ -74,7 +74,7 @@ const MisListas = () => {
       {error && <p className="text-danger">{error}</p>}
 
       {listas.length === 0 ? (
-        <p className="text-muted">No tienes listas creadas aún.</p>
+        <p className="text-ligth">No tienes listas creadas aún.</p>
       ) : (
         <ul className="list-group">
           {listas.map(lista => (

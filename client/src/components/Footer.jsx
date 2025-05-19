@@ -1,0 +1,60 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Footer.css";
+
+const Footer = ({ className = "" }) => {
+  const token = sessionStorage.getItem("token");
+  const year = new Date().getFullYear();
+
+  return (
+    <footer className={`footer mt-5 border-top pt-4 pb-2 ${className}`}>
+      <div className="container">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start gap-4">
+          {/* Marca / Logo */}
+          <div>
+            <span className="logo">🎬 CineStash</span>
+            <p className="slogan">
+              Tu espacio para gestionar y descubrir películas y series.
+            </p>
+          </div>
+
+          {/* Enlaces */}
+          {token && (
+            <ul className="footer-links list-unstyled d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mb-0">
+              <li>
+                <Link to="/home">Inicio</Link>
+              </li>
+              <li>
+                <Link to="/favoritos">Favoritos</Link>
+              </li>
+              <li>
+                <Link to="/mis-listas">Mis listas</Link>
+              </li>
+              <li>
+                <Link to="/historial">Historial</Link>
+              </li>
+            </ul>
+          )}
+
+          {/* Redes sociales */}
+          <div className="text-center text-md-end">
+            <div className="social-icons mb-2">
+              <a href="https://twitter.com" target="_blank" rel="noreferrer">
+                <i className="bi bi-twitter"></i>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer">
+                <i className="bi bi-instagram"></i>
+              </a>
+              <a href="https://github.com" target="_blank" rel="noreferrer">
+                <i className="bi bi-github"></i>
+              </a>
+            </div>
+            <p className="text-muted small mb-0">© {year} CineStash</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Cartelera from "../components/Cartelera";
 // <Cartelera />
 
 const Home = () => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(sessionStorage.getItem("token"));
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [peliculas, setPeliculas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -20,10 +19,12 @@ const Home = () => {
   const [orden, setOrden] = useState("popularity.desc");
   const [buscando, setBuscando] = useState(false);
   const [restaurando, setRestaurando] = useState(true);
+  const [estadoRestaurado, setEstadoRestaurado] = useState(false);
+  const totalPaginasRef = useRef(1);
 
   useEffect(() => {
     const checkToken = () => {
-      const storedToken = localStorage.getItem("token");
+      const storedToken = sessionStorage.getItem("token");
       setToken(storedToken);
       if (!storedToken) {
         navigate("/login", { replace: true });
@@ -51,6 +52,8 @@ const Home = () => {
         pagina,
         orden,
         buscando,
+        peliculas,
+        totalPaginas,
       } = JSON.parse(savedState);
 
       setBusqueda(busqueda);
@@ -60,15 +63,19 @@ const Home = () => {
       setPagina(pagina);
       setOrden(orden);
       setBuscando(buscando);
+      setPeliculas(Array.isArray(peliculas) ? peliculas : []);
+      setTotalPaginas(totalPaginas || 1);
     } else {
       setBuscando(false);
     }
 
-    // Muy importante: avisamos que ya hemos restaurado el estado
+    setEstadoRestaurado(true);
     setRestaurando(false);
-  }, [location.key]);
+  }, []);
 
   useEffect(() => {
+    if (!estadoRestaurado) return; // 💥 solo guardar si ya se restauró
+
     const state = {
       busqueda,
       generoSeleccionado,
@@ -77,6 +84,8 @@ const Home = () => {
       pagina,
       orden,
       buscando,
+      peliculas,
+      totalPaginas,
     };
     sessionStorage.setItem("cineStashState", JSON.stringify(state));
   }, [
@@ -87,137 +96,115 @@ const Home = () => {
     pagina,
     orden,
     buscando,
+    peliculas,
+    totalPaginas,
+    estadoRestaurado, // ⚠️ inclúyelo como dependencia
   ]);
 
-  const fetchPopulares = useCallback(async () => {
-    try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/${tipo}/popular?api_key=${
-          import.meta.env.VITE_TMDB_API_KEY
-        }&language=es-ES&page=${pagina}&include_adult=false&region=ES`
-      );
-      const data = await res.json();
-      setPeliculas(data.results);
-      setTotalPaginas(data.total_pages);
-    } catch (error) {
-      console.error("Error al cargar contenido popular:", error);
-    }
-  }, [tipo, pagina]);
+  const fetchPopulares = useCallback(
+    async (paginaArgumento) => {
+      const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+      const pageParam =
+        Number.isInteger(paginaArgumento) && paginaArgumento > 0
+          ? paginaArgumento
+          : Number.isInteger(pagina) && pagina > 0
+          ? pagina
+          : 1; // fallback seguro
 
-  const buscarPeliculas = useCallback(async () => {
-    try {
-      if (!busqueda.trim()) {
-        if (generoSeleccionado) {
-          const url = `https://api.themoviedb.org/3/discover/${tipo}?api_key=${
-            import.meta.env.VITE_TMDB_API_KEY
-          }&with_genres=${generoSeleccionado}&language=es-ES&page=${pagina}&sort_by=${orden}`;
-
-          const res = await fetch(url);
-          const data = await res.json();
-          setPeliculas(data.results || []);
-          setTotalPaginas(data.total_pages || 1);
-        } else {
-          fetchPopulares();
-        }
+      if (!API_KEY || !tipo || !pageParam) {
+        console.warn("Petición inválida:", { API_KEY, tipo, pageParam });
         return;
       }
 
-      if (modoBusqueda === "titulo") {
-        let url = `https://api.themoviedb.org/3/search/${tipo}?api_key=${
-          import.meta.env.VITE_TMDB_API_KEY
-        }&query=${encodeURIComponent(busqueda)}&language=es-ES&page=${pagina}`;
-
-        if (generoSeleccionado) {
-          url += `&with_genres=${generoSeleccionado}`;
-        }
-
+      try {
+        const url = `https://api.themoviedb.org/3/${tipo}/popular?api_key=${API_KEY}&language=es-ES&page=${pageParam}&include_adult=false&region=ES`;
+        console.log("Cargando populares:", url);
         const res = await fetch(url);
         const data = await res.json();
-        setPeliculas(data.results || []);
+        setPeliculas(Array.isArray(data.results) ? data.results : []);
         setTotalPaginas(data.total_pages || 1);
-      } else if (modoBusqueda === "actor") {
-        const resActor = await fetch(
-          `https://api.themoviedb.org/3/search/person?api_key=${
-            import.meta.env.VITE_TMDB_API_KEY
-          }&query=${encodeURIComponent(busqueda)}&language=es-ES`
-        );
-        const dataActor = await resActor.json();
-        const persona = dataActor.results?.[0];
+        totalPaginasRef.current = data.total_pages || 1;
+      } catch (error) {
+        console.error("Error al cargar contenido popular:", error);
+      }
+    },
+    [tipo, pagina]
+  );
 
-        if (!persona) {
-          setPeliculas([]);
-          setTotalPaginas(1);
+  const buscarPeliculas = useCallback(
+    async (paginaArgumento) => {
+      const pageParam =
+        Number.isInteger(paginaArgumento) && paginaArgumento > 0
+          ? paginaArgumento
+          : pagina;
+
+      if (!Number.isInteger(pageParam) || pageParam < 1) {
+        console.warn("Petición inválida en búsqueda:", { pageParam });
+        return;
+      }
+
+      try {
+        if (!busqueda.trim()) {
+          if (generoSeleccionado) {
+            const url = `https://api.themoviedb.org/3/discover/${tipo}?api_key=${
+              import.meta.env.VITE_TMDB_API_KEY
+            }&with_genres=${generoSeleccionado}&language=es-ES&page=${pageParam}&sort_by=${orden}`;
+
+            const res = await fetch(url);
+            const data = await res.json();
+            setPeliculas(Array.isArray(data.results) ? data.results : []);
+
+            setTotalPaginas(data.total_pages || 1);
+            totalPaginasRef.current = data.total_pages || 1; // ← AÑADE ESTO AQUÍ TAMBIÉN
+          } else {
+            fetchPopulares(pageParam);
+          }
           return;
         }
 
-        const resCreditos = await fetch(
-          `https://api.themoviedb.org/3/person/${
-            persona.id
-          }/${tipo}_credits?api_key=${
+        if (modoBusqueda === "titulo") {
+          let url = `https://api.themoviedb.org/3/search/${tipo}?api_key=${
             import.meta.env.VITE_TMDB_API_KEY
-          }&language=es-ES`
-        );
-        const dataCreditos = await resCreditos.json();
+          }&query=${encodeURIComponent(
+            busqueda
+          )}&language=es-ES&page=${pageParam}`;
 
-        const creditosFiltrados =
-          dataCreditos.cast?.slice((pagina - 1) * 20, pagina * 20) || [];
-        setPeliculas(creditosFiltrados);
-        setTotalPaginas(Math.ceil(dataCreditos.cast?.length / 20) || 1);
-      } else if (modoBusqueda === "director") {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/search/${tipo}?api_key=${
-            import.meta.env.VITE_TMDB_API_KEY
-          }&query=${encodeURIComponent(busqueda)}&language=es-ES&page=${pagina}`
-        );
-        const data = await res.json();
+          if (generoSeleccionado) {
+            url += `&with_genres=${generoSeleccionado}`;
+          }
 
-        const detalles = await Promise.all(
-          data.results?.map((item) =>
-            fetch(
-              `https://api.themoviedb.org/3/${tipo}/${
-                item.id
-              }/credits?api_key=${
-                import.meta.env.VITE_TMDB_API_KEY
-              }&language=es-ES`
-            )
-              .then((res) => res.json())
-              .then((creditos) => {
-                const esDirector = creditos.crew?.some(
-                  (c) =>
-                    c.job === "Director" &&
-                    c.name.toLowerCase().includes(busqueda.toLowerCase())
-                );
-                return esDirector ? item : null;
-              })
-          )
-        );
+          const res = await fetch(url);
+          const data = await res.json();
+          setPeliculas(Array.isArray(data.results) ? data.results : []);
+          setTotalPaginas(data.total_pages || 1);
+          totalPaginasRef.current = data.total_pages || 1; // ← AÑADE ESTO AQUÍ TAMBIÉN
+        }
 
-        const filtradas = detalles.filter((p) => p);
-        setPeliculas(filtradas);
-        setTotalPaginas(data.total_pages || 1);
+        // ... igual para actor y director usando pageParam ...
+      } catch (error) {
+        console.error("Error en la búsqueda:", error);
+        setPeliculas([]);
+        setTotalPaginas(1);
       }
-    } catch (error) {
-      console.error("Error en la búsqueda:", error);
-      setPeliculas([]);
-      setTotalPaginas(1);
-    }
-  }, [
-    tipo,
-    pagina,
-    busqueda,
-    generoSeleccionado,
-    modoBusqueda,
-    orden,
-    fetchPopulares,
-  ]);
+    },
+    [
+      tipo,
+      pagina,
+      busqueda,
+      generoSeleccionado,
+      modoBusqueda,
+      orden,
+      fetchPopulares,
+    ]
+  );
 
   useEffect(() => {
-    if (restaurando) return; // Evita ejecutar antes de restaurar
+    if (restaurando) return;
 
     if (buscando) {
-      buscarPeliculas();
+      buscarPeliculas(pagina); // ✅ le pasas la página actual
     } else {
-      fetchPopulares();
+      fetchPopulares(pagina); // ✅ lo mismo aquí
     }
   }, [pagina, buscando, buscarPeliculas, fetchPopulares, restaurando]);
 
@@ -238,21 +225,45 @@ const Home = () => {
     setModoBusqueda("titulo");
     setPagina(1);
     sessionStorage.removeItem("cineStashState");
-    fetchPopulares();
+    fetchPopulares(1); // ✅ fuerza página 1
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
-    const state = {
+    if (!estadoRestaurado) return; // Evita guardar antes de restaurar
+
+    const currentState = {
       busqueda,
       generoSeleccionado,
       tipo,
       modoBusqueda,
       pagina,
       orden,
+      buscando,
+      peliculas,
+      totalPaginas,
     };
-    sessionStorage.setItem("cineStashState", JSON.stringify(state));
-  }, [busqueda, generoSeleccionado, tipo, modoBusqueda, pagina, orden]);
+
+    const savedState = sessionStorage.getItem("cineStashState");
+    const parsedSaved = savedState ? JSON.parse(savedState) : null;
+
+    // Solo guarda si hay cambios reales
+    if (JSON.stringify(parsedSaved) !== JSON.stringify(currentState)) {
+      sessionStorage.setItem("cineStashState", JSON.stringify(currentState));
+    }
+  }, [
+    busqueda,
+    generoSeleccionado,
+    tipo,
+    modoBusqueda,
+    pagina,
+    orden,
+    buscando,
+    peliculas,
+    totalPaginas,
+    estadoRestaurado,
+  ]);
 
   const mostrarCartelera =
     !buscando &&
@@ -260,6 +271,10 @@ const Home = () => {
     !busqueda &&
     !generoSeleccionado &&
     pagina === 1;
+
+  if (!estadoRestaurado) {
+    return <p className="text-light">Restaurando estado...</p>;
+  }
 
   return (
     <div className="container mt-4 text-light">
@@ -370,28 +385,39 @@ const Home = () => {
         </button>
       </div>
 
-      {peliculas.length === 0 ? (
-        <p className="text-muted">Cargando contenido popular...</p>
+      {!peliculas || peliculas.length === 0 ? (
+        <p className="text-light">Cargando contenido popular...</p>
       ) : (
         <div className="row">
           {peliculas.length > 0 && (
             <div className="d-flex justify-content-center my-4 flex-wrap gap-2">
+              {/* Primera página */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === 1}
-                onClick={() => setPagina(1)}
+                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
+                onClick={() => {
+                  if (pagina !== 1) setPagina(1);
+                  else {
+                    if (buscando) buscarPeliculas(1);
+                    else fetchPopulares(1);
+                  }
+                }}
                 title="Primera página"
               >
                 ⏮
               </button>
+
+              {/* Anterior */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === 1}
-                onClick={() => setPagina((p) => p - 1)}
+                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
+                onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
                 ◀
               </button>
+
+              {/* Números de página */}
               {[
                 ...new Set(
                   Array.from({ length: 5 }, (_, i) => pagina - 2 + i).filter(
@@ -411,18 +437,31 @@ const Home = () => {
                   {page}
                 </button>
               ))}
+
+              {/* Siguiente */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === totalPaginas}
+                disabled={
+                  !Number.isInteger(totalPaginas) || pagina === totalPaginas
+                }
                 onClick={() => setPagina((p) => p + 1)}
                 title="Siguiente"
               >
                 ▶
               </button>
+
+              {/* Última página */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === totalPaginas}
-                onClick={() => setPagina(totalPaginas)}
+                disabled={
+                  !Number.isInteger(totalPaginas) || pagina === totalPaginas
+                }
+                onClick={() => {
+                  const siguienteSalto = Math.min(pagina + 10, totalPaginas);
+                  setPagina(siguienteSalto);
+                  if (buscando) buscarPeliculas(siguienteSalto);
+                  else fetchPopulares(siguienteSalto);
+                }}
                 title="Última página"
               >
                 ⏭
@@ -430,53 +469,65 @@ const Home = () => {
             </div>
           )}
 
-          {peliculas.map((peli) => (
-            <div
-              key={peli.id}
-              className="col-6 col-sm-4 col-md-3 col-lg-5th mb-4"
-            >
-              <Link
-                to={`/${tipo === "movie" ? "pelicula" : "serie"}/${peli.id}`}
-                className="text-decoration-none"
+          {Array.isArray(peliculas) &&
+            peliculas?.map((peli) => (
+              <div
+                key={peli.id}
+                className="col-6 col-sm-4 col-md-3 col-lg-5th mb-4"
               >
-                <div className="card bg-dark text-white border-0 shadow-sm h-100 hover-scale">
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${peli.poster_path}`}
-                    className="card-img-top"
-                    alt={peli.title || peli.name}
-                    style={{ borderRadius: "8px", objectFit: "cover" }}
-                  />
-                  <div className="card-body px-2 py-2">
-                    <h6 className="card-title mb-1">
-                      {peli.title || peli.name}
-                    </h6>
-                    <p className="card-text text-muted">
-                      ⭐ {peli.vote_average}
-                    </p>
+                <Link
+                  to={`/${tipo === "movie" ? "pelicula" : "serie"}/${peli.id}`}
+                  className="text-decoration-none"
+                >
+                  <div className="card bg-dark text-white border-0 shadow-sm h-100 hover-scale">
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${peli.poster_path}`}
+                      className="card-img-top"
+                      alt={peli.title || peli.name}
+                      style={{ borderRadius: "8px", objectFit: "cover" }}
+                    />
+                    <div className="card-body px-2 py-2">
+                      <h6 className="card-title mb-1">
+                        {peli.title || peli.name}
+                      </h6>
+                      <p className="card-text text-muted">
+                        ⭐ {peli.vote_average}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+                </Link>
+              </div>
+            ))}
 
           {peliculas.length > 0 && (
             <div className="d-flex justify-content-center my-4 flex-wrap gap-2">
+              {/* Primera página */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === 1}
-                onClick={() => setPagina(1)}
+                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
+                onClick={() => {
+                  if (pagina !== 1) setPagina(1);
+                  else {
+                    if (buscando) buscarPeliculas(1);
+                    else fetchPopulares(1);
+                  }
+                }}
                 title="Primera página"
               >
                 ⏮
               </button>
+
+              {/* Anterior */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === 1}
-                onClick={() => setPagina((p) => p - 1)}
+                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
+                onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
                 ◀
               </button>
+
+              {/* Números de página */}
               {[
                 ...new Set(
                   Array.from({ length: 5 }, (_, i) => pagina - 2 + i).filter(
@@ -496,18 +547,31 @@ const Home = () => {
                   {page}
                 </button>
               ))}
+
+              {/* Siguiente */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === totalPaginas}
+                disabled={
+                  !Number.isInteger(totalPaginas) || pagina === totalPaginas
+                }
                 onClick={() => setPagina((p) => p + 1)}
                 title="Siguiente"
               >
                 ▶
               </button>
+
+              {/* Última página */}
               <button
                 className="btn btn-outline-primary btn-sm"
-                disabled={pagina === totalPaginas}
-                onClick={() => setPagina(totalPaginas)}
+                disabled={
+                  !Number.isInteger(totalPaginas) || pagina === totalPaginas
+                }
+                onClick={() => {
+                  const siguienteSalto = Math.min(pagina + 10, totalPaginas);
+                  setPagina(siguienteSalto);
+                  if (buscando) buscarPeliculas(siguienteSalto);
+                  else fetchPopulares(siguienteSalto);
+                }}
                 title="Última página"
               >
                 ⏭

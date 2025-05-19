@@ -5,9 +5,10 @@ import Carrusel from "./Carrusel";
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const token = sessionStorage.getItem("token");
+  const usuario = JSON.parse(sessionStorage.getItem("usuario"));
   const nombre = usuario?.nombre || "";
+  const isActive = (ruta) => location.pathname === ruta;
 
   useEffect(() => {
     if (location.pathname === "/login" || location.pathname === "/register") {
@@ -18,8 +19,9 @@ const Header = () => {
     document.body.classList.add(token ? "con-sesion" : "sin-sesion");
   }, [token, location.pathname]);
 
-  if (location.pathname === "/login" || location.pathname === "/register")
+  if (location.pathname === "/login" || location.pathname === "/register") {
     return null;
+  }
 
   return (
     <header
@@ -27,44 +29,44 @@ const Header = () => {
       style={{ zIndex: 1030 }}
     >
       <div className="container-fluid px-3 py-2">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-          {/* Logo + título */}
+        <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          {/* Logo y título */}
           {token ? (
+            // Logo clicable con sesión
             <div
               onClick={() => {
-                if (location.pathname === "/home") {
-                  window.location.reload();
-                } else {
-                  navigate("/home");
-                }
+                sessionStorage.removeItem("cineStashState");
+                location.pathname === "/home"
+                  ? window.location.reload()
+                  : navigate("/home");
               }}
-              className="d-inline-flex align-items-center gap-2 text-decoration-none"
+              className="d-flex align-items-center gap-2 text-decoration-none"
               style={{ cursor: "pointer" }}
             >
-              <img
-                src="/favicon.ico"
-                alt="CineStash"
-                style={{ height: "36px" }}
-              />
-              <span className="cinestash-title">CineStash</span>
+              <img src="/logo.png" alt="CineStash" style={{ height: "36px" }} />
+              <span className="cinestash-title m-0">CineStash</span>
             </div>
           ) : (
+            // Logo centrado sin sesión, sin cursor de puntero
             <div className="w-100 d-flex justify-content-center">
-              <div className="d-inline-flex align-items-center gap-2">
+              <div
+                className="d-inline-flex align-items-center gap-2"
+                style={{ cursor: "default" }}
+              >
                 <img
-                  src="/favicon.ico"
+                  src="/logo.png"
                   alt="CineStash"
                   style={{ height: "36px" }}
                 />
-                <span className="cinestash-title">CineStash</span>
+                <span className="cinestash-title m-0">CineStash</span>
               </div>
             </div>
           )}
 
-          {/* Botones + usuario */}
+          {/* Área de usuario y navegación */}
           {token && (
-            <div className="d-flex align-items-center flex-wrap justify-content-center gap-3">
-              <span className="text-light d-flex align-items-center gap-1">
+            <div className="d-flex align-items-center flex-wrap gap-2 justify-content-end">
+              <span className="text-light d-flex align-items-center gap-1 me-2">
                 <i
                   className="bi bi-person-fill"
                   style={{ color: "orchid" }}
@@ -73,19 +75,34 @@ const Header = () => {
               </span>
               <Link
                 to="/favoritos"
-                className="btn btn-outline-primary btn-sm nav-btn-sm"
+                className={`btn btn-outline-primary btn-sm ${
+                  isActive("/favoritos") ? "active" : ""
+                }`}
               >
                 ⭐ Favoritos
               </Link>
+
               <Link
                 to="/mis-listas"
-                className="btn btn-outline-primary btn-sm nav-btn-sm"
+                className={`btn btn-outline-primary btn-sm ${
+                  isActive("/mis-listas") ? "active" : ""
+                }`}
               >
                 📂 Mis Listas
               </Link>
+
+              <Link
+                to="/historial"
+                className={`btn btn-outline-primary btn-sm ${
+                  isActive("/historial") ? "active" : ""
+                }`}
+              >
+                🕒 Historial
+              </Link>
+
               <button
                 onClick={cerrarSesion}
-                className="btn btn-outline-primary btn-sm cerrar-sesion-btn nav-btn-sm"
+                className="btn btn-outline-primary btn-sm cerrar-sesion-btn"
               >
                 🔓 Cerrar sesión
               </button>
@@ -93,7 +110,7 @@ const Header = () => {
           )}
         </div>
 
-        {/* Sin sesión: botones + carrusel */}
+        {/* Si no hay sesión: Carrusel + botones */}
         {!token && (
           <>
             <div className="d-flex justify-content-center gap-3 flex-wrap mt-3">
@@ -118,10 +135,10 @@ const Header = () => {
   );
 
   function cerrarSesion() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("usuario");
     sessionStorage.removeItem("cineStashState");
-    window.location.href = "/"; // fuerza reload completo
+    window.location.href = "/";
   }
 };
 

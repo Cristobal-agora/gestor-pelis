@@ -1,18 +1,18 @@
-const db = require('../config/db');
+const db = require("../config/db");
 
 exports.obtenerListas = async (req, res) => {
   try {
     const { id: usuario_id } = req.usuario;
 
     const result = await db.query(
-      'SELECT * FROM listas WHERE usuario_id = $1',
+      "SELECT * FROM listas WHERE usuario_id = $1",
       [usuario_id]
     );
 
     res.json(result.rows);
   } catch (err) {
-    console.error('❌ Error en obtenerListas:', err);
-    res.status(500).json({ mensaje: 'Error al obtener las listas' });
+    console.error("❌ Error en obtenerListas:", err);
+    res.status(500).json({ mensaje: "Error al obtener las listas" });
   }
 };
 
@@ -21,41 +21,42 @@ exports.crearLista = async (req, res) => {
     const { id: usuario_id } = req.usuario;
     const { nombre } = req.body;
 
-    console.log('🧪 crearLista →', { usuario_id, nombre });
+    console.log("🧪 crearLista →", { usuario_id, nombre });
 
     if (!usuario_id) {
-      return res.status(401).json({ mensaje: 'Usuario no autenticado' });
+      return res.status(401).json({ mensaje: "Usuario no autenticado" });
     }
 
     if (!nombre) {
-      return res.status(400).json({ mensaje: 'Falta el nombre' });
+      return res.status(400).json({ mensaje: "Falta el nombre" });
     }
 
-    await db.query(
-      'INSERT INTO listas (usuario_id, nombre) VALUES ($1, $2)',
-      [usuario_id, nombre]
+    const nuevaLista = await db.query(
+      "INSERT INTO listas (nombre, usuario_id) VALUES ($1, $2) RETURNING id, nombre",
+      [nombre, usuario_id]
     );
 
-    res.json({ mensaje: 'Lista creada' });
+    res.json(nuevaLista.rows[0]);
   } catch (err) {
-    console.error('❌ Error en crearLista:', err);
-    res.status(500).json({ mensaje: 'Error al crear la lista' });
+    console.error("❌ Error en crearLista:", err);
+    res.status(500).json({ mensaje: "Error al crear la lista" });
   }
 };
+
 
 exports.obtenerContenidoLista = async (req, res) => {
   try {
     const { id } = req.params;
 
     const result = await db.query(
-      'SELECT * FROM listas_contenido WHERE lista_id = $1',
+      "SELECT * FROM listas_contenido WHERE lista_id = $1",
       [id]
     );
 
     res.json(result.rows);
   } catch (err) {
-    console.error('❌ Error en obtenerContenidoLista:', err);
-    res.status(500).json({ mensaje: 'Error al obtener contenido' });
+    console.error("❌ Error en obtenerContenidoLista:", err);
+    res.status(500).json({ mensaje: "Error al obtener contenido" });
   }
 };
 
@@ -65,28 +66,27 @@ exports.agregarContenido = async (req, res) => {
     const { pelicula_id, tipo } = req.body;
 
     if (!pelicula_id || !tipo) {
-      return res.status(400).json({ mensaje: 'Faltan datos' });
+      return res.status(400).json({ mensaje: "Faltan datos" });
     }
 
     const existe = await db.query(
-  'SELECT 1 FROM listas_contenido WHERE lista_id = $1 AND pelicula_id = $2',
-  [lista_id, pelicula_id]
-);
+      "SELECT 1 FROM listas_contenido WHERE lista_id = $1 AND pelicula_id = $2",
+      [lista_id, pelicula_id]
+    );
 
-if (existe.rowCount > 0) {
-  return res.status(400).json({ mensaje: 'Ya está en la lista' });
-}
+    if (existe.rowCount > 0) {
+      return res.status(400).json({ mensaje: "Ya está en la lista" });
+    }
 
-await db.query(
-  'INSERT INTO listas_contenido (lista_id, tipo, pelicula_id) VALUES ($1, $2, $3)',
-  [lista_id, tipo, pelicula_id]
-);
+    await db.query(
+      "INSERT INTO listas_contenido (lista_id, tipo, pelicula_id) VALUES ($1, $2, $3)",
+      [lista_id, tipo, pelicula_id]
+    );
 
-
-    res.json({ mensaje: 'Contenido añadido a la lista' });
+    res.json({ mensaje: "Contenido añadido a la lista" });
   } catch (err) {
-    console.error('❌ Error en agregarContenido:', err);
-    res.status(500).json({ mensaje: 'Error al añadir contenido' });
+    console.error("❌ Error en agregarContenido:", err);
+    res.status(500).json({ mensaje: "Error al añadir contenido" });
   }
 };
 
@@ -95,14 +95,14 @@ exports.eliminarContenido = async (req, res) => {
     const { id: lista_id, peliculaId } = req.params;
 
     await db.query(
-      'DELETE FROM listas_contenido WHERE lista_id = $1 AND pelicula_id = $2',
+      "DELETE FROM listas_contenido WHERE lista_id = $1 AND pelicula_id = $2",
       [lista_id, peliculaId]
     );
 
-    res.json({ mensaje: 'Contenido eliminado de la lista' });
+    res.json({ mensaje: "Contenido eliminado de la lista" });
   } catch (err) {
-    console.error('❌ Error en eliminarContenido:', err);
-    res.status(500).json({ mensaje: 'Error al eliminar contenido' });
+    console.error("❌ Error en eliminarContenido:", err);
+    res.status(500).json({ mensaje: "Error al eliminar contenido" });
   }
 };
 
@@ -112,22 +112,24 @@ exports.eliminarLista = async (req, res) => {
     const { id: usuario_id } = req.usuario;
 
     // Primero elimina el contenido relacionado
-    await db.query('DELETE FROM listas_contenido WHERE lista_id = $1', [id]);
+    await db.query("DELETE FROM listas_contenido WHERE lista_id = $1", [id]);
 
     // Luego elimina la lista si pertenece al usuario
     const result = await db.query(
-      'DELETE FROM listas WHERE id = $1 AND usuario_id = $2',
+      "DELETE FROM listas WHERE id = $1 AND usuario_id = $2",
       [id, usuario_id]
     );
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ mensaje: 'Lista no encontrada o no autorizada' });
+      return res
+        .status(404)
+        .json({ mensaje: "Lista no encontrada o no autorizada" });
     }
 
-    res.json({ mensaje: 'Lista eliminada correctamente' });
+    res.json({ mensaje: "Lista eliminada correctamente" });
   } catch (err) {
-    console.error('❌ Error al eliminar lista:', err);
-    res.status(500).json({ mensaje: 'Error al eliminar la lista' });
+    console.error("❌ Error al eliminar lista:", err);
+    res.status(500).json({ mensaje: "Error al eliminar la lista" });
   }
 };
 
@@ -145,7 +147,7 @@ exports.listasQueIncluyen = async (req, res) => {
 
     res.json(result.rows);
   } catch (err) {
-    console.error('❌ Error en listasQueIncluyen:', err);
-    res.status(500).json({ mensaje: 'Error al buscar listas' });
+    console.error("❌ Error en listasQueIncluyen:", err);
+    res.status(500).json({ mensaje: "Error al buscar listas" });
   }
 };

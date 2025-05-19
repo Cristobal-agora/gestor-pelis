@@ -4,31 +4,52 @@ import { Link } from "react-router-dom";
 const Favoritos = () => {
   const [items, setItems] = useState([]);
   const [tipo, setTipo] = useState("movie");
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const obtenerFavoritos = useCallback(async () => {
     if (!token) return;
     setItems([]);
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/favoritos`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const favoritos = await res.json();
-    const filtrados = favoritos.filter((f) => f.tipo === tipo);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/favoritos`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const detalles = await Promise.all(
-      filtrados.map((f) =>
-        fetch(
-          `https://api.themoviedb.org/3/${f.tipo}/${f.pelicula_id}?api_key=${
-            import.meta.env.VITE_TMDB_API_KEY
-          }&language=es-ES`
+      // Si hay error de autorización, muestra mensaje y corta la ejecución
+      if (!res.ok) {
+        console.error(
+          "Error al obtener favoritos:",
+          res.status,
+          await res.text()
+        );
+        return;
+      }
+
+      const favoritos = await res.json();
+
+      if (!Array.isArray(favoritos)) {
+        console.error("Respuesta inesperada de favoritos:", favoritos);
+        return;
+      }
+
+      const filtrados = favoritos.filter((f) => f.tipo === tipo);
+
+      const detalles = await Promise.all(
+        filtrados.map((f) =>
+          fetch(
+            `https://api.themoviedb.org/3/${f.tipo}/${f.pelicula_id}?api_key=${
+              import.meta.env.VITE_TMDB_API_KEY
+            }&language=es-ES`
+          )
+            .then((res) => res.json())
+            .catch(() => null)
         )
-          .then((res) => res.json())
-          .catch(() => null)
-      )
-    );
+      );
 
-    setItems(detalles.filter((p) => p));
+      setItems(detalles.filter((p) => p));
+    } catch (error) {
+      console.error("Error inesperado al cargar favoritos:", error);
+    }
   }, [token, tipo]);
 
   useEffect(() => {
@@ -67,7 +88,7 @@ const Favoritos = () => {
       </div>
 
       {items.length === 0 ? (
-        <p className="text-center text-muted ">
+        <p className="text-center text-light ">
           No has agregado favoritos aún.
         </p>
       ) : (

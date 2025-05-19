@@ -4,6 +4,7 @@ import DetalleItem from "../components/DetalleItem";
 import ValoracionUsuario from "../components/ValoracionUsuario";
 import ValoracionesBloque from "../components/ValoracionesBloque";
 import TextoColapsado from "../components/TextoColapsado";
+import Comentarios from "../components/Comentarios"; // ajusta la ruta si es necesario
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -14,8 +15,11 @@ const MovieDetail = () => {
   const [listasIncluye, setListasIncluye] = useState([]);
   const [actualizarValoraciones, setActualizarValoraciones] = useState(0);
   const [plataformas, setPlataformas] = useState({ items: [], link: null });
+  const [vista, setVista] = useState(false);
+  const [nuevaLista, setNuevaLista] = useState("");
+  const [modoCrearLista, setModoCrearLista] = useState(false);
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     fetch(
@@ -67,11 +71,27 @@ const MovieDetail = () => {
   }, [id, token]);
 
   useEffect(() => {
+    if (token) {
+      fetch(`${import.meta.env.VITE_API_URL}/historial`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const encontrada = data.find(
+            (v) => v.tmdb_id === parseInt(id) && v.tipo === "movie"
+          );
+          setVista(!!encontrada);
+        })
+        .catch((err) => {
+          console.error("Error al cargar historial:", err);
+        });
+    }
+  }, [id, token]);
+
+  useEffect(() => {
     if (token && pelicula?.id) {
       fetch(
-        `${import.meta.env.VITE_API_URL}/listas/incluye/movie/${
-          pelicula.id
-        }`,
+        `${import.meta.env.VITE_API_URL}/listas/incluye/movie/${pelicula.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -123,6 +143,35 @@ const MovieDetail = () => {
     }
   };
 
+  const toggleVista = async () => {
+    if (!token) return alert("Debes iniciar sesión para usar esta función");
+
+    const url = `${import.meta.env.VITE_API_URL}/historial${
+      vista ? `/${id}/movie` : ""
+    }`;
+    const metodo = vista ? "DELETE" : "POST";
+    const body = vista ? null : JSON.stringify({ tmdb_id: id, tipo: "movie" });
+
+    try {
+      const res = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body,
+      });
+
+      if (res.ok) {
+        setVista(!vista);
+      } else {
+        console.error("Error al cambiar estado de visualización");
+      }
+    } catch (err) {
+      console.error("Error en toggleVista:", err);
+    }
+  };
+
   if (!pelicula) return <div className="text-light">Cargando...</div>;
 
   return (
@@ -169,86 +218,172 @@ const MovieDetail = () => {
                 ★
               </span>
             </button>
+
+            {token && (
+              <button
+                onClick={toggleVista}
+                className="btn btn-outline-success btn-sm mt-2"
+                title={vista ? "Marcar como no vista" : "Marcar como vista"}
+              >
+                {vista ? "👁 Vista" : "👁 Marcar como vista"}
+              </button>
+            )}
           </div>
 
           {token && (
             <div className="mb-4">
               <label className="form-label">📂 Añadir a lista:</label>
 
-              <div className="d-flex gap-2 flex-wrap">
-                <select
-                  className="form-select w-auto"
-                  value={listaSeleccionada}
-                  onChange={(e) => setListaSeleccionada(e.target.value)}
-                >
-                  <option value="">Selecciona una lista</option>
-                  {listas.length === 0 ? (
-                    <option disabled>🔸 No tienes listas creadas</option>
-                  ) : (
-                    listas.map((lista) => (
-                      <option key={lista.id} value={lista.id}>
-                        {lista.nombre}
-                      </option>
-                    ))
-                  )}
-                </select>
+              <div className="d-flex gap-2 flex-wrap align-items-center">
+                {!modoCrearLista ? (
+                  <>
+                    <select
+                      className="form-select w-auto"
+                      value={listaSeleccionada}
+                      onChange={(e) => setListaSeleccionada(e.target.value)}
+                    >
+                      <option value="">Selecciona una lista</option>
+                      {listas.length === 0 ? (
+                        <option disabled>🔸 No tienes listas creadas</option>
+                      ) : (
+                        listas.map((lista) => (
+                          <option key={lista.id} value={lista.id}>
+                            {lista.nombre}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                    <button
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => {
+                        setModoCrearLista(true);
+                        setListaSeleccionada(""); // opcional: reset selección
+                      }}
+                    >
+                      ➕ Nueva lista
+                    </button>
 
-                <button
-                  onClick={async () => {
-                    if (!listaSeleccionada)
-                      return alert("Selecciona una lista");
+                    {/* ✅ SOLO SE MUESTRA EN MODO NORMAL */}
+                    {!modoCrearLista && (
+                      <button
+                        className="btn btn-primary"
+                        disabled={!listaSeleccionada}
+                        onClick={async () => {
+                          const payload = {
+                            pelicula_id: pelicula.id,
+                            tipo: "movie",
+                          };
 
-                    if (!pelicula?.id) {
-                      console.error("❌ película.id está vacío o undefined");
-                      return alert(
-                        "No se puede añadir: ID de película no disponible"
-                      );
-                    }
+                          try {
+                            const res = await fetch(
+                              `${
+                                import.meta.env.VITE_API_URL
+                              }/listas/${listaSeleccionada}/contenido`,
+                              {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify(payload),
+                              }
+                            );
 
-                    const payload = {
-                      pelicula_id: pelicula.id,
-                      tipo: "movie",
-                    };
+                            const respuesta = await res.json();
+                            if (res.ok) {
+                              alert("✅ Añadido a la lista");
+                              setListaSeleccionada("");
+                            } else {
+                              alert(respuesta.mensaje || "Error al añadir");
+                            }
+                          } catch (err) {
+                            console.error(err);
+                            alert("Error de conexión");
+                          }
+                        }}
+                      >
+                        ➕ Añadir
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Nombre de la nueva lista"
+                      value={nuevaLista}
+                      onChange={(e) => setNuevaLista(e.target.value)}
+                    />
+                    <button
+                      className="btn btn-success btn-sm"
+                     onClick={async () => {
+  if (!nuevaLista.trim()) {
+    return alert("Escribe un nombre válido");
+  }
 
-                    console.log("📤 Enviando a la API:", payload);
+  try {
+    // 1. Crear la lista
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/listas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ nombre: nuevaLista }),
+    });
 
-                    try {
-                      const res = await fetch(
-                        `${
-                          import.meta.env.VITE_API_URL
-                        }/listas/${listaSeleccionada}/contenido`,
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                          },
-                          body: JSON.stringify(payload),
-                        }
-                      );
+    const data = await res.json();
 
-                      const respuesta = await res.json();
+    if (res.ok && data?.id != null) {
+      // 2. Añadir la película a la nueva lista
+      const resContenido = await fetch(
+        `${import.meta.env.VITE_API_URL}/listas/${data.id}/contenido`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            pelicula_id: pelicula.id,
+            tipo: "movie",
+          }),
+        }
+      );
 
-                      if (res.ok) {
-                        alert("✅ Película añadida a la lista");
-                        setListaSeleccionada("");
-                      } else {
-                        console.error("❌ Error del servidor:", respuesta);
-                        alert(
-                          `Error al añadir: ${
-                            respuesta.mensaje || "error desconocido"
-                          }`
-                        );
-                      }
-                    } catch (error) {
-                      console.error("❌ Error en la petición:", error);
-                      alert("Error al conectar con el servidor");
-                    }
-                  }}
-                  className="btn btn-primary"
-                >
-                  ➕ Añadir
-                </button>
+      if (resContenido.ok) {
+        alert("✅ Lista creada y película añadida correctamente");
+        setListas((prev) => [...prev, data]);
+        setListaSeleccionada("");
+        setModoCrearLista(false);
+        setNuevaLista("");
+      } else {
+        alert("⚠️ Lista creada, pero no se pudo añadir la película.");
+      }
+    } else {
+      alert(data.mensaje || "No se pudo crear la lista");
+    }
+  } catch (err) {
+    console.error("❌ Error:", err);
+    alert("Error de conexión");
+  }
+}}
+
+                    >
+                      Crear
+                    </button>
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => {
+                        setModoCrearLista(false);
+                        setNuevaLista("");
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </>
+                )}
               </div>
 
               {listasIncluye.length > 0 && (
@@ -334,6 +469,7 @@ const MovieDetail = () => {
               valor="No disponible en plataformas en España"
             />
           )}
+          <Comentarios tmdbId={pelicula.id} tipo="movie" />
         </div>
       </div>
     </div>

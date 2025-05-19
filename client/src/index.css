@@ -266,3 +266,18 @@ select:focus {
 body:not(.con-sesion):not(.sin-sesion) {
   overflow-y: hidden;
 }
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-wrapper main {
+  flex: 1;
+}
+.btn-outline-primary.active {
+  background-color: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}

@@ -5,6 +5,7 @@ import ValoracionUsuario from "../components/ValoracionUsuario";
 import ValoracionesBloque from "../components/ValoracionesBloque";
 import ModalSeguimiento from "../components/ModalSeguimiento";
 import TextoColapsado from "../components/TextoColapsado";
+import Comentarios from "../components/Comentarios";
 
 const SerieDetail = () => {
   const { id } = useParams();
@@ -19,8 +20,10 @@ const SerieDetail = () => {
   );
   const [progreso, setProgreso] = useState(null);
   const [plataformas, setPlataformas] = useState({ items: [], link: null });
+  const [nuevaLista, setNuevaLista] = useState("");
+  const [modoCrearLista, setModoCrearLista] = useState(false);
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     sessionStorage.setItem("seguirAbierto", mostrarSeguimiento);
@@ -97,12 +100,9 @@ const SerieDetail = () => {
 
   useEffect(() => {
     if (token && serie?.id) {
-      fetch(
-        `${import.meta.env.VITE_API_URL}/listas/incluye/tv/${serie.id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      fetch(`${import.meta.env.VITE_API_URL}/listas/incluye/tv/${serie.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
         .then((res) => res.json())
         .then((data) => setListasIncluye(data))
         .catch((err) => console.error("Error al cargar listas:", err));
@@ -231,63 +231,163 @@ const SerieDetail = () => {
           {token && (
             <div className="mb-4">
               <label className="form-label">📂 Añadir a lista:</label>
-              <div className="d-flex gap-2 flex-wrap">
-                <select
-                  className="form-select w-auto"
-                  value={listaSeleccionada}
-                  onChange={(e) => setListaSeleccionada(e.target.value)}
-                >
-                  <option value="">Selecciona una lista</option>
-                  {listas.length === 0 ? (
-                    <option disabled>🔸 No tienes listas creadas</option>
-                  ) : (
-                    listas.map((lista) => (
-                      <option key={lista.id} value={lista.id}>
-                        {lista.nombre}
-                      </option>
-                    ))
-                  )}
-                </select>
-                <button
-                  onClick={async () => {
-                    if (!listaSeleccionada)
-                      return alert("Selecciona una lista");
-                    if (!serie?.id) return alert("ID de serie no disponible");
-                    const payload = { pelicula_id: serie.id, tipo: "tv" };
-                    try {
-                      const res = await fetch(
-                        `${
-                          import.meta.env.VITE_API_URL
-                        }/listas/${listaSeleccionada}/contenido`,
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                          },
-                          body: JSON.stringify(payload),
-                        }
-                      );
-                      const respuesta = await res.json();
-                      if (res.ok) {
-                        alert("✅ Serie añadida a la lista");
+              <div className="d-flex gap-2 flex-wrap align-items-center">
+                {!modoCrearLista ? (
+                  <>
+                    <select
+                      className="form-select w-auto"
+                      value={listaSeleccionada}
+                      onChange={(e) => setListaSeleccionada(e.target.value)}
+                    >
+                      <option value="">Selecciona una lista</option>
+                      {listas.length === 0 ? (
+                        <option disabled>🔸 No tienes listas creadas</option>
+                      ) : (
+                        listas.map((lista) => (
+                          <option key={lista.id} value={lista.id}>
+                            {lista.nombre}
+                          </option>
+                        ))
+                      )}
+                    </select>
+
+                    <button
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => {
+                        setModoCrearLista(true);
                         setListaSeleccionada("");
-                      } else {
-                        alert(
-                          `Error al añadir: ${
-                            respuesta.mensaje || "error desconocido"
-                          }`
-                        );
-                      }
-                    } catch {
-                      alert("Error al conectar con el servidor");
-                    }
-                  }}
-                  className="btn btn-primary"
-                >
-                  ➕ Añadir
-                </button>
+                      }}
+                    >
+                      ➕ Nueva lista
+                    </button>
+
+                    <button
+                      className="btn btn-primary"
+                      disabled={!listaSeleccionada}
+                      onClick={async () => {
+                        const payload = {
+                          pelicula_id: serie.id,
+                          tipo: "tv",
+                        };
+                        try {
+                          const res = await fetch(
+                            `${
+                              import.meta.env.VITE_API_URL
+                            }/listas/${listaSeleccionada}/contenido`,
+                            {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                              },
+                              body: JSON.stringify(payload),
+                            }
+                          );
+                          const respuesta = await res.json();
+                          if (res.ok) {
+                            alert("✅ Serie añadida a la lista");
+                            setListaSeleccionada("");
+                          } else {
+                            alert(respuesta.mensaje || "Error al añadir");
+                          }
+                        } catch {
+                          alert("Error al conectar con el servidor");
+                        }
+                      }}
+                    >
+                      ➕ Añadir
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Nombre de la nueva lista"
+                      value={nuevaLista}
+                      onChange={(e) => setNuevaLista(e.target.value)}
+                    />
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={async () => {
+                        if (!nuevaLista.trim()) {
+                          alert("Escribe un nombre válido");
+                          return;
+                        }
+
+                        try {
+                          // 1. Crear lista
+                          const res = await fetch(
+                            `${import.meta.env.VITE_API_URL}/listas`,
+                            {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                              },
+                              body: JSON.stringify({ nombre: nuevaLista }),
+                            }
+                          );
+
+                          const data = await res.json();
+                          if (res.ok && data?.id != null) {
+                            setListas((prev) => [...prev, data]);
+                            setListaSeleccionada(data.id.toString());
+                            setModoCrearLista(false);
+                            setNuevaLista("");
+
+                            // 2. Añadir la serie a la lista nueva
+                            const addRes = await fetch(
+                              `${import.meta.env.VITE_API_URL}/listas/${
+                                data.id
+                              }/contenido`,
+                              {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify({
+                                  pelicula_id: serie.id,
+                                  tipo: "tv",
+                                }),
+                              }
+                            );
+
+                            if (addRes.ok) {
+                              alert("✅ Lista creada y serie añadida");
+                            } else {
+                              alert(
+                                "Lista creada pero no se pudo añadir la serie"
+                              );
+                            }
+                          } else {
+                            alert(data.mensaje || "No se pudo crear la lista");
+                          }
+                        } catch (error) {
+                          console.error(
+                            "❌ Error al crear lista y añadir contenido:",
+                            error
+                          );
+                          alert("Error al conectar con el servidor");
+                        }
+                      }}
+                    >
+                      Crear
+                    </button>
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => {
+                        setModoCrearLista(false);
+                        setNuevaLista("");
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </>
+                )}
               </div>
+
               {listasIncluye.length > 0 && (
                 <div className="mt-2 text-light small">
                   <span className="me-1">✅ </span>
@@ -381,6 +481,7 @@ const SerieDetail = () => {
               valor="No disponible en plataformas en España"
             />
           )}
+          <Comentarios tmdbId={serie.id} tipo="tv" />
 
           <br />
         </div>

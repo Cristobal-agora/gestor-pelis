@@ -15,6 +15,8 @@ import SerieDetail from "./pages/SerieDetail";
 import { useEffect } from "react";
 import MisListas from "./pages/MisListas";
 import ListaDetalle from "./pages/ListaDetalle";
+import Historial from "./components/Historial";
+import Footer from "./components/Footer"; // asegúrate de que la ruta sea correcta
 
 function AppContent() {
   const location = useLocation();
@@ -27,34 +29,37 @@ function AppContent() {
   }, [location.pathname, estaEnSinSesion]);
 
   return (
-    <>
+    <div className="app-wrapper d-flex flex-column min-vh-100">
       {!estaEnSinSesion && <Header />}
 
-      {estaEnSinSesion ? (
-        // Sin container en login/register
-        <Routes>
-          <Route path="/" element={<div />} />
-          <Route
-            path="/register"
-            element={<Register mostrarVideoFondo={true} />}
-          />
-          <Route path="/login" element={<Login mostrarVideoFondo={true} />} />
-        </Routes>
-      ) : (
-        // Con container en el resto
-        <div className="container mt-2 pt-3">
+      <main className="flex-fill">
+        {estaEnSinSesion ? (
           <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/populares" element={<PopularMovies />} />
-            <Route path="/pelicula/:id" element={<MovieDetail />} />
-            <Route path="/favoritos" element={<Favoritos />} />
-            <Route path="/serie/:id" element={<SerieDetail />} />
-            <Route path="/mis-listas" element={<MisListas />} />
-            <Route path="/lista/:id" element={<ListaDetalle />} />
+            <Route path="/" element={<div />} />
+            <Route
+              path="/register"
+              element={<Register mostrarVideoFondo={true} />}
+            />
+            <Route path="/login" element={<Login mostrarVideoFondo={true} />} />
           </Routes>
-        </div>
-      )}
-    </>
+        ) : (
+          <div className="container mt-2 pt-3">
+            <Routes>
+              <Route path="/home" element={<Home />} />
+              <Route path="/populares" element={<PopularMovies />} />
+              <Route path="/pelicula/:id" element={<MovieDetail />} />
+              <Route path="/favoritos" element={<Favoritos />} />
+              <Route path="/serie/:id" element={<SerieDetail />} />
+              <Route path="/mis-listas" element={<MisListas />} />
+              <Route path="/lista/:id" element={<ListaDetalle />} />
+              <Route path="/historial" element={<Historial />} />
+            </Routes>
+          </div>
+        )}
+      </main>
+
+      {!estaEnSinSesion && <Footer />}
+    </div>
   );
 }
 

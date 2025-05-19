@@ -16,4 +16,6 @@ const ModalSeguimiento = ({ tmdbId, onClose }) => {
   );
 };
 
+
+
 export default ModalSeguimiento;

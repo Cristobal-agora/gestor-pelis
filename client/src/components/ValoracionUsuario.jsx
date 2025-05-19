@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada  }) => {
   const [miValoracion, setMiValoracion] = useState(null);
   const [puntuacion, setPuntuacion] = useState(0);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     if (!token) return;
