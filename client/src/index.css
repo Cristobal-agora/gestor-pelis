@@ -52,7 +52,7 @@ body.sin-sesion {
   background: transparent !important;
   background-color: transparent !important;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: auto !important;
 }
 
 /* ===== LOGIN & AUTH ===== */
@@ -262,11 +262,6 @@ select:focus {
   display: none;
 }
 
-/* ===== FIX: scroll innecesario cuando no hay sesión ===== */
-body:not(.con-sesion):not(.sin-sesion) {
-  overflow-y: hidden;
-}
-
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -275,9 +270,29 @@ body:not(.con-sesion):not(.sin-sesion) {
 
 .app-wrapper main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .btn-outline-primary.active {
   background-color: #0d6efd;
   color: #fff;
   border-color: #0d6efd;
+}
+.inicio {
+  flex: 1;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.footer {
+  border-top: none !important;
+}
+
+.poster-img {
+  transition: transform 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.poster-img.flipping {
+  transform: rotateY(180deg);
 }

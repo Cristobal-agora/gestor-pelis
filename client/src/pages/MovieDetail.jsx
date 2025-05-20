@@ -211,7 +211,7 @@ const MovieDetail = () => {
               <span
                 style={{
                   fontSize: "2rem",
-                  color: esFavorito ? "#1f8df5" : "#6c757d",
+                  color: esFavorito ? "yellow" : "#6c757d",
                   transition: "color 0.3s ease",
                 }}
               >

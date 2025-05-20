@@ -17,48 +17,55 @@ import MisListas from "./pages/MisListas";
 import ListaDetalle from "./pages/ListaDetalle";
 import Historial from "./components/Historial";
 import Footer from "./components/Footer"; // asegúrate de que la ruta sea correcta
+import Inicio from "./pages/Inicio";
+import EditarPerfil from "./components/EditarPerfil";
+import CambiarPassword from "./components/CambiarPassword";
 
 function AppContent() {
   const location = useLocation();
-  const rutasSinSesion = ["/login", "/register"];
-  const estaEnSinSesion = rutasSinSesion.includes(location.pathname);
+  const rutasSinFooter = ["/login", "/register"];
+  const rutaOcultaFooter = rutasSinFooter.includes(location.pathname);
+  const mostrarFooterSimple = location.pathname === "/";
 
   useEffect(() => {
-    document.body.classList.toggle("sin-sesion", estaEnSinSesion);
-    document.body.classList.toggle("con-sesion", !estaEnSinSesion);
-  }, [location.pathname, estaEnSinSesion]);
+    const rutaActual = location.pathname;
+    const esRutaSinFooter = ["/login", "/register"].includes(rutaActual);
+
+    document.body.classList.toggle("sin-sesion", esRutaSinFooter);
+    document.body.classList.toggle("con-sesion", !esRutaSinFooter);
+  }, [location.pathname]);
 
   return (
     <div className="app-wrapper d-flex flex-column min-vh-100">
-      {!estaEnSinSesion && <Header />}
+      {!rutaOcultaFooter && <Header />}
 
-      <main className="flex-fill">
-        {estaEnSinSesion ? (
-          <Routes>
-            <Route path="/" element={<div />} />
-            <Route
-              path="/register"
-              element={<Register mostrarVideoFondo={true} />}
-            />
-            <Route path="/login" element={<Login mostrarVideoFondo={true} />} />
-          </Routes>
-        ) : (
-          <div className="container mt-2 pt-3">
-            <Routes>
-              <Route path="/home" element={<Home />} />
-              <Route path="/populares" element={<PopularMovies />} />
-              <Route path="/pelicula/:id" element={<MovieDetail />} />
-              <Route path="/favoritos" element={<Favoritos />} />
-              <Route path="/serie/:id" element={<SerieDetail />} />
-              <Route path="/mis-listas" element={<MisListas />} />
-              <Route path="/lista/:id" element={<ListaDetalle />} />
-              <Route path="/historial" element={<Historial />} />
-            </Routes>
-          </div>
-        )}
+      <main className="flex-fill d-flex flex-column">
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/" element={<Inicio />} />
+          <Route
+            path="/register"
+            element={<Register mostrarVideoFondo={true} />}
+          />
+          <Route path="/login" element={<Login mostrarVideoFondo={true} />} />
+
+          {/* Rutas con sesión */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/populares" element={<PopularMovies />} />
+          <Route path="/pelicula/:id" element={<MovieDetail />} />
+          <Route path="/favoritos" element={<Favoritos />} />
+          <Route path="/serie/:id" element={<SerieDetail />} />
+          <Route path="/mis-listas" element={<MisListas />} />
+          <Route path="/lista/:id" element={<ListaDetalle />} />
+          <Route path="/historial" element={<Historial />} />
+          <Route path="/perfil/editar" element={<EditarPerfil />} />
+          <Route path="/perfil/password" element={<CambiarPassword />} />
+        </Routes>
       </main>
 
-      {!estaEnSinSesion && <Footer />}
+      {!rutaOcultaFooter && (
+        <Footer modo={mostrarFooterSimple ? "simple" : "completo"} />
+      )}
     </div>
   );
 }

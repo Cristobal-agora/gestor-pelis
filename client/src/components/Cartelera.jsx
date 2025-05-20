@@ -44,7 +44,14 @@ const Cartelera = () => {
 
   return (
     <div className="text-light">
-      <h3 className="text-primary mb-3">🎬 Cartelera en cines</h3>
+      <h3 className="text-primary mb-3 d-flex align-items-center gap-2">
+        <img
+          src="/favicon.ico"
+          alt="CineStash Icon"
+          style={{ width: "24px", height: "24px" }}
+        />
+        Cartelera en cines
+      </h3>
 
       <div
         ref={contenedorRef}

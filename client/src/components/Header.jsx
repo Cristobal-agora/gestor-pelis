@@ -9,6 +9,7 @@ const Header = () => {
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
   const nombre = usuario?.nombre || "";
   const isActive = (ruta) => location.pathname === ruta;
+  
 
   useEffect(() => {
     if (location.pathname === "/login" || location.pathname === "/register") {
@@ -100,6 +101,31 @@ const Header = () => {
                 🕒 Historial
               </Link>
 
+              <div className="dropdown">
+                <button
+                className={`btn btn-outline-primary btn-sm dropdown-toggle ${
+  isActive("/perfil/editar") || isActive("/perfil/password") ? "active" : ""
+}`}
+
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  ⚙️ Mi cuenta
+                </button>
+                <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                  <li>
+                    <Link className="dropdown-item" to="/perfil/editar">
+                      📝 Editar perfil
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/perfil/password">
+                      🔑 Cambiar contraseña
+                    </Link>
+                  </li>
+                </ul>
+              </div>
               <button
                 onClick={cerrarSesion}
                 className="btn btn-outline-primary btn-sm cerrar-sesion-btn"
@@ -110,25 +136,16 @@ const Header = () => {
           )}
         </div>
 
-        {/* Si no hay sesión: Carrusel + botones */}
+        {/* Si no hay sesión: Botones */}
         {!token && (
-          <>
-            <div className="d-flex justify-content-center gap-3 flex-wrap mt-3">
-              <Link to="/register" className="btn btn-outline-light">
-                Registro
-              </Link>
-              <Link to="/login" className="btn btn-outline-light">
-                Iniciar Sesión
-              </Link>
-            </div>
-
-            <div
-              className="mt-4 px-2"
-              style={{ maxWidth: "1200px", margin: "0 auto" }}
-            >
-              <Carrusel />
-            </div>
-          </>
+          <div className="d-flex justify-content-center gap-3 flex-wrap mt-3">
+            <Link to="/register" className="btn btn-outline-light">
+              Registro
+            </Link>
+            <Link to="/login" className="btn btn-outline-light">
+              Iniciar Sesión
+            </Link>
+          </div>
         )}
       </div>
     </header>

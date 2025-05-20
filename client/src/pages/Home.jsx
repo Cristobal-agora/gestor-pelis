@@ -4,9 +4,8 @@ import Cartelera from "../components/Cartelera";
 // <Cartelera />
 
 const Home = () => {
-  const [token, setToken] = useState(sessionStorage.getItem("token"));
-
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
 
   const [peliculas, setPeliculas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -21,19 +20,6 @@ const Home = () => {
   const [restaurando, setRestaurando] = useState(true);
   const [estadoRestaurado, setEstadoRestaurado] = useState(false);
   const totalPaginasRef = useRef(1);
-
-  useEffect(() => {
-    const checkToken = () => {
-      const storedToken = sessionStorage.getItem("token");
-      setToken(storedToken);
-      if (!storedToken) {
-        navigate("/login", { replace: true });
-      }
-    };
-
-    window.addEventListener("popstate", checkToken);
-    return () => window.removeEventListener("popstate", checkToken);
-  }, [navigate]);
 
   useEffect(() => {
     if (!token) {
@@ -98,7 +84,7 @@ const Home = () => {
     buscando,
     peliculas,
     totalPaginas,
-    estadoRestaurado, // ⚠️ inclúyelo como dependencia
+    estadoRestaurado,
   ]);
 
   const fetchPopulares = useCallback(
@@ -470,32 +456,36 @@ const Home = () => {
           )}
 
           {Array.isArray(peliculas) &&
-            peliculas?.map((peli) => (
+            peliculas.map((peli) => (
               <div
                 key={peli.id}
                 className="col-6 col-sm-4 col-md-3 col-lg-5th mb-4"
               >
-                <Link
-                  to={`/${tipo === "movie" ? "pelicula" : "serie"}/${peli.id}`}
-                  className="text-decoration-none"
+                <div
+                  className="card bg-dark text-white border-0 shadow-sm h-100 hover-scale"
+                  onClick={(e) => {
+                    const img = e.currentTarget.querySelector(".poster-img");
+                    img.classList.add("flipping");
+                    setTimeout(() => {
+                      navigate(
+                        `/${tipo === "movie" ? "pelicula" : "serie"}/${peli.id}`
+                      );
+                    }, 400);
+                  }}
+                  style={{ cursor: "pointer" }}
                 >
-                  <div className="card bg-dark text-white border-0 shadow-sm h-100 hover-scale">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${peli.poster_path}`}
-                      className="card-img-top"
-                      alt={peli.title || peli.name}
-                      style={{ borderRadius: "8px", objectFit: "cover" }}
-                    />
-                    <div className="card-body px-2 py-2">
-                      <h6 className="card-title mb-1">
-                        {peli.title || peli.name}
-                      </h6>
-                      <p className="card-text text-muted">
-                        ⭐ {peli.vote_average}
-                      </p>
-                    </div>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${peli.poster_path}`}
+                    className="card-img-top poster-img"
+                    alt={peli.title || peli.name}
+                    style={{ borderRadius: "8px", objectFit: "cover" }}
+                  />
+                  <div className="card-body px-2 py-2">
+                    <h6 className="card-title mb-1">
+                      {peli.title || peli.name}
+                    </h6>
                   </div>
-                </Link>
+                </div>
               </div>
             ))}
 

@@ -15,7 +15,6 @@ const Favoritos = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Si hay error de autorización, muestra mensaje y corta la ejecución
       if (!res.ok) {
         console.error(
           "Error al obtener favoritos:",
@@ -32,7 +31,9 @@ const Favoritos = () => {
         return;
       }
 
-      const filtrados = favoritos.filter((f) => f.tipo === tipo);
+      // 🔄 Si es 'todos', no filtra. Si no, sí.
+      const filtrados =
+        tipo === "todos" ? favoritos : favoritos.filter((f) => f.tipo === tipo);
 
       const detalles = await Promise.all(
         filtrados.map((f) =>
@@ -82,8 +83,9 @@ const Favoritos = () => {
           value={tipo}
           onChange={(e) => setTipo(e.target.value)}
         >
-          <option value="movie">Películas</option>
-          <option value="tv">Series</option>
+          <option value="todos">🎬 Todos</option>
+          <option value="movie">🎞️ Películas</option>
+          <option value="tv">📺 Series</option>
         </select>
       </div>
 
@@ -105,11 +107,13 @@ const Favoritos = () => {
                 onClick={() => eliminarFavorito(item.id)}
                 style={{ zIndex: 2 }}
               >
-                <span style={{ fontSize: "1.5rem", color: "#1f8df5" }}>★</span>
+                <span style={{ fontSize: "2rem", color: "yellow" }}>★</span>
               </button>
 
               <Link
-                to={`/${tipo === "movie" ? "pelicula" : "serie"}/${item.id}`}
+                to={`/${
+                  item.media_type === "tv" || item.name ? "serie" : "pelicula"
+                }/${item.id}`}
                 className="text-decoration-none"
                 style={{ zIndex: 1 }}
               >
@@ -124,9 +128,6 @@ const Favoritos = () => {
                     <h6 className="card-title mb-1">
                       {item.title || item.name}
                     </h6>
-                    <p className="card-text text-muted">
-                      ⭐ {item.vote_average}
-                    </p>
                   </div>
                 </div>
               </Link>

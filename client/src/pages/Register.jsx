@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './AuthBackground.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "./AuthBackground.css";
 
 const Register = ({ mostrarVideoFondo }) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    password: '',
+    nombre: "",
+    email: "",
+    password: "",
   });
 
-  const [mensaje, setMensaje] = useState('');
+  const [mensaje, setMensaje] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,17 +21,45 @@ const Register = ({ mostrarVideoFondo }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const errores = [];
+
+    if (formData.nombre.trim().length < 2) {
+      errores.push("El nombre debe tener al menos 2 caracteres.");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      errores.push("El correo electrónico no es válido.");
+    }
+
+    const password = formData.password;
+    if (password.length < 6) {
+      errores.push("La contraseña debe tener al menos 6 caracteres.");
+    } else if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      errores.push("La contraseña debe contener letras y números.");
+    }
+
+    if (errores.length > 0) {
+      setMensaje(errores.join("\n"));
+      return;
+    }
+
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/register`, formData);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/register`,
+        formData
+      );
       setMensaje(res.data.mensaje);
-      navigate('/login', { state: { registrado: true } });
+      navigate("/login", { state: { registrado: true } });
     } catch (error) {
       console.error(error);
       if (error.response?.data?.errores) {
-        const errores = error.response.data.errores.map(err => `- ${err.msg}`).join('\n');
+        const errores = error.response.data.errores
+          .map((err) => `- ${err.msg}`)
+          .join("\n");
         setMensaje(errores);
       } else {
-        setMensaje(error.response?.data?.mensaje || 'Error en el registro');
+        setMensaje(error.response?.data?.mensaje || "Error en el registro");
       }
     }
   };
@@ -45,20 +73,23 @@ const Register = ({ mostrarVideoFondo }) => {
         </video>
       )}
 
-      <div className="d-flex align-items-center justify-content-center auth-content" style={{ minHeight: '80vh' }}>
+      <div
+        className="d-flex align-items-center justify-content-center auth-content"
+        style={{ minHeight: "80vh" }}
+      >
         <div
           className="p-5 rounded shadow-lg"
           style={{
-            maxWidth: '500px',
-            width: '100%',
-            backgroundColor: 'rgba(28, 28, 28, 0.85)'
+            maxWidth: "500px",
+            width: "100%",
+            backgroundColor: "rgba(28, 28, 28, 0.85)",
           }}
         >
           <h2 className="mb-4 text-center text-primary">Registro</h2>
 
           {mensaje && (
             <div className="alert alert-info text-start">
-              {mensaje.split('\n').map((linea, index) => (
+              {mensaje.split("\n").map((linea, index) => (
                 <div key={index}>{linea}</div>
               ))}
             </div>
@@ -66,7 +97,9 @@ const Register = ({ mostrarVideoFondo }) => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="nombre" className="form-label text-light">Nombre</label>
+              <label htmlFor="nombre" className="form-label text-light">
+                Nombre
+              </label>
               <input
                 type="text"
                 className="form-control bg-dark text-light border-secondary"
@@ -80,7 +113,9 @@ const Register = ({ mostrarVideoFondo }) => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="email" className="form-label text-light">Correo electrónico</label>
+              <label htmlFor="email" className="form-label text-light">
+                Correo electrónico
+              </label>
               <input
                 type="email"
                 className="form-control bg-dark text-light border-secondary"
@@ -94,7 +129,9 @@ const Register = ({ mostrarVideoFondo }) => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="password" className="form-label text-light">Contraseña</label>
+              <label htmlFor="password" className="form-label text-light">
+                Contraseña
+              </label>
               <input
                 type="password"
                 className="form-control bg-dark text-light border-secondary"
@@ -107,7 +144,10 @@ const Register = ({ mostrarVideoFondo }) => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100 py-2 fw-bold">
+            <button
+              type="submit"
+              className="btn btn-primary w-100 py-2 fw-bold"
+            >
               Registrarse
             </button>
           </form>
