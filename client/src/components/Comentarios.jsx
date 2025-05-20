@@ -12,6 +12,7 @@ const Comentarios = ({ tmdbId, tipo }) => {
         `${import.meta.env.VITE_API_URL}/comentarios/${tipo}/${tmdbId}`
       );
       const data = await res.json();
+      console.log("Comentarios recibidos:", data);
       setComentarios(data);
     } catch (error) {
       console.error("Error al obtener comentarios:", error);
@@ -69,52 +70,90 @@ const Comentarios = ({ tmdbId, tipo }) => {
   }, [obtenerComentarios]);
 
   return (
-    <div className="mt-5">
-      <h5 className="text-light mb-3">💬 Comentarios</h5>
-
-      {comentarios.length === 0 && (
-        <p className="text-ligth">No hay comentarios todavía.</p>
-      )}
-
-      <ul className="list-unstyled">
-        {comentarios.map((comentario) => (
-          <li
-            key={comentario.id}
-            className="mb-3 p-3 rounded bg-dark border border-secondary"
-          >
-            <div className="d-flex justify-content-between align-items-center mb-1">
-              <strong className="text-primary">{comentario.nombre}</strong>
-              <small className="text-muted">
-                {new Date(comentario.creada_en).toLocaleString()}
-              </small>
-            </div>
-            <p className="text-light mb-1">{comentario.contenido}</p>
-            {token && usuario?.id === comentario.usuario_id && (
-              <button
-                className="btn btn-sm btn-outline-danger"
-                onClick={() => borrarComentario(comentario.id)}
-              >
-                Borrar
-              </button>
+    <div
+      className="modal fade"
+      id="modalComentarios"
+      tabIndex="-1"
+      aria-labelledby="comentariosLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog modal-lg modal-dialog-scrollable">
+        <div className="modal-content bg-dark text-light border-secondary">
+          <div className="modal-header border-secondary">
+            <h5 className="modal-title" id="comentariosLabel">
+              💬 Comentarios
+            </h5>
+            <button
+              type="button"
+              className="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div className="modal-body">
+            {comentarios.length === 0 ? (
+              <p>No hay comentarios todavía.</p>
+            ) : (
+              <ul className="list-unstyled">
+                {comentarios.map((comentario) => (
+                  <li
+                    key={comentario.id}
+                    className="comentario-animado mb-3 p-3 bg-dark text-light rounded-3 shadow-sm border border-secondary"
+                  >
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <div>
+                        <strong className="text-info">
+                          {comentario.nombre}
+                        </strong>
+                        <small className="text-light ms-2">
+                          {comentario.creado_en &&
+                          !isNaN(Date.parse(comentario.creado_en))
+                            ? new Date(comentario.creado_en).toLocaleString(
+                                "es-ES",
+                                {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )
+                            : "Fecha desconocida"}
+                        </small>
+                      </div>
+                      {token && usuario?.id === comentario.usuario_id && (
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => borrarComentario(comentario.id)}
+                        >
+                          🗑️
+                        </button>
+                      )}
+                    </div>
+                    <p className="mb-0">{comentario.contenido}</p>
+                  </li>
+                ))}
+              </ul>
             )}
-          </li>
-        ))}
-      </ul>
-
-      {token && (
-        <div className="mt-4">
-          <textarea
-            className="form-control bg-dark text-light"
-            rows="3"
-            placeholder="Escribe un comentario..."
-            value={nuevoComentario}
-            onChange={(e) => setNuevoComentario(e.target.value)}
-          />
-          <button className="btn btn-primary mt-2" onClick={enviarComentario}>
-            Enviar
-          </button>
+          </div>
+          <div className="modal-footer border-secondary">
+            <textarea
+              className="form-control bg-dark text-light border-secondary"
+              rows="2"
+              placeholder="Escribe un comentario..."
+              value={nuevoComentario}
+              onChange={(e) => setNuevoComentario(e.target.value)}
+            />
+            <button
+              className="btn btn-primary mt-2"
+              onClick={enviarComentario}
+              disabled={!nuevoComentario.trim()}
+            >
+              Enviar
+            </button>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

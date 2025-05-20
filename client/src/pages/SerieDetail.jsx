@@ -6,6 +6,8 @@ import ValoracionesBloque from "../components/ValoracionesBloque";
 import ModalSeguimiento from "../components/ModalSeguimiento";
 import TextoColapsado from "../components/TextoColapsado";
 import Comentarios from "../components/Comentarios";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const SerieDetail = () => {
   const { id } = useParams();
@@ -150,10 +152,18 @@ const SerieDetail = () => {
   if (!serie) return <div className="text-light">Cargando serie...</div>;
 
   return (
-    <div className="container text-light py-4">
+    <motion.div
+      className="container text-light py-4"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <div className="row g-4 align-items-start flex-column flex-md-row">
         <div className="col-md-4 text-center text-md-start">
-          <img
+          <motion.img
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 200 }}
             src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
             alt={serie?.title || serie?.name}
             className="img-fluid rounded shadow detalle-poster"
@@ -211,21 +221,25 @@ const SerieDetail = () => {
         <div className="col-md-8">
           <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
             <h2 className="text-primary fw-bold me-2">{serie.name}</h2>
-            <button
+            <motion.button
               onClick={toggleFavorito}
               className="btn border-0 p-0"
               title={esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"}
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <span
+              <motion.span
                 style={{
                   fontSize: "2rem",
                   color: esFavorito ? "yellow" : "#6c757d",
-                  transition: "color 0.3s ease",
                 }}
+                animate={{ rotate: esFavorito ? 360 : 0 }}
+                transition={{ duration: 0.4 }}
               >
                 ★
-              </span>
-            </button>
+              </motion.span>
+            </motion.button>
           </div>
 
           {token && (
@@ -481,12 +495,20 @@ const SerieDetail = () => {
               valor="No disponible en plataformas en España"
             />
           )}
-          <Comentarios tmdbId={serie.id} tipo="tv" />
+          <button
+            className="btn btn-outline-light mt-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalComentarios"
+          >
+            Ver comentarios
+          </button>
+
+          <Comentarios tmdbId={serie.id} tipo={"tv"} />
 
           <br />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

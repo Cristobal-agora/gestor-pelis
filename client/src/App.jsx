@@ -4,6 +4,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Header from "./components/Header";
@@ -20,6 +21,7 @@ import Footer from "./components/Footer"; // asegúrate de que la ruta sea corre
 import Inicio from "./pages/Inicio";
 import EditarPerfil from "./components/EditarPerfil";
 import CambiarPassword from "./components/CambiarPassword";
+import ChatbotIA from "./components/ChatbotIA";
 
 function AppContent() {
   const location = useLocation();
@@ -40,31 +42,36 @@ function AppContent() {
       {!rutaOcultaFooter && <Header />}
 
       <main className="flex-fill d-flex flex-column">
-        <Routes>
-          {/* Rutas públicas */}
-          <Route path="/" element={<Inicio />} />
-          <Route
-            path="/register"
-            element={<Register mostrarVideoFondo={true} />}
-          />
-          <Route path="/login" element={<Login mostrarVideoFondo={true} />} />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            {/* Rutas públicas */}
+            <Route path="/" element={<Inicio />} />
+            <Route
+              path="/register"
+              element={<Register mostrarVideoFondo={true} />}
+            />
+            <Route path="/login" element={<Login mostrarVideoFondo={true} />} />
 
-          {/* Rutas con sesión */}
-          <Route path="/home" element={<Home />} />
-          <Route path="/populares" element={<PopularMovies />} />
-          <Route path="/pelicula/:id" element={<MovieDetail />} />
-          <Route path="/favoritos" element={<Favoritos />} />
-          <Route path="/serie/:id" element={<SerieDetail />} />
-          <Route path="/mis-listas" element={<MisListas />} />
-          <Route path="/lista/:id" element={<ListaDetalle />} />
-          <Route path="/historial" element={<Historial />} />
-          <Route path="/perfil/editar" element={<EditarPerfil />} />
-          <Route path="/perfil/password" element={<CambiarPassword />} />
-        </Routes>
+            {/* Rutas con sesión */}
+            <Route path="/home" element={<Home />} />
+            <Route path="/populares" element={<PopularMovies />} />
+            <Route path="/pelicula/:id" element={<MovieDetail />} />
+            <Route path="/favoritos" element={<Favoritos />} />
+            <Route path="/serie/:id" element={<SerieDetail />} />
+            <Route path="/mis-listas" element={<MisListas />} />
+            <Route path="/lista/:id" element={<ListaDetalle />} />
+            <Route path="/historial" element={<Historial />} />
+            <Route path="/perfil/editar" element={<EditarPerfil />} />
+            <Route path="/perfil/password" element={<CambiarPassword />} />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       {!rutaOcultaFooter && (
-        <Footer modo={mostrarFooterSimple ? "simple" : "completo"} />
+        <>
+          <Footer modo={mostrarFooterSimple ? "simple" : "completo"} />
+          <ChatbotIA />
+        </>
       )}
     </div>
   );

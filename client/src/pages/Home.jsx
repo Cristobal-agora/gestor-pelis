@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cartelera from "../components/Cartelera";
-// <Cartelera />
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -20,6 +21,11 @@ const Home = () => {
   const [restaurando, setRestaurando] = useState(true);
   const [estadoRestaurado, setEstadoRestaurado] = useState(false);
   const totalPaginasRef = useRef(1);
+  const pageVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+  };
 
   useEffect(() => {
     if (!token) {
@@ -131,20 +137,24 @@ const Home = () => {
 
       try {
         if (!busqueda.trim()) {
-          if (generoSeleccionado) {
-            const url = `https://api.themoviedb.org/3/discover/${tipo}?api_key=${
-              import.meta.env.VITE_TMDB_API_KEY
-            }&with_genres=${generoSeleccionado}&language=es-ES&page=${pageParam}&sort_by=${orden}`;
+          const url = `https://api.themoviedb.org/3/discover/${tipo}?api_key=${
+            import.meta.env.VITE_TMDB_API_KEY
+          }&language=es-ES&page=${pageParam}&sort_by=${orden}${
+            generoSeleccionado ? `&with_genres=${generoSeleccionado}` : ""
+          }`;
 
+          try {
             const res = await fetch(url);
             const data = await res.json();
             setPeliculas(Array.isArray(data.results) ? data.results : []);
-
             setTotalPaginas(data.total_pages || 1);
-            totalPaginasRef.current = data.total_pages || 1; // ← AÑADE ESTO AQUÍ TAMBIÉN
-          } else {
-            fetchPopulares(pageParam);
+            totalPaginasRef.current = data.total_pages || 1;
+          } catch (error) {
+            console.error("Error en discover sin texto:", error);
+            setPeliculas([]);
+            setTotalPaginas(1);
           }
+
           return;
         }
 
@@ -165,32 +175,22 @@ const Home = () => {
           setTotalPaginas(data.total_pages || 1);
           totalPaginasRef.current = data.total_pages || 1; // ← AÑADE ESTO AQUÍ TAMBIÉN
         }
-
-        // ... igual para actor y director usando pageParam ...
       } catch (error) {
         console.error("Error en la búsqueda:", error);
         setPeliculas([]);
         setTotalPaginas(1);
       }
     },
-    [
-      tipo,
-      pagina,
-      busqueda,
-      generoSeleccionado,
-      modoBusqueda,
-      orden,
-      fetchPopulares,
-    ]
+    [tipo, pagina, busqueda, generoSeleccionado, modoBusqueda, orden]
   );
 
   useEffect(() => {
     if (restaurando) return;
 
     if (buscando) {
-      buscarPeliculas(pagina); // ✅ le pasas la página actual
+      buscarPeliculas(pagina);
     } else {
-      fetchPopulares(pagina); // ✅ lo mismo aquí
+      fetchPopulares(pagina);
     }
   }, [pagina, buscando, buscarPeliculas, fetchPopulares, restaurando]);
 
@@ -263,7 +263,14 @@ const Home = () => {
   }
 
   return (
-    <div className="container mt-4 text-light">
+    <motion.div
+      className="container mt-4 text-light"
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+    >
       {mostrarCartelera && (
         <div className="mb-5">
           <Cartelera />
@@ -378,8 +385,11 @@ const Home = () => {
           {peliculas.length > 0 && (
             <div className="d-flex justify-content-center my-4 flex-wrap gap-2">
               {/* Primera página */}
-              <button
-                className="btn btn-outline-primary btn-sm"
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="boton-paginacion"
                 disabled={!Number.isInteger(totalPaginas) || pagina === 1}
                 onClick={() => {
                   if (pagina !== 1) setPagina(1);
@@ -391,17 +401,20 @@ const Home = () => {
                 title="Primera página"
               >
                 ⏮
-              </button>
+              </motion.button>
 
               {/* Anterior */}
-              <button
-                className="btn btn-outline-primary btn-sm"
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="boton-paginacion"
                 disabled={!Number.isInteger(totalPaginas) || pagina === 1}
                 onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
                 ◀
-              </button>
+              </motion.button>
 
               {/* Números de página */}
               {[
@@ -411,22 +424,26 @@ const Home = () => {
                   )
                 ),
               ].map((page) => (
-                <button
+                <motion.button
                   key={page}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                   onClick={() => setPagina(page)}
-                  className={`btn btn-sm ${
-                    page === pagina
-                      ? "btn-primary text-white fw-bold"
-                      : "btn-light border"
+                  className={`boton-paginacion ${
+                    page === pagina ? "bg-primary text-white fw-bold" : ""
                   }`}
                 >
                   {page}
-                </button>
+                </motion.button>
               ))}
 
               {/* Siguiente */}
-              <button
-                className="btn btn-outline-primary btn-sm"
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="boton-paginacion"
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
                 }
@@ -434,11 +451,14 @@ const Home = () => {
                 title="Siguiente"
               >
                 ▶
-              </button>
+              </motion.button>
 
               {/* Última página */}
-              <button
-                className="btn btn-outline-primary btn-sm"
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="boton-paginacion"
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
                 }
@@ -451,18 +471,24 @@ const Home = () => {
                 title="Última página"
               >
                 ⏭
-              </button>
+              </motion.button>
             </div>
           )}
 
           {Array.isArray(peliculas) &&
-            peliculas.map((peli) => (
-              <div
+            peliculas.map((peli, index) => (
+              <motion.div
                 key={peli.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
                 className="col-6 col-sm-4 col-md-3 col-lg-5th mb-4"
               >
-                <div
-                  className="card bg-dark text-white border-0 shadow-sm h-100 hover-scale"
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 250 }}
+                  className="card bg-dark text-white border-0 shadow-sm h-100"
                   onClick={(e) => {
                     const img = e.currentTarget.querySelector(".poster-img");
                     img.classList.add("flipping");
@@ -485,15 +511,15 @@ const Home = () => {
                       {peli.title || peli.name}
                     </h6>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             ))}
 
           {peliculas.length > 0 && (
             <div className="d-flex justify-content-center my-4 flex-wrap gap-2">
               {/* Primera página */}
               <button
-                className="btn btn-outline-primary btn-sm"
+                className="boton-paginacion"
                 disabled={!Number.isInteger(totalPaginas) || pagina === 1}
                 onClick={() => {
                   if (pagina !== 1) setPagina(1);
@@ -509,7 +535,7 @@ const Home = () => {
 
               {/* Anterior */}
               <button
-                className="btn btn-outline-primary btn-sm"
+                className="boton-paginacion"
                 disabled={!Number.isInteger(totalPaginas) || pagina === 1}
                 onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
@@ -540,7 +566,7 @@ const Home = () => {
 
               {/* Siguiente */}
               <button
-                className="btn btn-outline-primary btn-sm"
+                className="boton-paginacion"
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
                 }
@@ -552,7 +578,7 @@ const Home = () => {
 
               {/* Última página */}
               <button
-                className="btn btn-outline-primary btn-sm"
+                className="boton-paginacion"
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
                 }
@@ -570,7 +596,7 @@ const Home = () => {
           )}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

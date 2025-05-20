@@ -4,7 +4,9 @@ import DetalleItem from "../components/DetalleItem";
 import ValoracionUsuario from "../components/ValoracionUsuario";
 import ValoracionesBloque from "../components/ValoracionesBloque";
 import TextoColapsado from "../components/TextoColapsado";
-import Comentarios from "../components/Comentarios"; // ajusta la ruta si es necesario
+import Comentarios from "../components/Comentarios";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -175,10 +177,16 @@ const MovieDetail = () => {
   if (!pelicula) return <div className="text-light">Cargando...</div>;
 
   return (
-    <div className="container text-light py-4">
+    <motion.div
+      className="container text-light py-4"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+    >
       <div className="row g-4 align-items-start flex-column flex-md-row">
         <div className="col-md-4 text-center text-md-start">
-          <img
+          <motion.img
             src={`https://image.tmdb.org/t/p/w500${pelicula.poster_path}`}
             alt={pelicula?.title || pelicula?.name}
             className="img-fluid rounded shadow detalle-poster"
@@ -188,7 +196,13 @@ const MovieDetail = () => {
               height: "auto",
               objectFit: "cover",
             }}
+            whileHover={{
+              scale: 1.03,
+              boxShadow: "0px 8px 20px rgba(255, 255, 255, 0.2)",
+            }}
+            transition={{ type: "spring", stiffness: 200 }}
           />
+
           {token && (
             <ValoracionUsuario
               tmdb_id={pelicula.id}
@@ -203,30 +217,53 @@ const MovieDetail = () => {
         <div className="col-md-8">
           <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
             <h2 className="text-primary fw-bold me-2">{pelicula.title}</h2>
-            <button
+            <motion.button
               onClick={toggleFavorito}
               className="btn border-0 p-0"
               title={esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"}
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <span
+              <motion.span
                 style={{
                   fontSize: "2rem",
                   color: esFavorito ? "yellow" : "#6c757d",
-                  transition: "color 0.3s ease",
                 }}
+                animate={{ rotate: esFavorito ? 360 : 0 }}
+                transition={{ duration: 0.4 }}
               >
                 ★
-              </span>
-            </button>
+              </motion.span>
+            </motion.button>
 
             {token && (
-              <button
+              <motion.button
                 onClick={toggleVista}
-                className="btn btn-outline-success btn-sm mt-2"
+                className={`btn btn-sm mt-2 d-flex align-items-center gap-2 ${
+                  vista ? "btn-success" : "btn-outline-danger"
+                }`}
                 title={vista ? "Marcar como no vista" : "Marcar como vista"}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
-                {vista ? "👁 Vista" : "👁 Marcar como vista"}
-              </button>
+                <motion.span
+                  initial={false}
+                  animate={{ rotate: vista ? 360 : 0 }}
+                  transition={{ duration: 0.4 }}
+                  style={{
+                    display: "inline-block",
+                    fontSize: "1.2rem",
+                    filter: vista
+                      ? "drop-shadow(0 0 4px limegreen)"
+                      : "drop-shadow(0 0 3px crimson)",
+                  }}
+                >
+                  👁
+                </motion.span>
+                {vista ? "Vista" : "No vista"}
+              </motion.button>
             )}
           </div>
 
@@ -317,59 +354,67 @@ const MovieDetail = () => {
                     />
                     <button
                       className="btn btn-success btn-sm"
-                     onClick={async () => {
-  if (!nuevaLista.trim()) {
-    return alert("Escribe un nombre válido");
-  }
+                      onClick={async () => {
+                        if (!nuevaLista.trim()) {
+                          return alert("Escribe un nombre válido");
+                        }
 
-  try {
-    // 1. Crear la lista
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/listas`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ nombre: nuevaLista }),
-    });
+                        try {
+                          // 1. Crear la lista
+                          const res = await fetch(
+                            `${import.meta.env.VITE_API_URL}/listas`,
+                            {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                              },
+                              body: JSON.stringify({ nombre: nuevaLista }),
+                            }
+                          );
 
-    const data = await res.json();
+                          const data = await res.json();
 
-    if (res.ok && data?.id != null) {
-      // 2. Añadir la película a la nueva lista
-      const resContenido = await fetch(
-        `${import.meta.env.VITE_API_URL}/listas/${data.id}/contenido`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            pelicula_id: pelicula.id,
-            tipo: "movie",
-          }),
-        }
-      );
+                          if (res.ok && data?.id != null) {
+                            // 2. Añadir la película a la nueva lista
+                            const resContenido = await fetch(
+                              `${import.meta.env.VITE_API_URL}/listas/${
+                                data.id
+                              }/contenido`,
+                              {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify({
+                                  pelicula_id: pelicula.id,
+                                  tipo: "movie",
+                                }),
+                              }
+                            );
 
-      if (resContenido.ok) {
-        alert("✅ Lista creada y película añadida correctamente");
-        setListas((prev) => [...prev, data]);
-        setListaSeleccionada("");
-        setModoCrearLista(false);
-        setNuevaLista("");
-      } else {
-        alert("⚠️ Lista creada, pero no se pudo añadir la película.");
-      }
-    } else {
-      alert(data.mensaje || "No se pudo crear la lista");
-    }
-  } catch (err) {
-    console.error("❌ Error:", err);
-    alert("Error de conexión");
-  }
-}}
-
+                            if (resContenido.ok) {
+                              alert(
+                                "✅ Lista creada y película añadida correctamente"
+                              );
+                              setListas((prev) => [...prev, data]);
+                              setListaSeleccionada("");
+                              setModoCrearLista(false);
+                              setNuevaLista("");
+                            } else {
+                              alert(
+                                "⚠️ Lista creada, pero no se pudo añadir la película."
+                              );
+                            }
+                          } else {
+                            alert(data.mensaje || "No se pudo crear la lista");
+                          }
+                        } catch (err) {
+                          console.error("❌ Error:", err);
+                          alert("Error de conexión");
+                        }
+                      }}
                     >
                       Crear
                     </button>
@@ -469,10 +514,18 @@ const MovieDetail = () => {
               valor="No disponible en plataformas en España"
             />
           )}
-          <Comentarios tmdbId={pelicula.id} tipo="movie" />
+          <button
+            className="btn btn-outline-light mt-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalComentarios"
+          >
+            Ver comentarios
+          </button>
+
+          <Comentarios tmdbId={pelicula.id} tipo={"movie"} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

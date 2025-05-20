@@ -296,3 +296,39 @@ select:focus {
 .poster-img.flipping {
   transform: rotateY(180deg);
 }
+
+.comentario-animado {
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.boton-paginacion {
+  border: 1px solid #2196f3;
+  background-color: transparent;
+  color: #ffffff;
+  font-weight: 500;
+  border-radius: 50px;
+  padding: 6px 14px;
+  min-width: 40px;
+  transition: all 0.2s ease;
+}
+
+.boton-paginacion:hover:not(:disabled) {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+.boton-paginacion:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
