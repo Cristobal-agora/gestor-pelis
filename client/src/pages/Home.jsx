@@ -251,6 +251,20 @@ const Home = () => {
     estadoRestaurado,
   ]);
 
+  useEffect(() => {
+    if (!estadoRestaurado || !buscando) return;
+
+    buscarPeliculas(1);
+  }, [
+    generoSeleccionado,
+    orden,
+    tipo,
+    modoBusqueda,
+    buscarPeliculas,
+    buscando,
+    estadoRestaurado,
+  ]);
+
   const mostrarCartelera =
     !buscando &&
     tipo === "movie" &&
@@ -331,6 +345,7 @@ const Home = () => {
           onChange={(e) => {
             setGeneroSeleccionado(e.target.value);
             setPagina(1);
+            setBuscando(true); // ✅ fuerza la búsqueda al instante
           }}
         >
           <option value="">Todos los géneros</option>
@@ -354,21 +369,24 @@ const Home = () => {
           <option value="director">Por director/a</option>
         </select>
 
-        <select
-          className="form-select w-auto"
-          value={orden}
-          onChange={(e) => {
-            setOrden(e.target.value);
-            setPagina(1);
-          }}
-        >
-          <option value="popularity.desc">Más populares</option>
-          <option value="popularity.asc">Menos populares</option>
-          <option value="release_date.desc">Más recientes</option>
-          <option value="release_date.asc">Más antiguas</option>
-          <option value="vote_average.desc">Mejor valoradas</option>
-          <option value="vote_average.asc">Peor valoradas</option>
-        </select>
+        {busqueda.trim() === "" && (
+          <select
+            className="form-select w-auto"
+            value={orden}
+            onChange={(e) => {
+              setOrden(e.target.value);
+              setPagina(1);
+              setBuscando(true);
+            }}
+          >
+            <option value="popularity.desc">Más populares</option>
+            <option value="popularity.asc">Menos populares</option>
+            <option value="release_date.desc">Más recientes</option>
+            <option value="release_date.asc">Más antiguas</option>
+            <option value="vote_average.desc">Mejor valoradas</option>
+            <option value="vote_average.asc">Peor valoradas</option>
+          </select>
+        )}
 
         <button
           className="btn btn-light border btn-sm shadow-sm"
