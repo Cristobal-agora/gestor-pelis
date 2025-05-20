@@ -22,7 +22,7 @@ async function obtenerUsuarioPorEmail(email) {
 
 function generarToken(usuario) {
   return jwt.sign({ id: usuario.id, nombre: usuario.nombre }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: '24h',
   });
 }
 

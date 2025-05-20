@@ -25,6 +25,11 @@ import ChatbotIA from "./components/ChatbotIA";
 
 function AppContent() {
   const location = useLocation();
+  const token = sessionStorage.getItem("token");
+
+  const mostrarChatbot =
+    token && !["/login", "/register", "/"].includes(location.pathname);
+
   const rutasSinFooter = ["/login", "/register"];
   const rutaOcultaFooter = rutasSinFooter.includes(location.pathname);
   const mostrarFooterSimple = location.pathname === "/";
@@ -70,7 +75,7 @@ function AppContent() {
       {!rutaOcultaFooter && (
         <>
           <Footer modo={mostrarFooterSimple ? "simple" : "completo"} />
-          <ChatbotIA />
+          {mostrarChatbot && <ChatbotIA />}
         </>
       )}
     </div>
