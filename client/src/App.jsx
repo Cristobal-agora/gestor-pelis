@@ -24,6 +24,9 @@ import CambiarPassword from "./components/CambiarPassword";
 import ChatbotIA from "./components/ChatbotIA";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import RutaPrivada from "./components/RutaPrivada";
+import RecuperarPassword from "./pages/RecuperarPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function AppContent() {
   const location = useLocation();
@@ -60,16 +63,89 @@ function AppContent() {
             <Route path="/login" element={<Login mostrarVideoFondo={true} />} />
 
             {/* Rutas con sesión */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/populares" element={<PopularMovies />} />
-            <Route path="/pelicula/:id" element={<MovieDetail />} />
-            <Route path="/favoritos" element={<Favoritos />} />
-            <Route path="/serie/:id" element={<SerieDetail />} />
-            <Route path="/mis-listas" element={<MisListas />} />
-            <Route path="/lista/:id" element={<ListaDetalle />} />
-            <Route path="/historial" element={<Historial />} />
-            <Route path="/perfil/editar" element={<EditarPerfil />} />
-            <Route path="/perfil/password" element={<CambiarPassword />} />
+            <Route
+              path="/home"
+              element={
+                <RutaPrivada>
+                  <Home />
+                </RutaPrivada>
+              }
+            />
+
+            <Route
+              path="/populares"
+              element={
+                <RutaPrivada>
+                  <PopularMovies />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/pelicula/:id"
+              element={
+                <RutaPrivada>
+                  <MovieDetail />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/favoritos"
+              element={
+                <RutaPrivada>
+                  <Favoritos />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/serie/:id"
+              element={
+                <RutaPrivada>
+                  <SerieDetail />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/mis-listas"
+              element={
+                <RutaPrivada>
+                  <MisListas />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/lista/:id"
+              element={
+                <RutaPrivada>
+                  <ListaDetalle />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/historial"
+              element={
+                <RutaPrivada>
+                  <Historial />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/perfil/editar"
+              element={
+                <RutaPrivada>
+                  <EditarPerfil />
+                </RutaPrivada>
+              }
+            />
+            <Route
+              path="/perfil/password"
+              element={
+                <RutaPrivada>
+                  <CambiarPassword />
+                </RutaPrivada>
+              }
+            />
+            <Route path="/recuperar-password" element={<RecuperarPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Routes>
         </AnimatePresence>
       </main>

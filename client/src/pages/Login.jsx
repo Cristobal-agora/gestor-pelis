@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import "./AuthBackground.css";
 
 const Login = ({ mostrarVideoFondo }) => {
@@ -16,7 +16,11 @@ const Login = ({ mostrarVideoFondo }) => {
   const [mensaje, setMensaje] = useState(
     registrado ? "¡Registro exitoso! Inicia sesión para continuar." : ""
   );
-
+  useEffect(() => {
+    // Si vienes a /login, borra el token actual (simula cerrar sesión)
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("usuario");
+  }, []);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -137,6 +141,25 @@ const Login = ({ mostrarVideoFondo }) => {
             >
               Entrar
             </button>
+            <div className="mt-3 d-flex justify-content-between">
+             <button
+  type="button" // ⬅️ Esto es obligatorio si está dentro del form
+  onClick={() => navigate("/recuperar-password")}
+  className="btn btn-link p-0 text-light"
+>
+  ¿Has olvidado tu contraseña?
+</button>
+
+
+              <button
+                type="button"
+                className="btn btn-link p-0 text-primary fw-bold"
+                style={{ textDecoration: "none" }}
+                onClick={() => navigate("/register")}
+              >
+                ¿No tienes cuenta? Regístrate
+              </button>
+            </div>
           </form>
         </div>
       </div>

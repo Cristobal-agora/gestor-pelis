@@ -85,9 +85,37 @@ const validateChangePassword = [
     .withMessage("La nueva contraseña debe ser distinta de la actual"),
 ];
 
+const validateEmailOnly = [
+  body("email")
+    .notEmpty()
+    .withMessage("El correo es obligatorio")
+    .isEmail()
+    .withMessage("Debe ser un correo válido"),
+];
+
+const validateNuevaPassword = [
+  body("nuevaPassword")
+    .notEmpty()
+    .withMessage("La nueva contraseña es obligatoria")
+    .isLength({ min: 6 })
+    .withMessage("Debe tener al menos 6 caracteres")
+    .matches(/[A-Za-z]/)
+    .withMessage("Debe contener al menos una letra")
+    .matches(/\d/)
+    .withMessage("Debe contener al menos un número")
+    .custom((value) => !/\s/.test(value))
+    .withMessage("No puede contener espacios"),
+
+  body("token")
+    .notEmpty()
+    .withMessage("El token de recuperación es obligatorio"),
+];
+
 module.exports = {
   validateRegister,
   validateLogin,
   validateUpdateProfile,
   validateChangePassword,
+  validateEmailOnly,
+  validateNuevaPassword,
 };

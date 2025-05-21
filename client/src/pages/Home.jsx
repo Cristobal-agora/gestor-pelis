@@ -124,64 +124,98 @@ const Home = () => {
   );
 
   const buscarPeliculas = useCallback(
-    async (paginaArgumento) => {
+    async ({
+      pagina: paginaArgumento = 1,
+      tipoOverride,
+      textoOverride,
+      generoOverride,
+      ordenOverride,
+    } = {}) => {
+      const texto =
+        textoOverride !== undefined ? textoOverride.trim() : busqueda.trim();
+      const tipoReal = tipoOverride ?? tipo;
+      const generoReal = generoOverride ?? generoSeleccionado;
+      const ordenReal = ordenOverride ?? orden;
       const pageParam =
         Number.isInteger(paginaArgumento) && paginaArgumento > 0
           ? paginaArgumento
-          : pagina;
-
-      if (!Number.isInteger(pageParam) || pageParam < 1) {
-        console.warn("Petición inválida en búsqueda:", { pageParam });
-        return;
-      }
+          : 1;
 
       try {
-        if (!busqueda.trim()) {
-          const url = `https://api.themoviedb.org/3/discover/${tipo}?api_key=${
+        let url;
+        let data;
+
+        if (!texto) {
+          // ✅ discover: filtros nativos
+          url = `https://api.themoviedb.org/3/discover/${tipoReal}?api_key=${
             import.meta.env.VITE_TMDB_API_KEY
-          }&language=es-ES&page=${pageParam}&sort_by=${orden}${
-            generoSeleccionado ? `&with_genres=${generoSeleccionado}` : ""
+          }&language=es-ES&page=${pageParam}&sort_by=${ordenReal}${
+            generoReal ? `&with_genres=${generoReal}` : ""
           }`;
 
-          try {
-            const res = await fetch(url);
-            const data = await res.json();
-            setPeliculas(Array.isArray(data.results) ? data.results : []);
-            setTotalPaginas(Math.min(data.total_pages || 1, 500));
-            totalPaginasRef.current = Math.min(data.total_pages || 1, 500);
-          } catch (error) {
-            console.error("Error en discover sin texto:", error);
-            setPeliculas([]);
-            setTotalPaginas(1);
-          }
-
-          return;
-        }
-
-        if (modoBusqueda === "titulo") {
-          let url = `https://api.themoviedb.org/3/search/${tipo}?api_key=${
+          const res = await fetch(url);
+          data = await res.json();
+        } else {
+          // 🔎 search: sin filtros nativos → aplicamos en frontend
+          url = `https://api.themoviedb.org/3/search/${tipoReal}?api_key=${
             import.meta.env.VITE_TMDB_API_KEY
           }&query=${encodeURIComponent(
-            busqueda
+            texto
           )}&language=es-ES&page=${pageParam}`;
 
-          if (generoSeleccionado) {
-            url += `&with_genres=${generoSeleccionado}`;
+          const res = await fetch(url);
+          data = await res.json();
+
+          let resultados = Array.isArray(data.results) ? data.results : [];
+
+          // 🎯 Filtrado por género (solo si se seleccionó uno)
+          if (generoReal) {
+            resultados = resultados.filter(
+              (item) =>
+                Array.isArray(item.genre_ids) &&
+                item.genre_ids.includes(Number(generoReal))
+            );
           }
 
-          const res = await fetch(url);
-          const data = await res.json();
-          setPeliculas(Array.isArray(data.results) ? data.results : []);
-          setTotalPaginas(data.total_pages || 1);
-          totalPaginasRef.current = data.total_pages || 1; // ← AÑADE ESTO AQUÍ TAMBIÉN
+          // 🔃 Orden manual
+          resultados.sort((a, b) => {
+            const campo = ordenReal.split(".")[0]; // e.g., 'popularity' o 'release_date'
+            const ordenDesc = ordenReal.endsWith(".desc");
+
+            let valA = a[campo];
+            let valB = b[campo];
+
+            // fallback para fechas
+            if (campo === "release_date") {
+              valA = new Date(
+                a.release_date || a.first_air_date || "1900-01-01"
+              );
+              valB = new Date(
+                b.release_date || b.first_air_date || "1900-01-01"
+              );
+            }
+
+            if (valA < valB) return ordenDesc ? 1 : -1;
+            if (valA > valB) return ordenDesc ? -1 : 1;
+            return 0;
+          });
+
+          // Sustituimos results por lo filtrado y ordenado manualmente
+          data.results = resultados;
+          data.total_pages = 1; // si quieres evitar paginación en modo search con filtros
         }
+
+        setPeliculas(Array.isArray(data.results) ? data.results : []);
+        const total = Math.min(data.total_pages || 1, 500);
+        setTotalPaginas(total);
+        totalPaginasRef.current = total;
       } catch (error) {
-        console.error("Error en la búsqueda:", error);
+        console.error("Error al buscar:", error);
         setPeliculas([]);
         setTotalPaginas(1);
       }
     },
-    [tipo, pagina, busqueda, generoSeleccionado, modoBusqueda, orden]
+    [busqueda, tipo, generoSeleccionado, orden]
   );
 
   useEffect(() => {
@@ -253,17 +287,8 @@ const Home = () => {
 
   useEffect(() => {
     if (!estadoRestaurado || !buscando) return;
-
-    buscarPeliculas(1);
-  }, [
-    generoSeleccionado,
-    orden,
-    tipo,
-    modoBusqueda,
-    buscarPeliculas,
-    buscando,
-    estadoRestaurado,
-  ]);
+    buscarPeliculas(pagina);
+  }, [buscando, pagina, estadoRestaurado, buscarPeliculas]);
 
   const mostrarCartelera =
     !buscando &&
@@ -318,8 +343,9 @@ const Home = () => {
         <button
           className="btn btn-primary"
           onClick={() => {
-            setPagina(1); // reinicia a página 1
-            setBuscando(true); // activa modo búsqueda
+            setPagina(1);
+            setBuscando(true);
+            buscarPeliculas(1); // ✅ ejecuta de inmediato
           }}
         >
           Buscar
@@ -331,8 +357,14 @@ const Home = () => {
           className="form-select w-auto"
           value={tipo}
           onChange={(e) => {
-            setTipo(e.target.value);
+            const nuevoTipo = e.target.value;
+            setTipo(nuevoTipo);
             setPagina(1);
+            setBuscando(true);
+            buscarPeliculas({
+              pagina: 1,
+              tipoOverride: nuevoTipo,
+            });
           }}
         >
           <option value="movie">Películas</option>
@@ -343,9 +375,14 @@ const Home = () => {
           className="form-select w-auto"
           value={generoSeleccionado}
           onChange={(e) => {
-            setGeneroSeleccionado(e.target.value);
+            const nuevoGenero = e.target.value;
+            setGeneroSeleccionado(nuevoGenero);
             setPagina(1);
-            setBuscando(true); // ✅ fuerza la búsqueda al instante
+            setBuscando(true);
+            buscarPeliculas({
+              pagina: 1,
+              generoOverride: nuevoGenero,
+            });
           }}
         >
           <option value="">Todos los géneros</option>
@@ -368,25 +405,27 @@ const Home = () => {
           <option value="actor">Por actor/actriz</option>
           <option value="director">Por director/a</option>
         </select>
-
-        {busqueda.trim() === "" && (
-          <select
-            className="form-select w-auto"
-            value={orden}
-            onChange={(e) => {
-              setOrden(e.target.value);
-              setPagina(1);
-              setBuscando(true);
-            }}
-          >
-            <option value="popularity.desc">Más populares</option>
-            <option value="popularity.asc">Menos populares</option>
-            <option value="release_date.desc">Más recientes</option>
-            <option value="release_date.asc">Más antiguas</option>
-            <option value="vote_average.desc">Mejor valoradas</option>
-            <option value="vote_average.asc">Peor valoradas</option>
-          </select>
-        )}
+        <select
+          className="form-select w-auto"
+          value={orden}
+          onChange={(e) => {
+            const nuevoOrden = e.target.value;
+            setOrden(nuevoOrden);
+            setPagina(1);
+            setBuscando(true);
+            buscarPeliculas({
+              pagina: 1,
+              ordenOverride: nuevoOrden,
+            });
+          }}
+        >
+          <option value="popularity.desc">Más populares</option>
+          <option value="popularity.asc">Menos populares</option>
+          <option value="release_date.desc">Más recientes</option>
+          <option value="release_date.asc">Más antiguas</option>
+          <option value="vote_average.desc">Mejor valoradas</option>
+          <option value="vote_average.asc">Peor valoradas</option>
+        </select>
 
         <button
           className="btn btn-light border btn-sm shadow-sm"
@@ -396,8 +435,19 @@ const Home = () => {
         </button>
       </div>
 
-      {!peliculas || peliculas.length === 0 ? (
-        <p className="text-light">Cargando contenido popular...</p>
+      {peliculas.length === 0 ? (
+        <div className="text-warning mt-3">
+          <p>No se encontraron resultados con los criterios seleccionados.</p>
+          <button
+            className="btn btn-light btn-sm mt-2"
+            onClick={() => {
+              reiniciarFiltros();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            Reiniciar búsqueda
+          </button>
+        </div>
       ) : (
         <div className="row">
           {peliculas.length > 0 && (
