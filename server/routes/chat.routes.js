@@ -1,4 +1,3 @@
-// routes/chat.js
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
@@ -6,12 +5,23 @@ const axios = require("axios");
 router.post("/", async (req, res) => {
   const { pregunta } = req.body;
 
+  // Cabeceras con clave desde .env
+  const headers = {
+    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    "Content-Type": "application/json",
+  };
+
+  // Log de depuración (solo para desarrollo)
+  if (process.env.NODE_ENV !== "production") {
+    console.log("🔑 OPENROUTER_API_KEY:", process.env.OPENROUTER_API_KEY);
+  }
+
   try {
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         model: "openai/gpt-4o",
-        max_tokens: 400, 
+        max_tokens: 400,
         messages: [
           {
             role: "system",
@@ -24,13 +34,7 @@ router.post("/", async (req, res) => {
           },
         ],
       },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer": "https://cinestash.com", // o http://localhost si estás en local
-        },
-      }
+      { headers }
     );
 
     res.json({ respuesta: response.data.choices[0].message.content });

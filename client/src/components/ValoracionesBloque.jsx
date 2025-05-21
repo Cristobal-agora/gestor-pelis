@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./ValoracionesBloque.css"; // Estilos opcionales
+import {
+  BsStarFill,
+  BsPeopleFill,
+  BsPersonFill,
+} from "react-icons/bs";
+import "./ValoracionesBloque.css"; // opcional
 
 const ValoracionesBloque = ({ tmdb_id, tipo, tmdb_score, trigger }) => {
   const [mediaUsuarios, setMediaUsuarios] = useState(null);
@@ -13,9 +18,7 @@ const ValoracionesBloque = ({ tmdb_id, tipo, tmdb_score, trigger }) => {
 
       try {
         const res = await axios.get(
-          `${
-            import.meta.env.VITE_API_URL
-          }/valoraciones/resumen/${tipo}/${tmdb_id}`,
+          `${import.meta.env.VITE_API_URL}/valoraciones/resumen/${tipo}/${tmdb_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -35,14 +38,17 @@ const ValoracionesBloque = ({ tmdb_id, tipo, tmdb_score, trigger }) => {
 
   return (
     <div className="valoraciones-bloque d-flex gap-4 align-items-center flex-wrap">
-      <div>
-        <strong>⭐ TMDb:</strong> {tmdb_score?.toFixed(1) ?? "N/A"}
+      <div className="d-flex align-items-center gap-1">
+        <BsStarFill className="text-warning" />
+        <strong>TMDb:</strong> {tmdb_score ? (tmdb_score / 2).toFixed(1) : "N/A"} / 5
       </div>
-      <div>
-        <strong>👥 Usuarios:</strong> {mediaUsuarios ?? "Sin datos"}
+      <div className="d-flex align-items-center gap-1">
+        <BsPeopleFill className="text-info" />
+        <strong>Usuarios:</strong> {mediaUsuarios ?? "Sin datos"} / 5
       </div>
-      <div>
-        <strong>🧍 Tú:</strong> {miValoracion ?? "Sin valorar"}
+      <div className="d-flex align-items-center gap-1">
+        <BsPersonFill className="text-primary" />
+        <strong>Tú:</strong> {miValoracion ?? "Sin valorar"} / 5
       </div>
     </div>
   );

@@ -8,6 +8,21 @@ import TextoColapsado from "../components/TextoColapsado";
 import Comentarios from "../components/Comentarios";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import {
+  BsStarFill,
+  BsStar,
+  BsListUl,
+  BsFolderPlus,
+  BsPlusLg,
+  BsCalendar,
+  BsCardText,
+  BsTv,
+  BsController,
+  BsClock,
+  BsBroadcast,
+  BsChatDots,
+  BsCheckLg,
+} from "react-icons/bs";
 
 const SerieDetail = () => {
   const { id } = useParams();
@@ -189,7 +204,11 @@ const SerieDetail = () => {
                   className="btn btn-outline-info w-100 d-flex justify-content-between align-items-center"
                   onClick={() => setMostrarSeguimiento(true)}
                 >
-                  <span>📺 Mostrar seguimiento</span>
+                  <span>
+                    <BsTv className="me-1" />
+                    Mostrar seguimiento
+                  </span>
+
                   {progreso && <span className="fw-semibold">{progreso}</span>}
                 </button>
                 {progreso && (
@@ -230,21 +249,25 @@ const SerieDetail = () => {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <motion.span
+                animate={{ rotate: esFavorito ? 360 : 0 }}
+                transition={{ duration: 0.4 }}
                 style={{
                   fontSize: "2rem",
                   color: esFavorito ? "yellow" : "#6c757d",
                 }}
-                animate={{ rotate: esFavorito ? 360 : 0 }}
-                transition={{ duration: 0.4 }}
               >
-                ★
+                {esFavorito ? <BsStarFill /> : <BsStar />}
               </motion.span>
             </motion.button>
           </div>
 
           {token && (
             <div className="mb-4">
-              <label className="form-label">📂 Añadir a lista:</label>
+              <label className="form-label">
+                <BsListUl className="me-1" />
+                Añadir a lista:
+              </label>
+
               <div className="d-flex gap-2 flex-wrap align-items-center">
                 {!modoCrearLista ? (
                   <>
@@ -266,17 +289,18 @@ const SerieDetail = () => {
                     </select>
 
                     <button
-                      className="btn btn-outline-secondary btn-sm"
+                      className="btn btn-outline-secondary btn-sm btn-igual me-2"
                       onClick={() => {
                         setModoCrearLista(true);
                         setListaSeleccionada("");
                       }}
                     >
-                      ➕ Nueva lista
+                      <BsFolderPlus className="me-1" />
+                      Nueva lista
                     </button>
 
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary btn-sm btn-igual"
                       disabled={!listaSeleccionada}
                       onClick={async () => {
                         const payload = {
@@ -309,7 +333,8 @@ const SerieDetail = () => {
                         }
                       }}
                     >
-                      ➕ Añadir
+                      <BsPlusLg className="me-1" />
+                      Añadir
                     </button>
                   </>
                 ) : (
@@ -405,7 +430,11 @@ const SerieDetail = () => {
               {listasIncluye.length > 0 && (
                 <div className="mt-2 text-light small">
                   <span className="me-1">✅ </span>
-                  <span className="fw-semibold">Ya en:</span>{" "}
+                  <span className="me-1 text-success">
+                    <BsCheckLg />
+                  </span>
+                  <span className="fw-semibold">Ya en:</span>
+
                   {listasIncluye.map((l, i) => (
                     <span key={l.id}>
                       <strong>{l.nombre}</strong>
@@ -426,42 +455,36 @@ const SerieDetail = () => {
 
           <br />
           <DetalleItem
-            icono="📅"
+            icono={<BsCalendar />}
             etiqueta="Primera emisión:"
             valor={serie.first_air_date}
           />
           <DetalleItem
-            icono="📝"
+            icono={<BsCardText />}
             etiqueta="Resumen:"
             valor={
               <TextoColapsado texto={serie.overview || "No disponible."} />
             }
           />
-
           <DetalleItem
-            icono="📺"
+            icono={<BsTv />}
             etiqueta="Temporadas:"
             valor={serie.number_of_seasons}
           />
           <DetalleItem
-            icono="🎮"
+            icono={<BsController />}
             etiqueta="Episodios:"
             valor={serie.number_of_episodes}
           />
           <DetalleItem
-            icono="🎭"
-            etiqueta="Género:"
-            valor={serie.genres.map((g) => g.name).join(", ")}
-          />
-          <DetalleItem
-            icono="⏱️"
+            icono={<BsClock />}
             etiqueta="Duración por episodio:"
             valor={`${serie.episode_run_time?.[0] || "—"} min`}
           />
 
           {plataformas.items.length > 0 ? (
             <DetalleItem
-              icono="📡"
+              icono={<BsBroadcast />}
               etiqueta="Disponible en:"
               valor={
                 <a
@@ -490,16 +513,18 @@ const SerieDetail = () => {
             />
           ) : (
             <DetalleItem
-              icono="📡"
+              icono={<BsBroadcast />}
               etiqueta="Disponible en:"
               valor="No disponible en plataformas en España"
             />
           )}
+
           <button
             className="btn btn-outline-light mt-3"
             data-bs-toggle="modal"
             data-bs-target="#modalComentarios"
           >
+            <BsChatDots className="me-1" />
             Ver comentarios
           </button>
 

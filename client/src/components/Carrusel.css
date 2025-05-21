@@ -1,9 +1,14 @@
+.carrusel-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 100px auto 2rem auto;
+  padding: 0 1rem;
+}
+
 .carrusel-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1200px;
   height: 500px;
-  margin: 0 auto;
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -32,7 +37,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 2rem;
+  padding: 2rem 1rem;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
   text-align: center;
 }
@@ -48,8 +53,40 @@
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
   font-family: var(--fuente);
 }
-.carrusel-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 150px auto;
+
+/* Responsive breakpoints */
+@media (max-width: 992px) {
+  .carrusel-wrapper {
+    height: 400px;
+  }
+
+  .carrusel-overlay h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .carrusel-wrapper {
+    height: 300px;
+  }
+
+  .carrusel-overlay h2 {
+    font-size: 1.3rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .carrusel-wrapper {
+    height: 220px;
+  }
+
+  .carrusel-overlay {
+    padding: 1.2rem 0.5rem;
+  }
+
+  .carrusel-overlay h2 {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+  }
 }

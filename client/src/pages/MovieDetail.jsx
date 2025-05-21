@@ -7,6 +7,21 @@ import TextoColapsado from "../components/TextoColapsado";
 import Comentarios from "../components/Comentarios";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import {
+  BsStarFill,
+  BsStar,
+  BsEye,
+  BsEyeSlash,
+  BsListUl,
+  BsFolderPlus,
+  BsPlusLg,
+  BsCalendar,
+  BsCardText,
+  BsClock,
+  BsBroadcast,
+  BsCheckLg,
+  BsCollectionPlay,
+} from "react-icons/bs";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -226,14 +241,14 @@ const MovieDetail = () => {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <motion.span
+                animate={{ rotate: esFavorito ? 360 : 0 }}
+                transition={{ duration: 0.4 }}
                 style={{
                   fontSize: "2rem",
                   color: esFavorito ? "yellow" : "#6c757d",
                 }}
-                animate={{ rotate: esFavorito ? 360 : 0 }}
-                transition={{ duration: 0.4 }}
               >
-                ★
+                {esFavorito ? <BsStarFill /> : <BsStar />}
               </motion.span>
             </motion.button>
 
@@ -253,14 +268,16 @@ const MovieDetail = () => {
                   animate={{ rotate: vista ? 360 : 0 }}
                   transition={{ duration: 0.4 }}
                   style={{
-                    display: "inline-block",
-                    fontSize: "1.2rem",
+                    display: "flex", // mejor que "inline-block" para alinear con texto
+                    alignItems: "center", // verticalmente centrado
+                    fontSize: "1.4rem", // tamaño un poco mayor
+                    lineHeight: 1, // asegura que no se desplace verticalmente
                     filter: vista
                       ? "drop-shadow(0 0 4px limegreen)"
                       : "drop-shadow(0 0 3px crimson)",
                   }}
                 >
-                  👁
+                  {vista ? <BsEye /> : <BsEyeSlash />}
                 </motion.span>
                 {vista ? "Vista" : "No vista"}
               </motion.button>
@@ -269,7 +286,9 @@ const MovieDetail = () => {
 
           {token && (
             <div className="mb-4">
-              <label className="form-label">📂 Añadir a lista:</label>
+              <label className="form-label">
+                <BsListUl className="me-1" /> Añadir a lista:
+              </label>
 
               <div className="d-flex gap-2 flex-wrap align-items-center">
                 {!modoCrearLista ? (
@@ -291,19 +310,18 @@ const MovieDetail = () => {
                       )}
                     </select>
                     <button
-                      className="btn btn-outline-secondary btn-sm"
+                      className="btn btn-outline-secondary btn-sm btn-igual me-2"
                       onClick={() => {
                         setModoCrearLista(true);
                         setListaSeleccionada(""); // opcional: reset selección
                       }}
                     >
-                      ➕ Nueva lista
+                      <BsFolderPlus className="me-1" /> Nueva lista
                     </button>
 
-                    {/* ✅ SOLO SE MUESTRA EN MODO NORMAL */}
                     {!modoCrearLista && (
                       <button
-                        className="btn btn-primary"
+                        className="btn btn-primary btn-sm btn-igual"
                         disabled={!listaSeleccionada}
                         onClick={async () => {
                           const payload = {
@@ -339,7 +357,7 @@ const MovieDetail = () => {
                           }
                         }}
                       >
-                        ➕ Añadir
+                        <BsPlusLg className="me-1" /> Añadir
                       </button>
                     )}
                   </>
@@ -433,7 +451,9 @@ const MovieDetail = () => {
 
               {listasIncluye.length > 0 && (
                 <div className="mt-2 text-light small">
-                  <span className="me-1">✅ </span>
+                  <span className="me-1 text-success">
+                    <BsCheckLg />
+                  </span>
                   <span className="fw-semibold">Ya en:</span>{" "}
                   {listasIncluye.map((l, i) => (
                     <span key={l.id}>
@@ -455,12 +475,13 @@ const MovieDetail = () => {
 
           <br></br>
           <DetalleItem
-            icono="📅"
+            icono={<BsCalendar />}
             etiqueta="Fecha de estreno:"
             valor={pelicula.release_date}
           />
+
           <DetalleItem
-            icono="📝"
+            icono={<BsCardText />}
             etiqueta="Resumen:"
             valor={
               <TextoColapsado texto={pelicula.overview || "No disponible."} />
@@ -468,19 +489,20 @@ const MovieDetail = () => {
           />
 
           <DetalleItem
-            icono="🎭"
+            icono={<BsCollectionPlay />}
             etiqueta="Género:"
             valor={pelicula.genres.map((g) => g.name).join(", ")}
           />
+
           <DetalleItem
-            icono="⏱️"
+            icono={<BsClock />}
             etiqueta="Duración:"
             valor={`${pelicula.runtime} min`}
           />
 
           {plataformas.items.length > 0 ? (
             <DetalleItem
-              icono="📡"
+              icono={<BsBroadcast />}
               etiqueta="Disponible en:"
               valor={
                 <a
@@ -509,11 +531,12 @@ const MovieDetail = () => {
             />
           ) : (
             <DetalleItem
-              icono="📡"
+              icono={<BsBroadcast />}
               etiqueta="Disponible en:"
               valor="No disponible en plataformas en España"
             />
           )}
+
           <button
             className="btn btn-outline-light mt-3"
             data-bs-toggle="modal"

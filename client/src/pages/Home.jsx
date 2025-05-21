@@ -536,7 +536,10 @@ const Home = () => {
           {peliculas.length > 0 && (
             <div className="d-flex justify-content-center my-4 flex-wrap gap-2">
               {/* Primera página */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="boton-paginacion"
                 disabled={!Number.isInteger(totalPaginas) || pagina === 1}
                 onClick={() => {
@@ -549,17 +552,20 @@ const Home = () => {
                 title="Primera página"
               >
                 ⏮
-              </button>
+              </motion.button>
 
               {/* Anterior */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="boton-paginacion"
                 disabled={!Number.isInteger(totalPaginas) || pagina === 1}
                 onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
                 ◀
-              </button>
+              </motion.button>
 
               {/* Números de página */}
               {[
@@ -569,21 +575,25 @@ const Home = () => {
                   )
                 ),
               ].map((page) => (
-                <button
+                <motion.button
                   key={page}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                   onClick={() => setPagina(page)}
-                  className={`btn btn-sm ${
-                    page === pagina
-                      ? "btn-primary text-white fw-bold"
-                      : "btn-light border"
+                  className={`boton-paginacion ${
+                    page === pagina ? "bg-primary text-white fw-bold" : ""
                   }`}
                 >
                   {page}
-                </button>
+                </motion.button>
               ))}
 
               {/* Siguiente */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="boton-paginacion"
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
@@ -592,10 +602,13 @@ const Home = () => {
                 title="Siguiente"
               >
                 ▶
-              </button>
+              </motion.button>
 
               {/* Última página */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="boton-paginacion"
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
@@ -609,7 +622,7 @@ const Home = () => {
                 title="Última página"
               >
                 ⏭
-              </button>
+              </motion.button>
             </div>
           )}
         </div>

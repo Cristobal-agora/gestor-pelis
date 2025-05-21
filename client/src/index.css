@@ -51,8 +51,9 @@ body.sin-sesion {
   padding-top: 0 !important;
   background: transparent !important;
   background-color: transparent !important;
-  height: 100vh;
+  min-height: 100vh;
   overflow-y: auto !important;
+  margin-top: 0 !important;
 }
 
 /* ===== LOGIN & AUTH ===== */
@@ -243,12 +244,6 @@ select:focus {
   pointer-events: none;
 }
 
-.cartelera-fade-left,
-.cartelera-fade-right {
-  pointer-events: none;
-  /* ❌ NO pongas scroll-snap-align o overflow hidden aquí si el carrusel ya lo maneja */
-}
-
 /* ===== COLUMNAS RESPONSIVE BOOTSTRAP ===== */
 @media (min-width: 992px) {
   .col-lg-5th {
@@ -279,9 +274,11 @@ select:focus {
   border-color: #0d6efd;
 }
 .inicio {
-  flex: 1;
-  width: 100%;
-  padding: 1rem 0;
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .footer {
@@ -331,4 +328,50 @@ select:focus {
 .boton-paginacion:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+.btn-igual {
+  min-width: 120px; /* o ajusta el valor según el diseño */
+  text-align: center;
+}
+
+.logo-container:hover .cinestash-title {
+  color: var(--color-acento-hover);
+  transform: scale(1.05);
+}
+
+.header-sin-sesion {
+  background: transparent !important;
+  backdrop-filter: none;
+  box-shadow: none;
+  margin-top: 1rem;
+}
+
+.header-sin-sesion img {
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+}
+
+.header-sin-sesion .btn {
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+}
+
+.logo-img {
+  height: 40px;
+  border-radius: 6px;
+  transition: transform 0.3s ease;
+}
+.logo-img:hover {
+  transform: scale(1.05);
+}
+.btn-sin-borde-blanca {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.btn-sin-borde-blanca:hover {
+  background-color: #f2f2f2 !important;
 }
