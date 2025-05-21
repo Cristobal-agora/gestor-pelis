@@ -114,8 +114,8 @@ const Home = () => {
         const res = await fetch(url);
         const data = await res.json();
         setPeliculas(Array.isArray(data.results) ? data.results : []);
-        setTotalPaginas(data.total_pages || 1);
-        totalPaginasRef.current = data.total_pages || 1;
+        setTotalPaginas(Math.min(data.total_pages || 1, 500));
+        totalPaginasRef.current = Math.min(data.total_pages || 1, 500);
       } catch (error) {
         console.error("Error al cargar contenido popular:", error);
       }
@@ -147,8 +147,8 @@ const Home = () => {
             const res = await fetch(url);
             const data = await res.json();
             setPeliculas(Array.isArray(data.results) ? data.results : []);
-            setTotalPaginas(data.total_pages || 1);
-            totalPaginasRef.current = data.total_pages || 1;
+            setTotalPaginas(Math.min(data.total_pages || 1, 500));
+            totalPaginasRef.current = Math.min(data.total_pages || 1, 500);
           } catch (error) {
             console.error("Error en discover sin texto:", error);
             setPeliculas([]);
@@ -407,15 +407,8 @@ const Home = () => {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
-                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
-                onClick={() => {
-                  if (pagina !== 1) setPagina(1);
-                  else {
-                    if (buscando) buscarPeliculas(1);
-                    else fetchPopulares(1);
-                  }
-                }}
+                className={`pagination-btn ${pagina === 1 ? "disabled" : ""}`}
+                onClick={() => setPagina(1)}
                 title="Primera página"
               >
                 ⏮
@@ -426,8 +419,7 @@ const Home = () => {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
-                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
+                className={`pagination-btn ${pagina === 1 ? "disabled" : ""}`}
                 onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
@@ -435,36 +427,29 @@ const Home = () => {
               </motion.button>
 
               {/* Números de página */}
-              {[
-                ...new Set(
-                  Array.from({ length: 5 }, (_, i) => pagina - 2 + i).filter(
-                    (p) => p >= 1 && p <= totalPaginas
-                  )
-                ),
-              ].map((page) => (
-                <motion.button
-                  key={page}
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.92 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  onClick={() => setPagina(page)}
-                  className={`boton-paginacion ${
-                    page === pagina ? "bg-primary text-white fw-bold" : ""
-                  }`}
-                >
-                  {page}
-                </motion.button>
-              ))}
+              {Array.from({ length: 5 }, (_, i) => pagina - 2 + i)
+                .filter((p) => p >= 1 && p <= totalPaginas)
+                .map((p) => (
+                  <motion.button
+                    key={p}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    onClick={() => setPagina(p)}
+                    className={`pagination-btn ${p === pagina ? "active" : ""}`}
+                  >
+                    {p}
+                  </motion.button>
+                ))}
 
               {/* Siguiente */}
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
-                disabled={
-                  !Number.isInteger(totalPaginas) || pagina === totalPaginas
-                }
+                className={`pagination-btn ${
+                  pagina === totalPaginas ? "disabled" : ""
+                }`}
                 onClick={() => setPagina((p) => p + 1)}
                 title="Siguiente"
               >
@@ -476,15 +461,22 @@ const Home = () => {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
+                className={`pagination-btn ${
+                  pagina === totalPaginas ? "disabled" : ""
+                }`}
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
                 }
                 onClick={() => {
-                  const siguienteSalto = Math.min(pagina + 10, totalPaginas);
-                  setPagina(siguienteSalto);
-                  if (buscando) buscarPeliculas(siguienteSalto);
-                  else fetchPopulares(siguienteSalto);
+                  const esValida =
+                    Number.isInteger(totalPaginas) && totalPaginas > 0;
+                  if (esValida && pagina !== totalPaginas) {
+                    setPagina(totalPaginas);
+                    const ejecutar = buscando
+                      ? buscarPeliculas
+                      : fetchPopulares;
+                    ejecutar(totalPaginas);
+                  }
                 }}
                 title="Última página"
               >
@@ -540,15 +532,8 @@ const Home = () => {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
-                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
-                onClick={() => {
-                  if (pagina !== 1) setPagina(1);
-                  else {
-                    if (buscando) buscarPeliculas(1);
-                    else fetchPopulares(1);
-                  }
-                }}
+                className={`pagination-btn ${pagina === 1 ? "disabled" : ""}`}
+                onClick={() => setPagina(1)}
                 title="Primera página"
               >
                 ⏮
@@ -559,8 +544,7 @@ const Home = () => {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
-                disabled={!Number.isInteger(totalPaginas) || pagina === 1}
+                className={`pagination-btn ${pagina === 1 ? "disabled" : ""}`}
                 onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
@@ -568,36 +552,29 @@ const Home = () => {
               </motion.button>
 
               {/* Números de página */}
-              {[
-                ...new Set(
-                  Array.from({ length: 5 }, (_, i) => pagina - 2 + i).filter(
-                    (p) => p >= 1 && p <= totalPaginas
-                  )
-                ),
-              ].map((page) => (
-                <motion.button
-                  key={page}
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.92 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  onClick={() => setPagina(page)}
-                  className={`boton-paginacion ${
-                    page === pagina ? "bg-primary text-white fw-bold" : ""
-                  }`}
-                >
-                  {page}
-                </motion.button>
-              ))}
+              {Array.from({ length: 5 }, (_, i) => pagina - 2 + i)
+                .filter((p) => p >= 1 && p <= totalPaginas)
+                .map((p) => (
+                  <motion.button
+                    key={p}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    onClick={() => setPagina(p)}
+                    className={`pagination-btn ${p === pagina ? "active" : ""}`}
+                  >
+                    {p}
+                  </motion.button>
+                ))}
 
               {/* Siguiente */}
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
-                disabled={
-                  !Number.isInteger(totalPaginas) || pagina === totalPaginas
-                }
+                className={`pagination-btn ${
+                  pagina === totalPaginas ? "disabled" : ""
+                }`}
                 onClick={() => setPagina((p) => p + 1)}
                 title="Siguiente"
               >
@@ -609,15 +586,22 @@ const Home = () => {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="boton-paginacion"
+                className={`pagination-btn ${
+                  pagina === totalPaginas ? "disabled" : ""
+                }`}
                 disabled={
                   !Number.isInteger(totalPaginas) || pagina === totalPaginas
                 }
                 onClick={() => {
-                  const siguienteSalto = Math.min(pagina + 10, totalPaginas);
-                  setPagina(siguienteSalto);
-                  if (buscando) buscarPeliculas(siguienteSalto);
-                  else fetchPopulares(siguienteSalto);
+                  const esValida =
+                    Number.isInteger(totalPaginas) && totalPaginas > 0;
+                  if (esValida && pagina !== totalPaginas) {
+                    setPagina(totalPaginas);
+                    const ejecutar = buscando
+                      ? buscarPeliculas
+                      : fetchPopulares;
+                    ejecutar(totalPaginas);
+                  }
                 }}
                 title="Última página"
               >

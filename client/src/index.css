@@ -194,38 +194,36 @@ select:focus {
 }
 
 /* ===== PAGINACIÓN ===== */
-.pagination-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
 .pagination-btn {
-  background-color: var(--color-acento);
-  color: white;
+  background-color: transparent;
+  color: #ccc;
   border: none;
-  margin: 0 4px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .pagination-btn:hover {
-  background-color: var(--color-acento-hover);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.pagination-btn.active {
+  background-color: var(--color-acento);
+  color: white;
+  font-weight: bold;
 }
 
 .pagination-btn.disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   pointer-events: none;
 }
 
 .pagination-btn.active {
-  background-color: #fff;
-  color: var(--color-acento);
-  border: 2px solid var(--color-acento);
+  background-color: var(--color-acento);
+  color: #fff;
+  border: none;
 }
 
 /* ===== CARTELERA SCROLL INFINITO ===== */
