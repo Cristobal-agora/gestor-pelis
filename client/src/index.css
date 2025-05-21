@@ -268,6 +268,11 @@ select:focus {
   display: flex;
   flex-direction: column;
 }
+main {
+  flex: 1;
+  padding-bottom: 6rem; /* espacio para el footer */
+}
+
 .btn-outline-primary.active {
   background-color: #0d6efd;
   color: #fff;
@@ -279,6 +284,7 @@ select:focus {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding-bottom: 120px;
 }
 
 .footer {
@@ -374,4 +380,133 @@ select:focus {
 
 .btn-sin-borde-blanca:hover {
   background-color: #f2f2f2 !important;
+}
+.icono-favorito {
+  font-size: 1.2rem;
+  color: red;
+  transition: color 0.3s ease;
+}
+
+.icono-favorito:hover {
+  color: #999;
+}
+/* Botones del filtro de tipo (Todos / Películas / Series) */
+.btn-filtro-tipo {
+  color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  background-color: transparent !important;
+  transition: all 0.3s ease;
+}
+
+.btn-filtro-tipo:hover {
+  color: #fff !important;
+  border-color: #fff !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.btn-filtro-tipo.active {
+  background-color: #fff !important;
+  color: #000 !important;
+  font-weight: bold !important;
+  border-color: #fff !important;
+}
+.list-group-item {
+  background-color: #3c474ab1 !important;
+  border: 1px solid #333 !important;
+  color: #ddd !important;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #2a2a2a !important;
+  transform: scale(1.01);
+}
+
+.list-group-item a {
+  color: var(--color-acento, #1f8df5);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.list-group-item a:hover {
+  color: var(--color-acento-hover, #0074e8);
+  text-decoration: underline;
+}
+
+.icono-borrar-lista {
+  font-size: 1.2rem;
+  color: #dc3545;
+  transition: color 0.3s ease;
+}
+
+.icono-borrar-lista:hover {
+  color: #ff6b6b;
+}
+input.form-control {
+  background-color: #ffffff;
+  color: #fff;
+  border: 1px solid #444;
+  transition: border-color 0.3s ease;
+}
+
+input.form-control:focus {
+  border-color: var(--color-acento, #1f8df5);
+  box-shadow: 0 0 0 0.2rem rgba(31, 141, 245, 0.25);
+}
+/* Estilo personalizado del modal */
+.custom-confirm-alert {
+  background-color: #1e1e1e;
+  padding: 1.5rem 1.2rem;
+  border-radius: 12px;
+  color: #f0f0f0;
+  width: 320px;
+  max-width: 90vw;
+  text-align: left;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  font-family: inherit;
+}
+
+.custom-confirm-alert h1 {
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+  color: #ffffff;
+}
+
+.custom-confirm-alert p {
+  font-size: 0.9rem;
+  color: #cccccc;
+  margin-bottom: 1rem;
+}
+
+.custom-confirm-alert button {
+  padding: 6px 12px;
+  margin-left: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.custom-confirm-alert button:first-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+.custom-confirm-alert button:first-child:hover {
+  background-color: #c82333;
+}
+
+.custom-confirm-alert button:last-child {
+  background-color: #6c757d;
+  color: white;
+}
+
+.custom-confirm-alert button:last-child:hover {
+  background-color: #5a6268;
+}
+.react-confirm-alert-overlay {
+  background-color: rgba(0, 0, 0, 0.7) !important;
 }

@@ -9,8 +9,6 @@ import Comentarios from "../components/Comentarios";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
-  BsStarFill,
-  BsStar,
   BsListUl,
   BsFolderPlus,
   BsPlusLg,
@@ -23,6 +21,8 @@ import {
   BsChatDots,
   BsCheckLg,
 } from "react-icons/bs";
+
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const SerieDetail = () => {
   const { id } = useParams();
@@ -253,10 +253,10 @@ const SerieDetail = () => {
                 transition={{ duration: 0.4 }}
                 style={{
                   fontSize: "2rem",
-                  color: esFavorito ? "yellow" : "#6c757d",
+                  color: esFavorito ? "red" : "#6c757d",
                 }}
               >
-                {esFavorito ? <BsStarFill /> : <BsStar />}
+                {esFavorito ? <FaHeart /> : <FaRegHeart />}
               </motion.span>
             </motion.button>
           </div>

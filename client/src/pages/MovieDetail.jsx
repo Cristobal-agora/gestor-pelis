@@ -8,8 +8,6 @@ import Comentarios from "../components/Comentarios";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import {
-  BsStarFill,
-  BsStar,
   BsEye,
   BsEyeSlash,
   BsListUl,
@@ -22,6 +20,8 @@ import {
   BsCheckLg,
   BsCollectionPlay,
 } from "react-icons/bs";
+
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -245,10 +245,10 @@ const MovieDetail = () => {
                 transition={{ duration: 0.4 }}
                 style={{
                   fontSize: "2rem",
-                  color: esFavorito ? "yellow" : "#6c757d",
+                  color: esFavorito ? "red" : "#6c757d",
                 }}
               >
-                {esFavorito ? <BsStarFill /> : <BsStar />}
+                {esFavorito ? <FaHeart /> : <FaRegHeart />}
               </motion.span>
             </motion.button>
 

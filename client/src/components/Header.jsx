@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Carrusel from "./Carrusel";
 import {
   BsPersonFill,
-  BsStarFill,
   BsFolderFill,
   BsClockHistory,
   BsGearFill,
@@ -11,6 +10,7 @@ import {
   BsPencilFill,
   BsKeyFill,
 } from "react-icons/bs";
+import { FaHeart } from "react-icons/fa";
 
 const Header = () => {
   const location = useLocation();
@@ -99,8 +99,9 @@ const Header = () => {
                   isActive("/favoritos") ? "fw-bold" : ""
                 }`}
               >
-                <BsStarFill className="me-1" /> Favoritos
+                <FaHeart className="me-1" /> Favoritos
               </Link>
+
               <Link
                 to="/mis-listas"
                 className={`btn btn-sm text-light ${

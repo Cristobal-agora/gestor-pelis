@@ -23,8 +23,7 @@ import EditarPerfil from "./components/EditarPerfil";
 import CambiarPassword from "./components/CambiarPassword";
 import ChatbotIA from "./components/ChatbotIA";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
+import "react-toastify/dist/ReactToastify.css";
 
 function AppContent() {
   const location = useLocation();
@@ -82,18 +81,17 @@ function AppContent() {
         </>
       )}
       <ToastContainer
-  position="bottom-right"
-  autoClose={3000}
-  hideProgressBar={false}
-  newestOnTop={false}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-  theme="dark"
-/>
-
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </div>
   );
 }

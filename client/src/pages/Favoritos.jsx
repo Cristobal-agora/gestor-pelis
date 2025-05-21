@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { FaHeart, FaFilm, FaVideo, FaTv } from "react-icons/fa";
 
 const Favoritos = () => {
   const [items, setItems] = useState([]);
@@ -74,19 +75,75 @@ const Favoritos = () => {
 
   return (
     <div className="container mt-4 text-light">
-      <h2 className="mb-4 text-primary">⭐ Mis Favoritos</h2>
+      <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <h2 className="text-primary d-flex align-items-center gap-2 m-0">
+          <FaHeart style={{ color: "red" }} />
+          Mis Favoritos
+        </h2>
 
-      <div className="mb-4 d-flex align-items-center gap-3 flex-wrap">
+        {items.length > 0 && (
+          <button
+            className="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
+            onClick={async () => {
+              if (
+                !window.confirm(
+                  "¿Estás seguro de eliminar todos los favoritos?"
+                )
+              )
+                return;
+
+              try {
+                const res = await fetch(
+                  `${import.meta.env.VITE_API_URL}/favoritos`,
+                  {
+                    method: "DELETE",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+
+                if (res.ok) {
+                  setItems([]);
+                } else {
+                  alert("Error al eliminar favoritos");
+                }
+              } catch (err) {
+                console.error("Error al borrar favoritos:", err);
+                alert("Error al conectar con el servidor");
+              }
+            }}
+          >
+            <FaHeart /> Eliminar todos
+          </button>
+        )}
+      </div>
+
+      <div className="d-flex align-items-center gap-3 flex-wrap mb-4">
         <label className="form-label mb-0 me-2">Tipo:</label>
-        <select
-          className="form-select w-auto"
-          value={tipo}
-          onChange={(e) => setTipo(e.target.value)}
-        >
-          <option value="todos">🎬 Todos</option>
-          <option value="movie">🎞️ Películas</option>
-          <option value="tv">📺 Series</option>
-        </select>
+        <div className="btn-group" role="group">
+          <button
+            className={`btn btn-filtro-tipo
+ d-flex align-items-center gap-2 ${tipo === "todos" ? "active" : ""}`}
+            onClick={() => setTipo("todos")}
+          >
+            <FaFilm /> Todos
+          </button>
+          <button
+            className={`btn btn-filtro-tipo
+ d-flex align-items-center gap-2 ${tipo === "movie" ? "active" : ""}`}
+            onClick={() => setTipo("movie")}
+          >
+            <FaVideo /> Películas
+          </button>
+          <button
+            className={`btn btn-filtro-tipo
+ d-flex align-items-center gap-2 ${tipo === "tv" ? "active" : ""}`}
+            onClick={() => setTipo("tv")}
+          >
+            <FaTv /> Series
+          </button>
+        </div>
       </div>
 
       {items.length === 0 ? (
@@ -100,16 +157,6 @@ const Favoritos = () => {
               key={item.id}
               className="col-6 col-sm-4 col-md-3 col-lg-2 mb-4 position-relative"
             >
-              {/* Estrella de eliminación */}
-              <button
-                className="position-absolute top-0 end-0 m-2 border-0 bg-transparent"
-                title="Quitar de favoritos"
-                onClick={() => eliminarFavorito(item.id)}
-                style={{ zIndex: 2 }}
-              >
-                <span style={{ fontSize: "2rem", color: "yellow" }}>★</span>
-              </button>
-
               <Link
                 to={`/${
                   item.media_type === "tv" || item.name ? "serie" : "pelicula"
@@ -125,9 +172,21 @@ const Favoritos = () => {
                     style={{ borderRadius: "8px", objectFit: "cover" }}
                   />
                   <div className="card-body px-2 py-2">
-                    <h6 className="card-title mb-1">
-                      {item.title || item.name}
-                    </h6>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h6 className="card-title mb-0 me-2">
+                        {item.title || item.name}
+                      </h6>
+                      <button
+                        className="btn btn-sm p-0 border-0 bg-transparent"
+                        title="Quitar de favoritos"
+                        onClick={(e) => {
+                          e.preventDefault(); // evita que se active el <Link>
+                          eliminarFavorito(item.id);
+                        }}
+                      >
+                        <FaHeart className="icono-favorito" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </Link>
