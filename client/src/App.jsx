@@ -50,15 +50,8 @@ function AppContent() {
     document.body.classList.add(clase);
     localStorage.setItem("modo", modoClaro ? "claro" : "oscuro");
 
-    // Evitar mostrar la notificación en la primera carga
     if (!temaInicializado) {
       setTemaInicializado(true);
-    }
-
-    // Cambiar favicon según el tema
-    const favicon = document.querySelector("link[rel='icon']");
-    if (favicon) {
-      favicon.href = modoClaro ? "/favicon-oscuro.ico" : "/favicon-blanco.png";
     }
   }, [modoClaro, temaInicializado, location.pathname]);
 
