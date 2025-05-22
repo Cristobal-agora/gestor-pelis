@@ -17,10 +17,11 @@ const chatRoutes = require("./routes/chat.routes");
 
 // Middlewares
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://gestor-pelis.vercel.app"],
+  origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
+
 
 app.use(cors(corsOptions));
 
