@@ -29,7 +29,11 @@ const Header = () => {
     document.body.classList.add(token ? "con-sesion" : "sin-sesion");
   }, [token, location.pathname]);
 
-  if (location.pathname === "/login" || location.pathname === "/register") {
+  const rutasSinHeader = ["/login", "/register", "/recuperar-password"];
+
+  const esResetPassword = location.pathname.startsWith("/reset-password");
+
+  if (rutasSinHeader.includes(location.pathname) || esResetPassword) {
     return null;
   }
 
