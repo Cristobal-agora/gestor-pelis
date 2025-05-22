@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   BsFolderFill,
@@ -11,7 +11,7 @@ import {
 import { FaHeart } from "react-icons/fa";
 import { FiSun, FiMoon } from "react-icons/fi";
 // eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const avatarList = [
   "/avatars/1.png",
@@ -39,6 +39,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
   );
 
   const [showAvatars, setShowAvatars] = useState(false);
+  const avatarMenuRef = useRef(null);
 
   const isActive = (ruta) => location.pathname === ruta;
 
@@ -50,6 +51,31 @@ const Header = ({ modoClaro, cambiarTema }) => {
     document.body.classList.remove("con-sesion", "sin-sesion");
     document.body.classList.add(token ? "con-sesion" : "sin-sesion");
   }, [token, location.pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (avatarMenuRef.current && !avatarMenuRef.current.contains(e.target)) {
+        setShowAvatars(false);
+      }
+
+      if (e.key === "Escape") {
+        setShowAvatars(false);
+      }
+    };
+
+    if (showAvatars) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleClickOutside); // 👈 escape
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleClickOutside); // 👈 escape
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleClickOutside);
+    };
+  }, [showAvatars]);
 
   const rutasSinHeader = ["/login", "/register", "/recuperar-password"];
   const esResetPassword = location.pathname.startsWith("/reset-password");
@@ -163,29 +189,59 @@ const Header = ({ modoClaro, cambiarTema }) => {
                 />
                 <strong className="ms-2 text-light">{nombre}</strong>
 
-                {showAvatars && (
-                  <div
-                    className="position-absolute bg-dark p-2 rounded border"
-                    style={{ top: "40px", zIndex: 1050 }}
-                  >
-                    <div className="d-flex flex-wrap gap-2">
-                      {avatarList.map((src, index) => (
-                        <img
-                          key={index}
-                          src={src}
-                          alt={`avatar-${index}`}
-                          style={{
-                            width: "32px",
-                            height: "32px",
-                            borderRadius: "50%",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => handleAvatarSelect(src)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {showAvatars && (
+                    <motion.div
+                      ref={avatarMenuRef}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="position-absolute bg-dark p-2 rounded border"
+                      style={{ top: "40px", zIndex: 1050 }}
+                    >
+                      <div
+                        className="d-grid gap-2"
+                        style={{
+                          gridTemplateColumns: "repeat(2, 1fr)",
+                          justifyItems: "center",
+                        }}
+                      >
+                        {avatarList.map((src, index) => (
+                          <motion.img
+                            key={index}
+                            src={src}
+                            alt={`avatar-${index}`}
+                            initial={false}
+                            animate={{
+                              border:
+                                src === avatar
+                                  ? "2px solid #1f8df5"
+                                  : "2px solid transparent",
+                              boxShadow:
+                                src === avatar ? "0 0 6px #1f8df5" : "none",
+                              scale: src === avatar ? 1.1 : 1,
+                            }}
+                            whileHover={{ scale: 1.15 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 20,
+                            }}
+                            style={{
+                              width: "32px",
+                              height: "32px",
+                              borderRadius: "50%",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleAvatarSelect(src)}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <Link
