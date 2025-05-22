@@ -47,8 +47,13 @@ const Cartelera = () => {
       <h3 className="text-primary mb-3 d-flex align-items-center gap-2">
         <img
           src="/favicon.ico"
-          alt="CineStash Icon"
-          style={{ width: "24px", height: "24px" }}
+          alt="CineStash"
+          style={{
+            height: "28px", 
+            width: "28px", 
+            objectFit: "contain", 
+            filter: "drop-shadow(0 0 1px #1f8df5)",
+          }}
         />
         Cartelera en cines
       </h3>
@@ -60,7 +65,7 @@ const Cartelera = () => {
           scrollbarWidth: "none",
           paddingBottom: "0.5rem",
           marginBottom: "0",
-          scrollBehavior: "auto", // ← IMPORTANTE
+          scrollBehavior: "auto", //  IMPORTANTE
         }}
       >
         {peliculas.map((p) => (

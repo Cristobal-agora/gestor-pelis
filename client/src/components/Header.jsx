@@ -9,6 +9,9 @@ import {
   BsKeyFill,
 } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
+import { FiSun, FiMoon } from "react-icons/fi";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const avatarList = [
   "/avatars/1.png",
@@ -23,13 +26,18 @@ const avatarList = [
   "/avatars/10.png",
 ];
 
-const Header = () => {
+const Header = ({ modoClaro, cambiarTema }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
   const nombre = usuario?.nombre || "";
-  const [avatar, setAvatar] = useState(usuario?.avatar || avatarList[0]);
+  const [avatar, setAvatar] = useState(
+    localStorage.getItem("avatarSeleccionado") ||
+      usuario?.avatar ||
+      avatarList[0]
+  );
+
   const [showAvatars, setShowAvatars] = useState(false);
 
   const isActive = (ruta) => location.pathname === ruta;
@@ -53,7 +61,8 @@ const Header = () => {
   const handleAvatarSelect = (src) => {
     setAvatar(src);
     setShowAvatars(false);
-    // Opcional: guardar avatar en sessionStorage o backend
+    localStorage.setItem("avatarSeleccionado", src); // ✅ guardar persistente
+
     const nuevoUsuario = { ...usuario, avatar: src };
     sessionStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
   };
@@ -80,8 +89,32 @@ const Header = () => {
               className="d-flex align-items-center gap-2 text-decoration-none"
               style={{ cursor: "pointer" }}
             >
-              <img src="/logo.png" alt="CineStash" style={{ height: "40px" }} />
+              <img
+                src="/favicon.ico"
+                alt="CineStash"
+                style={{
+                  height: "28px", // más pequeño
+                  width: "28px", // cuadrado
+                  objectFit: "contain", // evita estiramiento
+                  filter: "drop-shadow(0 0 1px #1f8df5)", // opcional, toque de luz
+                }}
+              />
+
               <span className="cinestash-title m-0">CineStash</span>
+              <motion.button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  cambiarTema();
+                }}
+                title={`Cambiar a modo ${modoClaro ? "oscuro" : "claro"}`}
+                className="btn btn-sm sin-borde-icono"
+                whileHover={{ scale: 1.2, rotate: 10 }}
+                whileTap={{ scale: 0.9, rotate: -10 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {modoClaro ? <FiMoon size={20} /> : <FiSun size={20} />}
+              </motion.button>
             </div>
           )}
 
@@ -90,10 +123,14 @@ const Header = () => {
               <div className="d-flex flex-column align-items-center">
                 <div className="d-flex align-items-center gap-2 ">
                   <img
-                    src="/logo.png"
+                    src="/favicon.ico"
                     alt="CineStash"
-                    className="logo-img"
-                    style={{ height: "40px" }}
+                    style={{
+                      height: "28px", // más pequeño
+                      width: "28px", // cuadrado
+                      objectFit: "contain", // evita estiramiento
+                      filter: "drop-shadow(0 0 1px #1f8df5)", // opcional, toque de luz
+                    }}
                   />
                   <span className="cinestash-title m-0">CineStash</span>
                 </div>

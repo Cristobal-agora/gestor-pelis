@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ChatbotIA.css";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
+import { FaCommentDots } from "react-icons/fa";
 
 const ChatbotIA = () => {
   const [abierto, setAbierto] = useState(false);
@@ -49,11 +50,8 @@ const ChatbotIA = () => {
 
   return (
     <>
-      <div
-        className={`chatbot-boton ${abierto ? "abierto" : ""}`}
-        onClick={toggleChat}
-      >
-        <img src="/favicon.ico" alt="Chat IA" className="chatbot-icono" />
+      <div className="chatbot-boton" onClick={toggleChat}>
+        <FaCommentDots size={28} color="#fff" />
       </div>
 
       <AnimatePresence>
