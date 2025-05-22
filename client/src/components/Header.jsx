@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Carrusel from "./Carrusel";
 import {
-  BsPersonFill,
   BsFolderFill,
   BsClockHistory,
   BsGearFill,
@@ -12,16 +10,32 @@ import {
 } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 
+const avatarList = [
+  "/avatars/1.png",
+  "/avatars/2.png",
+  "/avatars/3.png",
+  "/avatars/4.png",
+  "/avatars/5.png",
+  "/avatars/6.png",
+  "/avatars/7.png",
+  "/avatars/8.png",
+  "/avatars/9.png",
+  "/avatars/10.png",
+];
+
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
   const nombre = usuario?.nombre || "";
+  const [avatar, setAvatar] = useState(usuario?.avatar || avatarList[0]);
+  const [showAvatars, setShowAvatars] = useState(false);
+
   const isActive = (ruta) => location.pathname === ruta;
 
   useEffect(() => {
-    if (location.pathname === "/login" || location.pathname === "/register") {
+    if (["/login", "/register"].includes(location.pathname)) {
       document.body.classList.remove("con-sesion", "sin-sesion");
       return;
     }
@@ -30,12 +44,19 @@ const Header = () => {
   }, [token, location.pathname]);
 
   const rutasSinHeader = ["/login", "/register", "/recuperar-password"];
-
   const esResetPassword = location.pathname.startsWith("/reset-password");
 
   if (rutasSinHeader.includes(location.pathname) || esResetPassword) {
     return null;
   }
+
+  const handleAvatarSelect = (src) => {
+    setAvatar(src);
+    setShowAvatars(false);
+    // Opcional: guardar avatar en sessionStorage o backend
+    const nuevoUsuario = { ...usuario, avatar: src };
+    sessionStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
+  };
 
   return (
     <header
@@ -43,7 +64,6 @@ const Header = () => {
       style={{
         zIndex: 1030,
         backgroundColor: "rgba(20, 20, 20, 0.65)",
-
         backdropFilter: token ? "blur(6px)" : "blur(4px)",
       }}
     >
@@ -90,13 +110,47 @@ const Header = () => {
             </div>
           )}
 
-          {/* Área de usuario y navegación */}
           {token && (
-            <div className="d-flex align-items-center flex-wrap gap-2 justify-content-end">
-              <span className="text-light d-flex align-items-center gap-1 me-2">
-                <BsPersonFill style={{ color: "orchid" }} />
-                <strong>{nombre}</strong>
-              </span>
+            <div className="d-flex align-items-center flex-wrap gap-3 justify-content-end">
+              <div className="d-flex align-items-center position-relative">
+                <img
+                  src={avatar}
+                  alt="avatar"
+                  style={{
+                    height: "32px",
+                    width: "32px",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setShowAvatars(!showAvatars)}
+                />
+                <strong className="ms-2 text-light">{nombre}</strong>
+
+                {showAvatars && (
+                  <div
+                    className="position-absolute bg-dark p-2 rounded border"
+                    style={{ top: "40px", zIndex: 1050 }}
+                  >
+                    <div className="d-flex flex-wrap gap-2">
+                      {avatarList.map((src, index) => (
+                        <img
+                          key={index}
+                          src={src}
+                          alt={`avatar-${index}`}
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "50%",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleAvatarSelect(src)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <Link
                 to="/favoritos"
                 className={`btn btn-sm text-light ${
@@ -105,7 +159,6 @@ const Header = () => {
               >
                 <FaHeart className="me-1" /> Favoritos
               </Link>
-
               <Link
                 to="/mis-listas"
                 className={`btn btn-sm text-light ${
@@ -122,7 +175,6 @@ const Header = () => {
               >
                 <BsClockHistory className="me-1" /> Historial
               </Link>
-
               <div className="dropdown">
                 <button
                   className={`btn btn-sm text-light dropdown-toggle ${
