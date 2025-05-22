@@ -320,7 +320,7 @@ const Home = () => {
         Explora {tipo === "movie" ? "Películas" : "Series"}
       </h2>
 
-      <div className="input-group mb-3">
+      <div className="input-group mb-3 sin-fondo">
         <input
           type="text"
           className="form-control"
@@ -352,7 +352,7 @@ const Home = () => {
         </button>
       </div>
 
-      <div className="d-flex gap-3 mb-4 flex-wrap align-items-center">
+      <div className="d-flex gap-3 mb-4 flex-wrap align-items-center sin-fondo">
         <select
           className="form-select w-auto"
           value={tipo}

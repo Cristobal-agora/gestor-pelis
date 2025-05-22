@@ -8,6 +8,7 @@ import TextoColapsado from "../components/TextoColapsado";
 import Comentarios from "../components/Comentarios";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { FaRegCommentDots } from "react-icons/fa";
 import {
   BsListUl,
   BsFolderPlus,
@@ -199,34 +200,7 @@ const SerieDetail = () => {
                   setActualizarValoraciones((prev) => prev + 1)
                 }
               />
-              <div className="mt-4">
-                <button
-                  className="btn btn-outline-info w-100 d-flex justify-content-between align-items-center"
-                  onClick={() => setMostrarSeguimiento(true)}
-                >
-                  <span>
-                    <BsTv className="me-1" />
-                    Mostrar seguimiento
-                  </span>
 
-                  {progreso && <span className="fw-semibold">{progreso}</span>}
-                </button>
-                {progreso && (
-                  <div className="progress mt-2" style={{ height: "6px" }}>
-                    <div
-                      className="progress-bar bg-info"
-                      role="progressbar"
-                      style={{
-                        width: `${
-                          (parseInt(progreso.split("/")[0]) /
-                            parseInt(progreso.split("/")[1])) *
-                          100
-                        }%`,
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
               {mostrarSeguimiento && (
                 <ModalSeguimiento
                   tmdbId={serie.id}
@@ -238,7 +212,7 @@ const SerieDetail = () => {
         </div>
 
         <div className="col-md-8">
-          <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
+          <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap sin-fondo">
             <h2 className="text-primary fw-bold me-2">{serie.name}</h2>
             <motion.button
               onClick={toggleFavorito}
@@ -261,6 +235,35 @@ const SerieDetail = () => {
             </motion.button>
           </div>
 
+          <div className="mb-3 d-flex flex-column align-items-start sin-fondo">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              onClick={() => setMostrarSeguimiento(true)}
+              className="btn-seguimiento d-flex align-items-center gap-2"
+            >
+              <BsTv />
+              Mostrar seguimiento
+            </motion.button>
+
+            {progreso && (
+              <div className="barra-seguimiento mt-2">
+                <div
+                  className="barra-seguimiento-interna"
+                  style={{
+                    width: `${
+                      (parseInt(progreso.split("/")[0]) /
+                        parseInt(progreso.split("/")[1])) *
+                      100
+                    }%`,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <br></br>
           {token && (
             <div className="mb-4">
               <label className="form-label">
@@ -519,15 +522,17 @@ const SerieDetail = () => {
             />
           )}
 
-          <button
-            className="btn btn-outline-light mt-3"
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="btn-comentarios mt-3"
             data-bs-toggle="modal"
             data-bs-target="#modalComentarios"
           >
-            <BsChatDots className="me-1" />
+            <FaRegCommentDots className="me-2" />
             Ver comentarios
-          </button>
-
+          </motion.button>
           <Comentarios tmdbId={serie.id} tipo={"tv"} />
 
           <br />

@@ -7,6 +7,7 @@ import TextoColapsado from "../components/TextoColapsado";
 import Comentarios from "../components/Comentarios";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { FaRegCommentDots } from "react-icons/fa";
 import {
   BsEye,
   BsEyeSlash,
@@ -230,7 +231,7 @@ const MovieDetail = () => {
         </div>
 
         <div className="col-md-8">
-          <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
+          <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap sin-fondo">
             <h2 className="text-primary fw-bold me-2">{pelicula.title}</h2>
             <motion.button
               onClick={toggleFavorito}
@@ -536,15 +537,17 @@ const MovieDetail = () => {
               valor="No disponible en plataformas en España"
             />
           )}
-
-          <button
-            className="btn btn-outline-light mt-3"
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="btn-comentarios d-flex align-items-center gap-2 mt-3"
             data-bs-toggle="modal"
             data-bs-target="#modalComentarios"
           >
+            <FaRegCommentDots size={18} />
             Ver comentarios
-          </button>
-
+          </motion.button>
           <Comentarios tmdbId={pelicula.id} tipo={"movie"} />
         </div>
       </div>

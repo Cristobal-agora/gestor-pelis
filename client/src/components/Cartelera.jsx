@@ -44,14 +44,14 @@ const Cartelera = () => {
 
   return (
     <div className="text-light">
-      <h3 className="text-primary mb-3 d-flex align-items-center gap-2">
+      <h3 className="text-primary mb-3 d-flex align-items-center gap-2 sin-fondo">
         <img
           src="/favicon.ico"
           alt="CineStash"
           style={{
-            height: "28px", 
-            width: "28px", 
-            objectFit: "contain", 
+            height: "28px",
+            width: "28px",
+            objectFit: "contain",
             filter: "drop-shadow(0 0 1px #1f8df5)",
           }}
         />
@@ -79,7 +79,7 @@ const Cartelera = () => {
               <img
                 src={`https://image.tmdb.org/t/p/w500${p.poster_path}`}
                 alt={p.title}
-                className="img-fluid rounded shadow"
+                className="img-fluid rounded cartelera-img-hover"
                 style={{
                   width: "160px",
                   height: "240px",
