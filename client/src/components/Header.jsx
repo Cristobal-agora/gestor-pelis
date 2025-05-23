@@ -126,7 +126,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
                 }}
               />
 
-              <span className="cinestash-title m-0">CineStash</span>
+              <span className="cinestash-title text-azul-suave m-0">CineStash</span>
               <motion.button
                 type="button"
                 onClick={(e) => {

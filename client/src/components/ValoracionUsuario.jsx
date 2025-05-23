@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsStarFill, BsStar, BsSave, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2';
-
+import Swal from "sweetalert2";
 
 const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada }) => {
   const [miValoracion, setMiValoracion] = useState(null);
@@ -44,48 +43,46 @@ const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada }) => {
       if (res.ok) {
         toast.success("Valoración guardada");
         setMiValoracion({ puntuacion });
-
-        // 🔁 Notificar al padre si existe el callback
         if (onValoracionGuardada) onValoracionGuardada();
+      } else {
+        toast.error("No se pudo guardar la valoración");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error de conexión");
+      toast.error("Error de conexión");
     }
   };
 
- const eliminarValoracion = async () => {
-  const result = await Swal.fire({
-    title: '¿Eliminar valoración?',
-    text: 'Esta acción no se puede deshacer.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
-    confirmButtonColor: '#dc3545',
-  });
+  const eliminarValoracion = async () => {
+    const result = await Swal.fire({
+      title: "¿Eliminar valoración?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#dc3545",
+    });
 
-  if (!result.isConfirmed) return;
+    if (!result.isConfirmed) return;
 
-  const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/valoraciones/${tipo}/${tmdb_id}`,
-    {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/valoraciones/${tipo}/${tmdb_id}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (res.ok) {
+      setMiValoracion(null);
+      setPuntuacion(0);
+      toast.info("Valoración eliminada");
+      if (onValoracionGuardada) onValoracionGuardada();
+    } else {
+      toast.error("No se pudo eliminar la valoración");
     }
-  );
-
-  if (res.ok) {
-    setMiValoracion(null);
-    setPuntuacion(0);
-    toast.info("Valoración eliminada");
-
-    if (onValoracionGuardada) onValoracionGuardada();
-  } else {
-    toast.error("❌ No se pudo eliminar la valoración");
-  }
-};
-
+  };
 
   return (
     <div className="mt-3">
@@ -121,16 +118,13 @@ const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada }) => {
         </div>
 
         <div className="d-flex gap-2">
-          <button className="btn btn-success btn-sm" onClick={enviarValoracion}>
+          <button className="btn-crear-lista" onClick={enviarValoracion}>
             <BsSave className="me-1" />
             Guardar
           </button>
 
           {miValoracion && (
-            <button
-              className="btn btn-danger btn-sm"
-              onClick={eliminarValoracion}
-            >
+            <button className="btn-cancelar-lista" onClick={eliminarValoracion}>
               <BsTrash className="me-1" />
               Eliminar
             </button>

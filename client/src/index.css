@@ -78,7 +78,6 @@ a:hover {
 
 .cinestash-title {
   font-size: 2.2rem;
-  color: var(--color-acento);
   font-weight: 800;
   font-family: var(--fuente);
   letter-spacing: 0.5px;
@@ -195,35 +194,30 @@ select:focus {
 
 /* ===== PAGINACIÓN ===== */
 .pagination-btn {
-  background-color: transparent;
-  color: #ccc;
+  background-color: #1f1f1f;
   border: none;
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0.6rem 0.9rem;
+  font-size: 1.1rem;
+  color: #f5f5f5;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.pagination-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+.pagination-btn:hover:not(.disabled) {
+  background-color: #1f8df5;
+  color: #fff;
 }
 
 .pagination-btn.active {
-  background-color: var(--color-acento);
-  color: white;
+  background-color: #1f8df5;
   font-weight: bold;
+  color: #fff;
 }
 
 .pagination-btn.disabled {
   opacity: 0.4;
-  pointer-events: none;
-}
-
-.pagination-btn.active {
-  background-color: var(--color-acento);
-  color: #fff;
-  border: none;
+  cursor: not-allowed;
 }
 
 /* ===== CARTELERA SCROLL INFINITO ===== */
@@ -1019,7 +1013,7 @@ input.form-control:focus {
   background-color: rgba(0, 0, 0, 0.7) !important;
 }
 body.modo-claro {
-  --bg-dark-top: #9a9c9e;
+  --bg-dark-top: #ffffff;
   --bg-dark-bottom: #8f9194;
   --texto-claro: #101010;
   --color-acento: #1f8df5;
@@ -1169,4 +1163,169 @@ body.modo-claro .sin-borde-icono:hover {
 .cartelera-img-hover:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.btn-visto {
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.btn-visto.visto {
+  background-color: #28a745;
+  color: white;
+}
+.btn-visto.no-visto {
+  background-color: #dc3545;
+  color: white;
+}
+.btn-visto:hover {
+  opacity: 0.9;
+}
+.select-lista-compacta {
+  max-width: 220px;
+  padding: 0.4rem 1.2rem;
+  border-radius: 999px;
+  border: 2px solid var(--color-acento);
+  background-color: #1e1e1e;
+  color: var(--texto-claro);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  appearance: none;
+}
+
+.select-lista-compacta:focus {
+  border-color: var(--color-acento-hover);
+  outline: none;
+}
+
+body.modo-claro .select-lista-compacta {
+  color: var(--texto-claro);
+  background-color: #ffffff;
+  color: #000;
+  border-color: var(--color-acento);
+}
+
+.btn-nueva-lista {
+  background-color: transparent;
+  border: 2px dashed var(--color-acento);
+  color: var(--color-acento);
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-nueva-lista:hover {
+  background-color: var(--color-acento);
+  color: white;
+}
+
+body.modo-claro .btn-nueva-lista {
+  background-color: var(--color-acento) !important;
+  color: white !important;
+  border: none !important;
+}
+
+body.modo-claro .btn-nueva-lista:hover {
+  background-color: var(--color-acento-hover) !important;
+  color: white !important;
+}
+
+.btn-anadir {
+  background-color: var(--color-acento);
+  color: white;
+  border: none;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+.btn-anadir:hover {
+  background-color: var(--color-acento-hover);
+}
+
+.btn-crear-lista {
+  background-color: #28a745;
+  color: white;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+.btn-crear-lista:hover {
+  background-color: #218838;
+}
+.btn-cancelar-lista {
+  background-color: transparent;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-cancelar-lista:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-nueva-lista,
+.btn-anadir {
+  min-width: 160px;
+  max-width: 160px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.95rem;
+  height: 38px;
+}
+.select-uniforme {
+  min-width: auto;
+  max-width: 100%;
+  padding: 0.4rem 1.2rem;
+  font-size: 0.95rem;
+  height: 38px;
+  border-radius: 999px;
+  border: 2px solid var(--color-acento);
+  background-color: #1e1e1e;
+  color: var(--texto-claro);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg fill='%23ffffff' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 16px;
+  padding-right: 2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.modo-claro .select-uniforme {
+  background-color: #ffffff;
+  color: #000;
+  border-color: var(--color-acento);
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg fill='%23000000' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+}
+
+select option {
+  background-color: #1c1c1c;
+  color: #fff;
+}
+body.modo-claro select option {
+  background-color: #fff;
+  color: #000;
+}
+.text-azul-suave {
+  color: #1f8df5;
+}
+.valoracion-lateral {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }

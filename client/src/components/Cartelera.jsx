@@ -44,7 +44,7 @@ const Cartelera = () => {
 
   return (
     <div className="text-light">
-      <h3 className="text-primary mb-3 d-flex align-items-center gap-2 sin-fondo">
+      <h3 className="text-azul-suave mb-3 d-flex align-items-center gap-2 sin-fondo">
         <img
           src="/favicon.ico"
           alt="CineStash"

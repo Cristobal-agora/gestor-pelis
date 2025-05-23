@@ -3,6 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Cartelera from "../components/Cartelera";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import {
+  BsChevronDoubleLeft,
+  BsChevronLeft,
+  BsChevronRight,
+  BsChevronDoubleRight,
+} from "react-icons/bs";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -316,11 +322,11 @@ const Home = () => {
           <hr className="my-5 text-secondary" />
         </div>
       )}
-      <h2 className="mb-2 text-primary">
-        Explora {tipo === "movie" ? "Películas" : "Series"}
+      <h2 className="mb-2 text-azul-suave">
+        {tipo === "movie" ? "Películas" : "Series"}
       </h2>
-
-      <div className="input-group mb-3 sin-fondo">
+      <br />
+      <div className="input-group mb-2 sin-fondo">
         <input
           type="text"
           className="form-control"
@@ -461,7 +467,7 @@ const Home = () => {
                 onClick={() => setPagina(1)}
                 title="Primera página"
               >
-                ⏮
+                <BsChevronDoubleLeft />
               </motion.button>
 
               {/* Anterior */}
@@ -473,7 +479,7 @@ const Home = () => {
                 onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
-                ◀
+                <BsChevronLeft />
               </motion.button>
 
               {/* Números de página */}
@@ -503,7 +509,7 @@ const Home = () => {
                 onClick={() => setPagina((p) => p + 1)}
                 title="Siguiente"
               >
-                ▶
+                <BsChevronRight />
               </motion.button>
 
               {/* Última página */}
@@ -530,7 +536,7 @@ const Home = () => {
                 }}
                 title="Última página"
               >
-                ⏭
+                <BsChevronDoubleRight />
               </motion.button>
             </div>
           )}
@@ -586,7 +592,7 @@ const Home = () => {
                 onClick={() => setPagina(1)}
                 title="Primera página"
               >
-                ⏮
+                <BsChevronDoubleLeft />
               </motion.button>
 
               {/* Anterior */}
@@ -598,7 +604,7 @@ const Home = () => {
                 onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 title="Anterior"
               >
-                ◀
+                <BsChevronLeft />
               </motion.button>
 
               {/* Números de página */}
@@ -628,7 +634,7 @@ const Home = () => {
                 onClick={() => setPagina((p) => p + 1)}
                 title="Siguiente"
               >
-                ▶
+                <BsChevronRight />
               </motion.button>
 
               {/* Última página */}
@@ -655,7 +661,7 @@ const Home = () => {
                 }}
                 title="Última página"
               >
-                ⏭
+                <BsChevronDoubleRight />
               </motion.button>
             </div>
           )}

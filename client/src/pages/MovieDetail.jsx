@@ -23,6 +23,7 @@ import {
 } from "react-icons/bs";
 
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -130,7 +131,8 @@ const MovieDetail = () => {
 
   const toggleFavorito = async () => {
     if (!token) {
-      alert("Debes iniciar sesión para guardar favoritos");
+      toast.info("Debes iniciar sesión para guardar favoritos");
+
       return;
     }
 
@@ -162,7 +164,8 @@ const MovieDetail = () => {
   };
 
   const toggleVista = async () => {
-    if (!token) return alert("Debes iniciar sesión para usar esta función");
+    if (!token)
+      return toast.info("Debes iniciar sesión para usar esta función");
 
     const url = `${import.meta.env.VITE_API_URL}/historial${
       vista ? `/${id}/movie` : ""
@@ -218,71 +221,68 @@ const MovieDetail = () => {
             }}
             transition={{ type: "spring", stiffness: 200 }}
           />
-
-          {token && (
-            <ValoracionUsuario
-              tmdb_id={pelicula.id}
-              tipo="movie"
-              onValoracionGuardada={() =>
-                setActualizarValoraciones((prev) => prev + 1)
-              }
-            />
-          )}
         </div>
 
         <div className="col-md-8">
-          <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap sin-fondo">
-            <h2 className="text-primary fw-bold me-2">{pelicula.title}</h2>
-            <motion.button
-              onClick={toggleFavorito}
-              className="btn border-0 p-0"
-              title={esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"}
-              whileTap={{ scale: 0.9 }}
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.span
-                animate={{ rotate: esFavorito ? 360 : 0 }}
-                transition={{ duration: 0.4 }}
-                style={{
-                  fontSize: "2rem",
-                  color: esFavorito ? "red" : "#6c757d",
-                }}
-              >
-                {esFavorito ? <FaHeart /> : <FaRegHeart />}
-              </motion.span>
-            </motion.button>
+          <div className="sin-fondo mb-3">
+            <div className="d-flex justify-content-between align-items-start flex-wrap">
+              <h2 className="text-azul-suave fw-bold me-2 mb-3">
+                {pelicula.title}
+              </h2>
 
-            {token && (
-              <motion.button
-                onClick={toggleVista}
-                className={`btn btn-sm mt-2 d-flex align-items-center gap-2 ${
-                  vista ? "btn-success" : "btn-outline-danger"
-                }`}
-                title={vista ? "Marcar como no vista" : "Marcar como vista"}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <motion.span
-                  initial={false}
-                  animate={{ rotate: vista ? 360 : 0 }}
-                  transition={{ duration: 0.4 }}
-                  style={{
-                    display: "flex", // mejor que "inline-block" para alinear con texto
-                    alignItems: "center", // verticalmente centrado
-                    fontSize: "1.4rem", // tamaño un poco mayor
-                    lineHeight: 1, // asegura que no se desplace verticalmente
-                    filter: vista
-                      ? "drop-shadow(0 0 4px limegreen)"
-                      : "drop-shadow(0 0 3px crimson)",
-                  }}
+              <div className="d-flex align-items-center gap-3">
+                <motion.button
+                  onClick={toggleFavorito}
+                  className="btn border-0 p-0"
+                  title={
+                    esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"
+                  }
+                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  {vista ? <BsEye /> : <BsEyeSlash />}
-                </motion.span>
-                {vista ? "Vista" : "No vista"}
-              </motion.button>
-            )}
+                  <motion.span
+                    animate={{ rotate: esFavorito ? 360 : 0 }}
+                    transition={{ duration: 0.4 }}
+                    style={{
+                      fontSize: "2rem",
+                      color: esFavorito ? "red" : "#6c757d",
+                    }}
+                  >
+                    {esFavorito ? <FaHeart /> : <FaRegHeart />}
+                  </motion.span>
+                </motion.button>
+
+                {token && (
+                  <motion.button
+                    onClick={toggleVista}
+                    className={`btn-visto ${vista ? "visto" : "no-visto"}`}
+                    title={vista ? "Marcar como no vista" : "Marcar como vista"}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <motion.span
+                      initial={false}
+                      animate={{ rotate: vista ? 360 : 0 }}
+                      transition={{ duration: 0.4 }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        fontSize: "1.4rem",
+                        lineHeight: 1,
+                        filter: vista
+                          ? "drop-shadow(0 0 4px limegreen)"
+                          : "drop-shadow(0 0 3px crimson)",
+                      }}
+                    >
+                      {vista ? <BsEye /> : <BsEyeSlash />}
+                    </motion.span>
+                    {vista ? "Vista" : "No vista"}
+                  </motion.button>
+                )}
+              </div>
+            </div>
           </div>
 
           {token && (
@@ -295,11 +295,14 @@ const MovieDetail = () => {
                 {!modoCrearLista ? (
                   <>
                     <select
-                      className="form-select w-auto"
+                      className="select-uniforme"
                       value={listaSeleccionada}
                       onChange={(e) => setListaSeleccionada(e.target.value)}
+                      aria-label="Selecciona una lista"
                     >
-                      <option value="">Selecciona una lista</option>
+                      <option value="" disabled hidden>
+                        Selecciona una lista
+                      </option>
                       {listas.length === 0 ? (
                         <option disabled>🔸 No tienes listas creadas</option>
                       ) : (
@@ -310,8 +313,9 @@ const MovieDetail = () => {
                         ))
                       )}
                     </select>
+
                     <button
-                      className="btn btn-outline-secondary btn-sm btn-igual me-2"
+                      className="btn-nueva-lista"
                       onClick={() => {
                         setModoCrearLista(true);
                         setListaSeleccionada(""); // opcional: reset selección
@@ -319,48 +323,6 @@ const MovieDetail = () => {
                     >
                       <BsFolderPlus className="me-1" /> Nueva lista
                     </button>
-
-                    {!modoCrearLista && (
-                      <button
-                        className="btn btn-primary btn-sm btn-igual"
-                        disabled={!listaSeleccionada}
-                        onClick={async () => {
-                          const payload = {
-                            pelicula_id: pelicula.id,
-                            tipo: "movie",
-                          };
-
-                          try {
-                            const res = await fetch(
-                              `${
-                                import.meta.env.VITE_API_URL
-                              }/listas/${listaSeleccionada}/contenido`,
-                              {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify(payload),
-                              }
-                            );
-
-                            const respuesta = await res.json();
-                            if (res.ok) {
-                              alert("✅ Añadido a la lista");
-                              setListaSeleccionada("");
-                            } else {
-                              alert(respuesta.mensaje || "Error al añadir");
-                            }
-                          } catch (err) {
-                            console.error(err);
-                            alert("Error de conexión");
-                          }
-                        }}
-                      >
-                        <BsPlusLg className="me-1" /> Añadir
-                      </button>
-                    )}
                   </>
                 ) : (
                   <>
@@ -372,10 +334,10 @@ const MovieDetail = () => {
                       onChange={(e) => setNuevaLista(e.target.value)}
                     />
                     <button
-                      className="btn btn-success btn-sm"
+                      className="btn-crear-lista"
                       onClick={async () => {
                         if (!nuevaLista.trim()) {
-                          return alert("Escribe un nombre válido");
+                          return toast.warn("⚠️ Escribe un nombre válido");
                         }
 
                         try {
@@ -414,31 +376,34 @@ const MovieDetail = () => {
                             );
 
                             if (resContenido.ok) {
-                              alert(
-                                "✅ Lista creada y película añadida correctamente"
+                              toast.success(
+                                "Lista creada y película añadida correctamente"
                               );
                               setListas((prev) => [...prev, data]);
-                              setListaSeleccionada("");
+                              setListasIncluye((prev) => [...prev, data]); // 🔧 asegura que yaIncluida sea true
+                              setListaSeleccionada(data.id.toString());
                               setModoCrearLista(false);
                               setNuevaLista("");
                             } else {
-                              alert(
-                                "⚠️ Lista creada, pero no se pudo añadir la película."
+                              toast.warn(
+                                "Lista creada, pero no se pudo añadir la película."
                               );
                             }
                           } else {
-                            alert(data.mensaje || "No se pudo crear la lista");
+                            toast.error(
+                              data.mensaje || "No se pudo crear la lista"
+                            );
                           }
                         } catch (err) {
                           console.error("❌ Error:", err);
-                          alert("Error de conexión");
+                          toast.error("Error de conexión");
                         }
                       }}
                     >
                       Crear
                     </button>
                     <button
-                      className="btn btn-outline-danger btn-sm"
+                      className="btn-cancelar-lista"
                       onClick={() => {
                         setModoCrearLista(false);
                         setNuevaLista("");
@@ -474,82 +439,102 @@ const MovieDetail = () => {
             trigger={actualizarValoraciones}
           />
 
-          <br></br>
-          <DetalleItem
-            icono={<BsCalendar />}
-            etiqueta="Fecha de estreno:"
-            valor={pelicula.release_date}
-          />
+          <div className="row mt-3 align-items-start">
+            <div className="col-md-8">
+              <DetalleItem
+                icono={<BsCalendar />}
+                etiqueta="Fecha de estreno:"
+                valor={pelicula.release_date}
+              />
 
-          <DetalleItem
-            icono={<BsCardText />}
-            etiqueta="Resumen:"
-            valor={
-              <TextoColapsado texto={pelicula.overview || "No disponible."} />
-            }
-          />
+              <DetalleItem
+                icono={<BsCardText />}
+                etiqueta="Resumen:"
+                valor={
+                  <TextoColapsado
+                    texto={pelicula.overview || "No disponible."}
+                  />
+                }
+              />
 
-          <DetalleItem
-            icono={<BsCollectionPlay />}
-            etiqueta="Género:"
-            valor={pelicula.genres.map((g) => g.name).join(", ")}
-          />
+              <DetalleItem
+                icono={<BsCollectionPlay />}
+                etiqueta="Género:"
+                valor={pelicula.genres.map((g) => g.name).join(", ")}
+              />
 
-          <DetalleItem
-            icono={<BsClock />}
-            etiqueta="Duración:"
-            valor={`${pelicula.runtime} min`}
-          />
+              <DetalleItem
+                icono={<BsClock />}
+                etiqueta="Duración:"
+                valor={`${pelicula.runtime} min`}
+              />
 
-          {plataformas.items.length > 0 ? (
-            <DetalleItem
-              icono={<BsBroadcast />}
-              etiqueta="Disponible en:"
-              valor={
-                <a
-                  href={plataformas.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="d-flex flex-wrap gap-2 align-items-center"
-                  style={{ textDecoration: "none" }}
-                >
-                  {plataformas.items.map((p) => (
-                    <img
-                      key={p.provider_id}
-                      src={`https://image.tmdb.org/t/p/w45${p.logo_path}`}
-                      alt={p.provider_name}
-                      title={p.provider_name}
-                      className="rounded"
-                      style={{
-                        backgroundColor: "#fff",
-                        padding: "2px",
-                        height: "30px",
-                      }}
-                    />
-                  ))}
-                </a>
-              }
-            />
-          ) : (
-            <DetalleItem
-              icono={<BsBroadcast />}
-              etiqueta="Disponible en:"
-              valor="No disponible en plataformas en España"
-            />
-          )}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300 }}
-            className="btn-comentarios d-flex align-items-center gap-2 mt-3"
-            data-bs-toggle="modal"
-            data-bs-target="#modalComentarios"
-          >
-            <FaRegCommentDots size={18} />
-            Ver comentarios
-          </motion.button>
-          <Comentarios tmdbId={pelicula.id} tipo={"movie"} />
+              {plataformas.items.length > 0 ? (
+                <DetalleItem
+                  icono={<BsBroadcast />}
+                  etiqueta="Disponible en:"
+                  valor={
+                    <a
+                      href={plataformas.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="d-flex flex-wrap gap-2 align-items-center"
+                      style={{ textDecoration: "none" }}
+                    >
+                      {plataformas.items.map((p) => (
+                        <img
+                          key={p.provider_id}
+                          src={`https://image.tmdb.org/t/p/w45${p.logo_path}`}
+                          alt={p.provider_name}
+                          title={p.provider_name}
+                          className="rounded"
+                          style={{
+                            backgroundColor: "#fff",
+                            padding: "2px",
+                            height: "30px",
+                          }}
+                        />
+                      ))}
+                    </a>
+                  }
+                />
+              ) : (
+                <DetalleItem
+                  icono={<BsBroadcast />}
+                  etiqueta="Disponible en:"
+                  valor="No disponible en plataformas en España"
+                />
+              )}
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="btn-comentarios d-flex align-items-center gap-2 mt-2"
+                data-bs-toggle="modal"
+                data-bs-target="#modalComentarios"
+              >
+                <FaRegCommentDots size={18} />
+                Ver comentarios
+              </motion.button>
+            </div>
+            {token && (
+              <div className="col-md-4 d-flex justify-content-end">
+                <div style={{ maxWidth: "280px" }}>
+                  <ValoracionUsuario
+                    tmdb_id={pelicula.id}
+                    tipo="movie"
+                    onValoracionGuardada={() =>
+                      setActualizarValoraciones((prev) => prev + 1)
+                    }
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
+        <Comentarios tmdbId={pelicula.id} tipo={"movie"} />
       </div>
     </motion.div>
   );
