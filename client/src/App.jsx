@@ -55,10 +55,10 @@ function AppContent() {
     }
   }, [modoClaro, temaInicializado, location.pathname]);
 
- const rutasSinHeaderFooter = ["/login", "/register", "/reset-password"];
-const rutaOcultaFooter = rutasSinHeaderFooter.some((ruta) =>
-  location.pathname.startsWith(ruta)
-);
+  const rutasSinHeaderFooter = ["/login", "/register", "/reset-password"];
+  const rutaOcultaFooter = rutasSinHeaderFooter.some((ruta) =>
+    location.pathname.startsWith(ruta)
+  );
 
   const mostrarFooterSimple = location.pathname === "/";
 
@@ -129,7 +129,7 @@ const rutaOcultaFooter = rutasSinHeaderFooter.some((ruta) =>
               path="/favoritos"
               element={
                 <RutaPrivada>
-                  <Favoritos />
+                  <Favoritos modoClaro={modoClaro} />
                 </RutaPrivada>
               }
             />
@@ -145,7 +145,7 @@ const rutaOcultaFooter = rutasSinHeaderFooter.some((ruta) =>
               path="/mis-listas"
               element={
                 <RutaPrivada>
-                  <MisListas />
+                  <MisListas modoClaro={modoClaro} />
                 </RutaPrivada>
               }
             />
@@ -153,15 +153,16 @@ const rutaOcultaFooter = rutasSinHeaderFooter.some((ruta) =>
               path="/lista/:id"
               element={
                 <RutaPrivada>
-                  <ListaDetalle />
+                  <ListaDetalle modoClaro={modoClaro} />
                 </RutaPrivada>
               }
             />
+
             <Route
               path="/historial"
               element={
                 <RutaPrivada>
-                  <Historial />
+                  <Historial modoClaro={modoClaro} />
                 </RutaPrivada>
               }
             />

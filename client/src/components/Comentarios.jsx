@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { FaCommentDots, FaTrashAlt, FaPaperPlane } from "react-icons/fa";
 
-const Comentarios = ({ tmdbId, tipo }) => {
+const Comentarios = ({ tmdbId, tipo, modoClaro }) => {
   const [comentarios, setComentarios] = useState([]);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const token = sessionStorage.getItem("token");
@@ -12,7 +13,6 @@ const Comentarios = ({ tmdbId, tipo }) => {
         `${import.meta.env.VITE_API_URL}/comentarios/${tipo}/${tmdbId}`
       );
       const data = await res.json();
-      console.log("Comentarios recibidos:", data);
       setComentarios(data);
     } catch (error) {
       console.error("Error al obtener comentarios:", error);
@@ -78,19 +78,28 @@ const Comentarios = ({ tmdbId, tipo }) => {
       aria-hidden="true"
     >
       <div className="modal-dialog modal-lg modal-dialog-scrollable">
-        <div className="modal-content bg-dark text-light border-secondary">
+        <div
+          className={`modal-content ${
+            modoClaro ? "bg-light text-dark" : "bg-dark text-light"
+          } border-secondary`}
+        >
           <div className="modal-header border-secondary">
-            <h5 className="modal-title" id="comentariosLabel">
-              💬 Comentarios
+            <h5
+              className="modal-title d-flex align-items-center gap-2"
+              id="comentariosLabel"
+            >
+              <FaCommentDots className="text-info" />
+              Comentarios
             </h5>
             <button
               type="button"
-              className="btn-close btn-close-white"
+              className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Cerrar"
             ></button>
           </div>
-          <div className="modal-body">
+         <div className="modal-body modal-body-scrollable">
+
             {comentarios.length === 0 ? (
               <p>No hay comentarios todavía.</p>
             ) : (
@@ -98,14 +107,27 @@ const Comentarios = ({ tmdbId, tipo }) => {
                 {comentarios.map((comentario) => (
                   <li
                     key={comentario.id}
-                    className="comentario-animado mb-3 p-3 bg-dark text-light rounded-3 shadow-sm border border-secondary"
+                    className={`comentario-animado mb-3 p-3 rounded-4 ${
+                      modoClaro
+                        ? "bg-white text-dark border border-info"
+                        : "bg-secondary bg-opacity-10 text-light border border-info-subtle"
+                    }`}
                   >
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <div>
-                        <strong className="text-info">
+                        <strong
+                          style={{
+                            color: modoClaro ? "#0077cc" : "#00bfff",
+                            fontWeight: "600",
+                          }}
+                        >
                           {comentario.nombre}
                         </strong>
-                        <small className="text-light ms-2">
+                        <small
+                          className={`ms-2 ${
+                            modoClaro ? "text-muted" : "text-light"
+                          }`}
+                        >
                           {comentario.creado_en &&
                           !isNaN(Date.parse(comentario.creado_en))
                             ? new Date(comentario.creado_en).toLocaleString(
@@ -123,10 +145,11 @@ const Comentarios = ({ tmdbId, tipo }) => {
                       </div>
                       {token && usuario?.id === comentario.usuario_id && (
                         <button
-                          className="btn btn-sm btn-outline-danger"
+                          className="btn btn-sm p-0 border-0 bg-transparent"
+                          title="Eliminar comentario"
                           onClick={() => borrarComentario(comentario.id)}
                         >
-                          🗑️
+                          <FaTrashAlt className="text-danger" />
                         </button>
                       )}
                     </div>
@@ -136,20 +159,26 @@ const Comentarios = ({ tmdbId, tipo }) => {
               </ul>
             )}
           </div>
-          <div className="modal-footer border-secondary">
+          <div className="modal-footer border-secondary d-flex flex-column flex-md-row gap-2 align-items-end">
             <textarea
-              className="form-control bg-dark text-light border-secondary"
+              className="form-control flex-grow-1"
               rows="2"
               placeholder="Escribe un comentario..."
               value={nuevoComentario}
               onChange={(e) => setNuevoComentario(e.target.value)}
+              style={{
+                resize: "none",
+                backgroundColor: "#fff", // blanco en ambos modos
+                color: "#000", // texto negro siempre
+                borderColor: modoClaro ? "#ccc" : "#555",
+              }}
             />
             <button
-              className="btn btn-primary mt-2"
+              className="btn btn-comentarios"
               onClick={enviarComentario}
               disabled={!nuevoComentario.trim()}
             >
-              Enviar
+              <FaPaperPlane /> Enviar
             </button>
           </div>
         </div>

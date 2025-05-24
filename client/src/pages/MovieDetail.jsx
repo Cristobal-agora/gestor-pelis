@@ -283,20 +283,27 @@ const MovieDetail = () => {
               <div className="d-flex align-items-center gap-3">
                 <motion.button
                   onClick={toggleFavorito}
-                  className="btn border-0 p-0"
+                  className="btn border-0 p-0 d-flex align-items-center justify-content-center"
                   title={
                     esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"
                   }
                   whileTap={{ scale: 0.9 }}
                   whileHover={{ scale: 1.1 }}
                   transition={{ type: "spring", stiffness: 300 }}
+                  style={{
+                    width: "48px",
+                    height: "48px", // Igual altura que btn-visto
+                    borderRadius: "999px", // Redondeado
+                    backgroundColor: "transparent", // o color dinámico si quieres
+                  }}
                 >
                   <motion.span
                     animate={{ rotate: esFavorito ? 360 : 0 }}
                     transition={{ duration: 0.4 }}
                     style={{
-                      fontSize: "2rem",
+                      fontSize: "1.6rem",
                       color: esFavorito ? "red" : "#6c757d",
+                      lineHeight: "1",
                     }}
                   >
                     {esFavorito ? <FaHeart /> : <FaRegHeart />}
@@ -583,6 +590,7 @@ const MovieDetail = () => {
                 Ver comentarios
               </motion.button>
             </div>
+
             {token && (
               <div className="col-md-4 d-flex justify-content-end">
                 <div style={{ maxWidth: "280px" }}>

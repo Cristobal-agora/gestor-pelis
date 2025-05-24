@@ -26,7 +26,7 @@ const TextoColapsado = ({ texto, lineas = 3 }) => {
       </div>
       {hayOverflow && (
         <button
-          className="btn btn-link btn-sm text-info p-0 mt-1"
+          className="btn btn-link btn-sm texto-expandible p-0 mt-1"
           onClick={() => setExpandido(!expandido)}
         >
           {expandido ? "Mostrar menos" : "Mostrar más"}

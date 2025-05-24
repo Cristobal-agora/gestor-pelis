@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
-const MisListas = () => {
+const MisListas = ({ modoClaro }) => {
   const [listas, setListas] = useState([]);
   const [nuevaLista, setNuevaLista] = useState("");
   const [error, setError] = useState("");
@@ -59,7 +59,7 @@ const MisListas = () => {
   }, [obtenerListas, token, navigate]);
 
   return (
-    <div className="container mt-4 text-light">
+    <div className={`container mt-4 ${modoClaro ? "text-dark" : "text-light"}`}>
       <h2 className="mb-3 text-primary d-flex align-items-center gap-2">
         <FaFolderOpen /> Mis Listas
       </h2>
@@ -72,7 +72,17 @@ const MisListas = () => {
           value={nuevaLista}
           onChange={(e) => setNuevaLista(e.target.value)}
         />
-        <button className="btn btn-success" onClick={crearLista}>
+        <button
+          className="btn btn-crear-lista"
+          onClick={crearLista}
+          style={{
+            backgroundColor: "#28a745",
+            color: "#fff",
+            borderRadius: "999px",
+            fontWeight: "500",
+            padding: "0.45rem 1.25rem",
+          }}
+        >
           Crear
         </button>
       </div>
@@ -86,11 +96,23 @@ const MisListas = () => {
           {listas.map((lista) => (
             <li
               key={lista.id}
-              className="list-group-item d-flex justify-content-between align-items-center"
+              className="list-group-item d-flex justify-content-between align-items-center shadow-sm"
+              style={{
+                borderRadius: "12px",
+                padding: "0.8rem 1rem",
+                backgroundColor: modoClaro ? "#f1f1f1" : "#3c474ab1",
+                color: modoClaro ? "#000" : "#ddd",
+                border: modoClaro ? "1px solid #ccc" : "1px solid #333",
+              }}
             >
-              <Link to={`/lista/${lista.id}`} className="text-decoration-none">
+              <Link
+                to={`/lista/${lista.id}`}
+                className="text-decoration-none"
+                style={{ color: modoClaro ? "#1f8df5" : "#1f8df5" }}
+              >
                 {lista.nombre}
               </Link>
+
               <button
                 className="btn btn-sm p-0 border-0 bg-transparent"
                 title="Eliminar lista"

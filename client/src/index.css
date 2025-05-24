@@ -244,11 +244,6 @@ select:focus {
   }
 }
 
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar {
-  display: none;
-}
-
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -384,24 +379,65 @@ main {
 }
 /* Botones del filtro de tipo (Todos / Películas / Series) */
 .btn-filtro-tipo {
-  color: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background-color: transparent;
   transition: all 0.3s ease;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
 }
 
 .btn-filtro-tipo:hover {
+  color: #fff;
+  border-color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-filtro-tipo.active {
+  background-color: #fff;
+  color: #000;
+  font-weight: bold;
+  border-color: #fff;
+}
+
+/* 🔆 Modo claro */
+body.modo-claro .btn-filtro-tipo {
+  color: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+body.modo-claro .btn-filtro-tipo:hover {
+  color: #000;
+  border-color: #000;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.modo-claro .btn-filtro-tipo.active {
+  background-color: #1f8df5;
+  color: #fff;
+  border-color: #1f8df5;
+}
+/* 🌙 Estilos explícitos para modo oscuro */
+/* 🌙 Botones no activos en modo oscuro */
+body.modo-oscuro .btn-filtro-tipo {
+  color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  background-color: transparent !important;
+}
+
+body.modo-oscuro .btn-filtro-tipo:hover {
   color: #fff !important;
   border-color: #fff !important;
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.btn-filtro-tipo.active {
+body.modo-oscuro .btn-filtro-tipo.active {
   background-color: #fff !important;
   color: #000 !important;
   font-weight: bold !important;
   border-color: #fff !important;
 }
+
 .list-group-item {
   background-color: #3c474ab1 !important;
   border: 1px solid #333 !important;
@@ -426,6 +462,15 @@ main {
   color: var(--color-acento-hover, #0074e8);
   text-decoration: underline;
 }
+body.modo-claro .list-group-item {
+  background-color: #e2e3e5 !important;
+  border: 1px solid #bbb !important;
+  color: #111 !important;
+}
+
+body.modo-claro .list-group-item:hover {
+  background-color: #d4d6d8 !important;
+}
 
 .icono-borrar-lista {
   font-size: 1.2rem;
@@ -437,8 +482,8 @@ main {
   color: #ff6b6b;
 }
 input.form-control {
-  background-color: #ffffff;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   border: 1px solid #444;
   transition: border-color 0.3s ease;
 }
@@ -446,6 +491,10 @@ input.form-control {
 input.form-control:focus {
   border-color: var(--color-acento, #1f8df5);
   box-shadow: 0 0 0 0.2rem rgba(31, 141, 245, 0.25);
+}
+body.modo-claro input.form-control {
+  background-color: #e9ecef;
+  color: #000;
 }
 /* Estilo personalizado del modal */
 .custom-confirm-alert {
@@ -754,11 +803,6 @@ select:focus {
   }
 }
 
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar {
-  display: none;
-}
-
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -883,35 +927,7 @@ main {
 .btn-sin-borde-blanca:hover {
   background-color: #f2f2f2 !important;
 }
-.icono-favorito {
-  font-size: 1.2rem;
-  color: red;
-  transition: color 0.3s ease;
-}
 
-.icono-favorito:hover {
-  color: #999;
-}
-/* Botones del filtro de tipo (Todos / Películas / Series) */
-.btn-filtro-tipo {
-  color: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  background-color: transparent !important;
-  transition: all 0.3s ease;
-}
-
-.btn-filtro-tipo:hover {
-  color: #fff !important;
-  border-color: #fff !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.btn-filtro-tipo.active {
-  background-color: #fff !important;
-  color: #000 !important;
-  font-weight: bold !important;
-  border-color: #fff !important;
-}
 .list-group-item {
   background-color: #3c474ab1 !important;
   border: 1px solid #333 !important;
@@ -1103,8 +1119,9 @@ body.modo-claro .shadow-sm {
 body.modo-claro .sin-borde-icono:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
+
 .btn-comentarios {
-  background-color: #1f8df5;
+  background-color: #1f8df5 !important; /* asegúrate de que se aplica siempre */
   color: white;
   border: none;
   padding: 0.5rem 1.2rem;
@@ -1117,9 +1134,46 @@ body.modo-claro .sin-borde-icono:hover {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.btn-comentarios:hover {
+.btn-comentarios:hover:not(:disabled) {
   background-color: #167bdc;
 }
+
+.btn-comentarios:disabled {
+  background-color: #1f8df5; /* mismo color para que no salte al habilitar */
+  color: white;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.textarea-comentario {
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+  color: #f1f1f1;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea-comentario:focus {
+  outline: none;
+  border-color: #1f8df5;
+  box-shadow: 0 0 0 0.2rem rgba(31, 141, 245, 0.25);
+}
+
+body.modo-claro .textarea-comentario {
+  background-color: #f0f0f0;
+  color: #000;
+  border: 1px solid #aaa;
+}
+.text-nombre-usuario {
+  color: #17a2b8; /* azul info para modo oscuro */
+  font-weight: 600;
+}
+
+body.modo-claro .text-nombre-usuario {
+  color: #007080; /* azul más oscuro, buena visibilidad sobre fondo claro */
+}
+
 .btn-seguimiento {
   background-color: #1f8df5;
   color: white;
@@ -1150,6 +1204,7 @@ body.modo-claro .sin-borde-icono:hover {
   border-radius: 20px 0 0 20px;
   transition: width 0.4s ease-in-out;
 }
+
 .sin-fondo {
   background-color: transparent !important;
   box-shadow: none !important;
@@ -1260,7 +1315,6 @@ body.modo-claro .btn-nueva-lista:hover {
   opacity: 0.7;
 }
 
-
 .btn-crear-lista {
   background-color: #28a745;
   color: white;
@@ -1340,4 +1394,38 @@ body.modo-claro select option {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+}
+.icono-valoracion {
+  color: #f5b301; /* Amarillo dorado más visible */
+  font-size: 1.2rem;
+}
+
+.text-valoracion-titulo {
+  font-weight: 600;
+  color: #f5b301; /* Color por defecto (modo oscuro) */
+}
+
+/* Modo claro: color más oscuro para mejor contraste */
+body.modo-claro .text-valoracion-titulo {
+  color: #d48806; /* Un dorado más intenso */
+}
+
+/* Color adaptado para modo oscuro */
+.texto-expandible {
+  color: #66bfff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.texto-expandible:hover {
+  text-decoration: underline;
+}
+
+/* Color adaptado para modo claro */
+body.modo-claro .texto-expandible {
+  color: #1a73e8; /* Azul legible y accesible */
+}
+.modal-body-scrollable {
+  max-height: calc(100vh - 250px); /* ajusta el 250px según header/footer */
+  overflow-y: auto;
 }

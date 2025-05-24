@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "./SeguimientoSerie.css";
+import { FaCheck, FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const SeguimientoSerie = ({ tmdbId }) => {
   const [temporadas, setTemporadas] = useState([]);
@@ -85,7 +86,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
       );
       setTemporadas(temporadasData);
       const inicial = {};
-      temporadasData.forEach((t) => (inicial[t.temporada] = true));
+      temporadasData.forEach((t) => (inicial[t.temporada] = false));
       setVisibles(inicial);
     };
     obtenerDatos();
@@ -201,62 +202,95 @@ const SeguimientoSerie = ({ tmdbId }) => {
         ).length;
 
         return (
-          <div key={t.temporada} className="mb-3">
+          <div key={t.temporada} className="seguimiento-bloque mb-3">
             <div className="d-flex justify-content-between align-items-center mb-2">
-              <h6 className="text-info mb-0">
-                Temporada {t.temporada} ({vistos}/{t.episodios.length})
+              <h6 className="text-info mb-0 fw-bold">
+                Temporada {t.temporada}{" "}
+                <span className="text-secondary fw-normal">
+                  ({vistos}/{t.episodios.length})
+                </span>
               </h6>
               <div className="d-flex gap-2">
                 <button
-                  className="btn btn-sm btn-outline-success"
+                  className="btn btn-sm btn-seguimiento fw-semibold"
+                  style={{
+                    backgroundColor:
+                      vistos < t.episodios.length ? "#28a745" : "#dc3545",
+                  }}
                   onClick={() =>
                     vistos < t.episodios.length
                       ? marcarTemporada(t.temporada)
                       : desmarcarTemporada(t.temporada)
                   }
                 >
-                  {vistos < t.episodios.length
-                    ? "✅ Marcar toda"
-                    : "❌ Desmarcar toda"}
+                  {vistos < t.episodios.length ? (
+                    <>
+                      <FaCheck /> Marcar toda
+                    </>
+                  ) : (
+                    <>
+                      <FaTimes /> Desmarcar toda
+                    </>
+                  )}
                 </button>
                 <button
-                  className="btn btn-sm btn-outline-light"
+                  className="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
                   onClick={() => toggleTemporada(t.temporada)}
                 >
-                  {visibles[t.temporada] ? "Ocultar" : "Mostrar"}
+                  {visibles[t.temporada] ? (
+                    <>
+                      <FaChevronUp /> Ocultar
+                    </>
+                  ) : (
+                    <>
+                      <FaChevronDown /> Mostrar
+                    </>
+                  )}
                 </button>
               </div>
             </div>
 
-            <ul
-              className={`list-group overflow-hidden transition-collapse ${
-                visibles[t.temporada] ? "expanded" : "collapsed"
-              }`}
-            >
-              {t.episodios.map((e) => (
-                <li
-                  key={e.id}
-                  className={`list-group-item d-flex justify-content-between align-items-center transition-item ${
-                    vista[`${t.temporada}-${e.episode_number}`]
-                      ? "visto-episodio"
-                      : ""
-                  }`}
-                >
-                  <span>
-                    T{t.temporada.toString().padStart(2, "0")} | E
-                    {e.episode_number.toString().padStart(2, "0")} – {e.name}
-                  </span>
-                  <input
-                    type="checkbox"
-                    disabled={!token}
-                    checked={
-                      vista[`${t.temporada}-${e.episode_number}`] || false
-                    }
-                    onChange={() => toggleVista(t.temporada, e.episode_number)}
-                  />
-                </li>
-              ))}
-            </ul>
+            {visibles[t.temporada] && (
+              <ul className="list-group transition-collapse">
+                {t.episodios.map((e) => (
+                  <li
+                    key={e.id}
+                    className={`list-group-item d-flex justify-content-between align-items-center transition-item ${
+                      vista[`${t.temporada}-${e.episode_number}`]
+                        ? "visto-episodio"
+                        : ""
+                    }`}
+                  >
+                    <span>
+                      T{t.temporada.toString().padStart(2, "0")} | E
+                      {e.episode_number.toString().padStart(2, "0")} – {e.name}
+                    </span>
+                    <button
+                      className={`btn btn-sm px-2 py-1 fw-bold rounded-pill d-flex align-items-center gap-2 ${
+                        vista[`${t.temporada}-${e.episode_number}`]
+                          ? "btn-success"
+                          : "btn-outline-danger"
+                      }`}
+                      onClick={(eBtn) => {
+                        eBtn.preventDefault();
+                        toggleVista(t.temporada, e.episode_number);
+                      }}
+                      title={
+                        vista[`${t.temporada}-${e.episode_number}`]
+                          ? "Episodio marcado como visto"
+                          : "Marcar como visto"
+                      }
+                    >
+                      {vista[`${t.temporada}-${e.episode_number}`] ? (
+                        <FaCheck />
+                      ) : (
+                        <FaTimes />
+                      )}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         );
       })}

@@ -147,3 +147,42 @@ h6.text-info {
   background-color: #ff4d4d;
   color: #000;
 }
+/* ===== MODO CLARO PARA SEGUIMIENTO ===== */
+body.modo-claro .seguimiento-wrapper {
+  background-color: #d9dcdf;
+  color: #111;
+}
+
+body.modo-claro .seguimiento-bloque {
+  background-color: #cbced2;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+body.modo-claro .list-group-item {
+  background-color: transparent;
+  color: #111;
+  border-bottom: 1px solid #ccc;
+}
+
+body.modo-claro .list-group-item:hover {
+  background-color: rgba(0, 136, 204, 0.1);
+}
+
+body.modo-claro .visto-episodio {
+  background-color: #d1eaff;
+  border-left: 4px solid #1f8df5;
+  color: #1f8df5;
+}
+
+body.modo-claro .visto-episodio span {
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+
+body.modo-claro .switch-slider {
+  background-color: #ddd;
+}
+
+body.modo-claro .switch-toggle input:checked + .switch-slider {
+  background-color: #1f8df5;
+}

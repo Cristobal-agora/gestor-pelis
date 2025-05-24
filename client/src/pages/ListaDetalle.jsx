@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import {
+  FaTrashAlt,
+  FaFilm,
+  FaVideo,
+  FaTv,
+  FaFolderOpen,
+} from "react-icons/fa";
 
-const ListaDetalle = () => {
+const ListaDetalle = ({ modoClaro }) => {
   const { id } = useParams();
   const token = sessionStorage.getItem("token");
   const [elementos, setElementos] = useState([]);
   const [nombreLista, setNombreLista] = useState("");
-  const [filtroTipo, setFiltroTipo] = useState("todos");
+  const [filtroTipo, setFiltroTipo] = useState("movie");
 
   useEffect(() => {
     const obtenerNombreLista = async () => {
@@ -41,19 +48,22 @@ const ListaDetalle = () => {
 
         const contenido = await res.json();
 
-        const detalles = await Promise.all(
-          contenido.map((item) => {
-            if (!item.tipo || !item.pelicula_id) return null;
+        const filtrados =
+          filtroTipo === "todos"
+            ? contenido
+            : contenido.filter((f) => f.tipo === filtroTipo);
 
-            return fetch(
-              `https://api.themoviedb.org/3/${item.tipo}/${item.pelicula_id}?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=es-ES`
+        const detalles = await Promise.all(
+          filtrados.map((item) =>
+            fetch(
+              `https://api.themoviedb.org/3/${item.tipo}/${
+                item.pelicula_id
+              }?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=es-ES`
             )
               .then((res) => (res.ok ? res.json() : null))
-              .catch((err) => {
-                console.error("Error TMDb:", err);
-                return null;
-              });
-          })
+              .then((data) => (data ? { ...data, tipo: item.tipo } : null))
+              .catch(() => null)
+          )
         );
 
         setElementos(detalles.filter((e) => e));
@@ -64,7 +74,7 @@ const ListaDetalle = () => {
 
     obtenerNombreLista();
     cargarContenido();
-  }, [id, token]);
+  }, [id, token, filtroTipo]);
 
   const eliminarElemento = async (peliculaId) => {
     try {
@@ -89,28 +99,49 @@ const ListaDetalle = () => {
   const elementosFiltrados =
     filtroTipo === "todos"
       ? elementos
-      : elementos.filter((e) =>
-          filtroTipo === "pelicula" ? e.title : e.name
-        );
+      : elementos.filter((e) => e.tipo === filtroTipo);
 
   return (
-    <div className="container text-light mt-4">
-      <h2 className="text-primary mb-3">📂 Lista: {nombreLista}</h2>
+    <div className={`container mt-4 ${modoClaro ? "text-dark" : "text-light"}`}>
+      <h2 className="text-primary mb-3 d-flex align-items-center gap-2">
+        <FaFolderOpen /> Lista: {nombreLista}
+      </h2>
 
-      <div className="mb-4">
-        <select
-          className="form-select w-auto"
-          value={filtroTipo}
-          onChange={(e) => setFiltroTipo(e.target.value)}
-        >
-          <option value="todos">🎬 Todos</option>
-          <option value="pelicula">🎞️ Solo Películas</option>
-          <option value="serie">📺 Solo Series</option>
-        </select>
+      <div className="d-flex align-items-center gap-3 flex-wrap mb-4">
+        <label className="form-label mb-0 me-2">Tipo:</label>
+        <div className="btn-group" role="group">
+          <button
+            className={`btn btn-filtro-tipo
+ d-flex align-items-center gap-2 ${filtroTipo === "todos" ? "active" : ""}`}
+            onClick={() => setFiltroTipo("todos")}
+          >
+            <FaFilm /> Todos
+          </button>
+          <button
+            className={`btn btn-filtro-tipo
+ d-flex align-items-center gap-2 ${filtroTipo === "movie" ? "active" : ""}`}
+            onClick={() => setFiltroTipo("movie")}
+          >
+            <FaVideo /> Películas
+          </button>
+          <button
+            className={`btn btn-filtro-tipo
+ d-flex align-items-center gap-2 ${filtroTipo === "tv" ? "active" : ""}`}
+            onClick={() => setFiltroTipo("tv")}
+          >
+            <FaTv /> Series
+          </button>
+        </div>
       </div>
 
       {elementosFiltrados.length === 0 ? (
-        <p className="text-light ">No hay elementos en esta lista.</p>
+        <p
+          className={`fw-semibold text-center ${
+            modoClaro ? "text-dark" : "text-light"
+          }`}
+        >
+          No hay elementos en esta lista.
+        </p>
       ) : (
         <div className="row">
           {elementosFiltrados.map((item) => (
@@ -119,10 +150,16 @@ const ListaDetalle = () => {
               className="col-6 col-sm-4 col-md-3 col-lg-2 mb-4"
             >
               <Link
-                to={`/${item.title ? "pelicula" : "serie"}/${item.id}`}
+                to={`/${item.tipo === "movie" ? "pelicula" : "serie"}/${
+                  item.id
+                }`}
                 className="text-decoration-none"
               >
-                <div className="card bg-dark text-white border-0 shadow-sm h-100 hover-scale">
+                <div
+                  className={`card border-0 shadow-sm h-100 ${
+                    modoClaro ? "bg-light text-dark" : "bg-dark text-white"
+                  }`}
+                >
                   <img
                     src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                     className="card-img-top"
@@ -144,7 +181,7 @@ const ListaDetalle = () => {
                         title="Eliminar de la lista"
                         style={{ fontSize: "1.5rem", lineHeight: "1" }}
                       >
-                        <i className="bi bi-trash"></i>
+                        <FaTrashAlt className="icono-borrar-lista" />
                       </button>
                     </h6>
                   </div>

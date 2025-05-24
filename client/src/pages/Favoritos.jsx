@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaFilm, FaVideo, FaTv } from "react-icons/fa";
+import { toast } from "react-toastify";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
-const Favoritos = () => {
+const Favoritos = ({ modoClaro }) => {
   const [items, setItems] = useState([]);
   const [tipo, setTipo] = useState("movie");
   const token = sessionStorage.getItem("token");
@@ -74,7 +77,8 @@ const Favoritos = () => {
   };
 
   return (
-    <div className="container mt-4 text-light">
+    <div className={`container mt-4 ${modoClaro ? "text-dark" : "text-light"}`}>
+
       <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <h2 className="text-primary d-flex align-items-center gap-2 m-0">
           <FaHeart style={{ color: "red" }} />
@@ -82,7 +86,10 @@ const Favoritos = () => {
         </h2>
 
         {items.length > 0 && (
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300 }}
             className="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
             onClick={async () => {
               if (
@@ -106,16 +113,16 @@ const Favoritos = () => {
                 if (res.ok) {
                   setItems([]);
                 } else {
-                  alert("Error al eliminar favoritos");
+                  toast.error("Error al eliminar favoritos");
                 }
               } catch (err) {
                 console.error("Error al borrar favoritos:", err);
-                alert("Error al conectar con el servidor");
+                toast.error("Error al conectar con el servidor");
               }
             }}
           >
             <FaHeart /> Eliminar todos
-          </button>
+          </motion.button>
         )}
       </div>
 
@@ -147,7 +154,11 @@ const Favoritos = () => {
       </div>
 
       {items.length === 0 ? (
-        <p className="text-center text-light ">
+        <p
+          className={`text-center fw-semibold ${
+            modoClaro ? "text-dark" : "text-light"
+          }`}
+        >
           No has agregado favoritos aún.
         </p>
       ) : (
@@ -164,12 +175,25 @@ const Favoritos = () => {
                 className="text-decoration-none"
                 style={{ zIndex: 1 }}
               >
-                <div className="card bg-dark text-white border-0 shadow-sm h-100 hover-scale">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  className={`card border-0 shadow-sm h-100 ${
+                    modoClaro ? "bg-light text-dark" : "bg-dark text-white"
+                  }`}
+                  style={{
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    cursor: "pointer",
+                    transition: "transform 0.2s ease-in-out",
+                  }}
+                >
                   <img
                     src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                     className="card-img-top"
                     alt={item.title || item.name}
-                    style={{ borderRadius: "8px", objectFit: "cover" }}
+                    style={{ objectFit: "cover", height: "100%" }}
                   />
                   <div className="card-body px-2 py-2">
                     <div className="d-flex justify-content-between align-items-center">
@@ -188,7 +212,7 @@ const Favoritos = () => {
                       </button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </Link>
             </div>
           ))}
