@@ -9,6 +9,7 @@ import {
   BsChevronRight,
   BsChevronDoubleRight,
 } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -151,6 +152,58 @@ const Home = () => {
         let url;
         let data;
 
+        if (
+          (modoBusqueda === "actor" || modoBusqueda === "director") &&
+          texto
+        ) {
+          const url = `https://api.themoviedb.org/3/search/person?api_key=${
+            import.meta.env.VITE_TMDB_API_KEY
+          }&query=${encodeURIComponent(texto)}&language=es-ES&page=1`;
+
+          const res = await fetch(url);
+          const data = await res.json();
+
+          const personas = Array.isArray(data.results) ? data.results : [];
+          const idsUnicos = new Set();
+          let peliculasEncontradas = await Promise.all(
+            personas.map(async (persona) => {
+              const creditosUrl = `https://api.themoviedb.org/3/person/${
+                persona.id
+              }/combined_credits?api_key=${
+                import.meta.env.VITE_TMDB_API_KEY
+              }&language=es-ES`;
+              const creditosRes = await fetch(creditosUrl);
+              const creditos = await creditosRes.json();
+
+              const lista =
+                modoBusqueda === "actor"
+                  ? creditos.cast
+                  : creditos.crew?.filter((c) => c.job === "Director");
+
+              return (lista || []).filter(
+                (item) =>
+                  item.media_type === tipoReal &&
+                  item.id &&
+                  !idsUnicos.has(item.id) &&
+                  idsUnicos.add(item.id) // ← esto añade y evita duplicados
+              );
+            })
+          );
+
+          // Aplanar el array de arrays
+          peliculasEncontradas = peliculasEncontradas.flat();
+
+          // Ordenar
+          peliculasEncontradas.sort((a, b) => b.popularity - a.popularity);
+
+          // Finalmente, set
+          setPeliculas(peliculasEncontradas);
+
+          setTotalPaginas(1);
+          totalPaginasRef.current = 1;
+          return;
+        }
+
         if (!texto) {
           // ✅ discover: filtros nativos
           url = `https://api.themoviedb.org/3/discover/${tipoReal}?api_key=${
@@ -162,7 +215,7 @@ const Home = () => {
           const res = await fetch(url);
           data = await res.json();
         } else {
-          // 🔎 search: sin filtros nativos → aplicamos en frontend
+          // 🔎 search por título
           url = `https://api.themoviedb.org/3/search/${tipoReal}?api_key=${
             import.meta.env.VITE_TMDB_API_KEY
           }&query=${encodeURIComponent(
@@ -191,7 +244,6 @@ const Home = () => {
             let valA = a[campo];
             let valB = b[campo];
 
-            // fallback para fechas
             if (campo === "release_date") {
               valA = new Date(
                 a.release_date || a.first_air_date || "1900-01-01"
@@ -206,9 +258,8 @@ const Home = () => {
             return 0;
           });
 
-          // Sustituimos results por lo filtrado y ordenado manualmente
           data.results = resultados;
-          data.total_pages = 1; // si quieres evitar paginación en modo search con filtros
+          data.total_pages = 1;
         }
 
         setPeliculas(Array.isArray(data.results) ? data.results : []);
@@ -221,7 +272,7 @@ const Home = () => {
         setTotalPaginas(1);
       }
     },
-    [busqueda, tipo, generoSeleccionado, orden]
+    [busqueda, tipo, generoSeleccionado, orden, modoBusqueda]
   );
 
   useEffect(() => {
@@ -348,10 +399,23 @@ const Home = () => {
         />
         <button
           className="btn btn-primary"
+          disabled={
+            (modoBusqueda === "actor" || modoBusqueda === "director") &&
+            busqueda.trim() === ""
+          }
           onClick={() => {
+            if (
+              (modoBusqueda === "actor" || modoBusqueda === "director") &&
+              busqueda.trim() === ""
+            ) {
+              toast.warning(
+                "Introduce un nombre para buscar por actor/director."
+              );
+              return;
+            }
             setPagina(1);
             setBuscando(true);
-            buscarPeliculas(1); // ✅ ejecuta de inmediato
+            buscarPeliculas(1);
           }}
         >
           Buscar

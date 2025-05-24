@@ -33,6 +33,10 @@ const SerieDetail = () => {
   const [listas, setListas] = useState([]);
   const [listaSeleccionada, setListaSeleccionada] = useState("");
   const [listasIncluye, setListasIncluye] = useState([]);
+  const yaIncluida = listasIncluye.some(
+    (l) => l.id.toString() === listaSeleccionada
+  );
+
   const [actualizarValoraciones, setActualizarValoraciones] = useState(0);
   const [mostrarSeguimiento, setMostrarSeguimiento] = useState(
     sessionStorage.getItem("seguirAbierto") === "true"
@@ -165,6 +169,51 @@ const SerieDetail = () => {
 
     if (res.ok) setEsFavorito(!esFavorito);
   };
+  const anadirASerieAListaSeleccionada = async () => {
+    if (!token) {
+      return toast.info("Debes iniciar sesión");
+    }
+
+    if (!listaSeleccionada) {
+      return toast.warn("Selecciona una lista válida");
+    }
+
+    if (yaIncluida) {
+      return toast.info("Esta serie ya está en esa lista");
+    }
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/listas/${listaSeleccionada}/contenido`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            pelicula_id: serie.id,
+            tipo: "tv",
+          }),
+        }
+      );
+
+      if (res.ok) {
+        toast.success("Serie añadida a la lista correctamente");
+        const listaAñadida = listas.find(
+          (l) => l.id.toString() === listaSeleccionada
+        );
+        if (listaAñadida) {
+          setListasIncluye((prev) => [...prev, listaAñadida]);
+        }
+      } else {
+        toast.error("Error al añadir la serie a la lista");
+      }
+    } catch (err) {
+      console.error("Error al añadir:", err);
+      toast.error("Error de conexión");
+    }
+  };
 
   if (!serie) return <div className="text-light">Cargando serie...</div>;
 
@@ -258,6 +307,20 @@ const SerieDetail = () => {
                         ))
                       )}
                     </select>
+                    <button
+                      className="btn-anadir"
+                      onClick={anadirASerieAListaSeleccionada}
+                      disabled={!listaSeleccionada || yaIncluida}
+                      title={
+                        !listaSeleccionada
+                          ? "Selecciona una lista"
+                          : yaIncluida
+                          ? "Ya está en esta lista"
+                          : "Añadir a lista"
+                      }
+                    >
+                      <BsPlusLg /> Añadir a lista
+                    </button>
 
                     <button
                       className="btn-nueva-lista"

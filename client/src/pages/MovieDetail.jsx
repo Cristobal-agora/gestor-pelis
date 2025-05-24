@@ -32,6 +32,10 @@ const MovieDetail = () => {
   const [listas, setListas] = useState([]);
   const [listaSeleccionada, setListaSeleccionada] = useState("");
   const [listasIncluye, setListasIncluye] = useState([]);
+  const yaIncluida = listasIncluye.some(
+    (l) => l.id.toString() === listaSeleccionada
+  );
+
   const [actualizarValoraciones, setActualizarValoraciones] = useState(0);
   const [plataformas, setPlataformas] = useState({ items: [], link: null });
   const [vista, setVista] = useState(false);
@@ -192,6 +196,52 @@ const MovieDetail = () => {
       console.error("Error en toggleVista:", err);
     }
   };
+  const anadirAPeliculaAListaSeleccionada = async () => {
+    if (!token) {
+      return toast.info("Debes iniciar sesión");
+    }
+
+    if (!listaSeleccionada) {
+      return toast.warn("Selecciona una lista válida");
+    }
+
+    if (yaIncluida) {
+      return toast.info("Esta película ya está en esa lista");
+    }
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/listas/${listaSeleccionada}/contenido`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            pelicula_id: pelicula.id,
+            tipo: "movie",
+          }),
+        }
+      );
+
+      if (res.ok) {
+        toast.success("Película añadida a la lista correctamente");
+
+        const listaAñadida = listas.find(
+          (l) => l.id.toString() === listaSeleccionada
+        );
+        if (listaAñadida) {
+          setListasIncluye((prev) => [...prev, listaAñadida]);
+        }
+      } else {
+        toast.error("Error al añadir la película a la lista");
+      }
+    } catch (err) {
+      console.error("Error al añadir:", err);
+      toast.error("Error de conexión");
+    }
+  };
 
   if (!pelicula) return <div className="text-light">Cargando...</div>;
 
@@ -313,6 +363,21 @@ const MovieDetail = () => {
                         ))
                       )}
                     </select>
+                    <button
+                      className="btn-anadir ms-1"
+                      onClick={anadirAPeliculaAListaSeleccionada}
+                      disabled={!listaSeleccionada || yaIncluida}
+                      title={
+                        !listaSeleccionada
+                          ? "Selecciona una lista"
+                          : yaIncluida
+                          ? "Ya está en esta lista"
+                          : "Añadir a lista"
+                      }
+                    >
+                      <BsPlusLg />
+                      Añadir a lista
+                    </button>
 
                     <button
                       className="btn-nueva-lista"
