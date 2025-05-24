@@ -55,8 +55,11 @@ function AppContent() {
     }
   }, [modoClaro, temaInicializado, location.pathname]);
 
-  const rutasSinFooter = ["/login", "/register"];
-  const rutaOcultaFooter = rutasSinFooter.includes(location.pathname);
+ const rutasSinHeaderFooter = ["/login", "/register", "/reset-password"];
+const rutaOcultaFooter = rutasSinHeaderFooter.some((ruta) =>
+  location.pathname.startsWith(ruta)
+);
+
   const mostrarFooterSimple = location.pathname === "/";
 
   useEffect(() => {

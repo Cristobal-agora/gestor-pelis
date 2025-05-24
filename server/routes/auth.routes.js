@@ -17,7 +17,7 @@ router.post(
 );
 
 router.post(
-  "/restablecer-password",
+  "/reset-password",
   validateNuevaPassword,
   validateRequest,
   authController.restablecerPassword

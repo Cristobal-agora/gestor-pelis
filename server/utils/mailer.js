@@ -9,7 +9,8 @@ const transporter = nodemailer.createTransport({
 });
 
 async function enviarEmailRecuperacion(destinatario, token) {
-  const link = `${process.env.FRONTEND_URL}/recuperar-password/${token}`;
+  const link = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
 
   const mailOptions = {
     from: `CineStash <${process.env.EMAIL_FROM}>`,
