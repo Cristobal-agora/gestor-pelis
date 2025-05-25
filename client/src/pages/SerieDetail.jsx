@@ -514,8 +514,12 @@ const SerieDetail = () => {
             </div>
 
             {token && (
-              <div className="col-md-4 d-flex justify-content-end">
-                <div style={{ maxWidth: "280px" }}>
+              <div className="col-md-4">
+                <div
+                  className="d-flex flex-column align-items-start gap-3"
+                  style={{ maxWidth: "280px" }}
+                >
+                  {/* Bloque de valoración */}
                   <ValoracionUsuario
                     tmdb_id={serie.id}
                     tipo="tv"
@@ -523,54 +527,49 @@ const SerieDetail = () => {
                       setActualizarValoraciones((prev) => prev + 1)
                     }
                   />
-                </div>
-              </div>
-            )}
-          </div>
+                  <br />
+                  {/* Bloque de botones en responsive */}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    className="btn-comentarios w-100"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalComentarios"
+                  >
+                    <FaRegCommentDots className="me-2" />
+                    Ver comentarios
+                  </motion.button>
 
-          <div className="d-flex flex-wrap align-items-start gap-4 mt-3">
-            {/* Botón de Ver Comentarios */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="btn-comentarios"
-              data-bs-toggle="modal"
-              data-bs-target="#modalComentarios"
-            >
-              <FaRegCommentDots className="me-2" />
-              Ver comentarios
-            </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    onClick={() => setMostrarSeguimiento(true)}
+                    className="btn-seguimiento w-100 d-flex align-items-center justify-content-center gap-2"
+                  >
+                    <BsTv />
+                    Mostrar seguimiento
+                  </motion.button>
 
-            {/* Botón Mostrar seguimiento y barra debajo */}
-            {token && (
-              <div className="d-flex flex-column align-items-center gap-2">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  onClick={() => setMostrarSeguimiento(true)}
-                  className="btn-seguimiento d-flex align-items-center gap-2"
-                  style={{ width: "220px", justifyContent: "center" }} // mismo ancho que barra
-                >
-                  <BsTv />
-                  Mostrar seguimiento
-                </motion.button>
-
-                {progreso && (
-                  <div className="barra-seguimiento" style={{ width: "180px" }}>
+                  {progreso && (
                     <div
-                      className="barra-seguimiento-interna"
-                      style={{
-                        width: `${
-                          (parseInt(progreso.split("/")[0]) /
-                            parseInt(progreso.split("/")[1])) *
-                          100
-                        }%`,
-                      }}
-                    />
-                  </div>
-                )}
+                      className="barra-seguimiento"
+                      style={{ width: "100%" }}
+                    >
+                      <div
+                        className="barra-seguimiento-interna"
+                        style={{
+                          width: `${
+                            (parseInt(progreso.split("/")[0]) /
+                              parseInt(progreso.split("/")[1])) *
+                            100
+                          }%`,
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

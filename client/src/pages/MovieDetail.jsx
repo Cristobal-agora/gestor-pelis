@@ -275,7 +275,7 @@ const MovieDetail = () => {
 
         <div className="col-md-8">
           <div className="sin-fondo mb-3">
-            <div className="d-flex justify-content-between align-items-start flex-wrap">
+            <div className="movie-title-wrapper d-flex justify-content-between align-items-center flex-wrap">
               <h2 className="text-azul-suave fw-bold me-2 mb-3">
                 {pelicula.title}
               </h2>
@@ -592,7 +592,7 @@ const MovieDetail = () => {
             </div>
 
             {token && (
-              <div className="col-md-4 d-flex justify-content-end">
+              <div className="col-md-4 d-flex justify-content-end mt-4 mt-md-0">
                 <div style={{ maxWidth: "280px" }}>
                   <ValoracionUsuario
                     tmdb_id={pelicula.id}

@@ -40,11 +40,16 @@ body {
   color: var(--texto-claro);
   font-family: var(--fuente);
   min-height: 100vh;
-  padding-top: 80px;
 }
 
 body.con-sesion {
-  padding-top: 70px;
+  padding-top: 95px;
+}
+
+@media (max-width: 768px) {
+  body.con-sesion {
+    padding-top: 50px;
+  }
 }
 
 body.sin-sesion {
@@ -163,21 +168,6 @@ img.shadow {
 .hover-scale:hover {
   transform: scale(1.03);
   box-shadow: 0 0 15px rgba(31, 141, 245, 0.4);
-}
-
-/* Detalle póster */
-.detalle-poster {
-  max-height: 600px !important;
-  width: 100% !important;
-  height: auto !important;
-  object-fit: contain !important;
-}
-
-@media (max-width: 768px) {
-  .detalle-poster {
-    max-height: 440px !important;
-    object-fit: cover !important;
-  }
 }
 
 /* ===== INPUTS ===== */
@@ -336,7 +326,7 @@ main {
   background: transparent !important;
   backdrop-filter: none;
   box-shadow: none;
-  margin-top: 1rem;
+  margin-top: 0 !important;
 }
 
 .header-sin-sesion img {
@@ -593,11 +583,6 @@ body {
   color: var(--texto-claro);
   font-family: var(--fuente);
   min-height: 100vh;
-  padding-top: 80px;
-}
-
-body.con-sesion {
-  padding-top: 70px;
 }
 
 body.sin-sesion {
@@ -729,7 +714,7 @@ img.shadow {
 
 @media (max-width: 768px) {
   .detalle-poster {
-    max-height: 440px !important;
+    max-height: 400px !important;
     object-fit: cover !important;
   }
 }
@@ -889,24 +874,6 @@ main {
 .logo-container:hover .cinestash-title {
   color: var(--color-acento-hover);
   transform: scale(1.05);
-}
-
-.header-sin-sesion {
-  background: transparent !important;
-  backdrop-filter: none;
-  box-shadow: none;
-  margin-top: 1rem;
-}
-
-.header-sin-sesion img {
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
-}
-
-.header-sin-sesion .btn {
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 8px;
-  padding: 0.6rem 1.5rem;
 }
 
 .logo-img {
@@ -1428,4 +1395,114 @@ body.modo-claro .texto-expandible {
 .modal-body-scrollable {
   max-height: calc(100vh - 250px); /* ajusta el 250px según header/footer */
   overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  header .d-flex.justify-content-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .cinestash-title {
+    font-size: 1.5rem !important;
+  }
+
+  .dropdown-menu {
+    font-size: 0.9rem;
+  }
+
+  .btn-sm,
+  .nav-btn-sm {
+    font-size: 0.85rem !important;
+    padding: 0.4rem 0.75rem !important;
+  }
+
+  header img[alt="CineStash"] {
+    height: 24px !important;
+    width: 24px !important;
+  }
+
+  header strong.ms-2 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  header .btn {
+    font-size: 0.9rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  header strong.ms-2 {
+    font-size: 0.9rem !important;
+  }
+
+  .cinestash-title {
+    font-size: 1.5rem !important;
+  }
+}
+@media (max-width: 768px) {
+  .movie-title-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+
+  .movie-title-row h2 {
+    margin-bottom: 0 !important;
+  }
+
+  .movie-title-row .btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 768px) {
+  .d-flex.gap-2.flex-wrap.align-items-center {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-anadir,
+  .btn-nueva-lista,
+  .btn-crear-lista,
+  .btn-cancelar-lista {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .select-uniforme {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .comentarios-wrapper {
+    padding: 0 0.5rem;
+  }
+}
+/* MovieDetail título y botones responsive */
+.movie-title-wrapper {
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .movie-title-wrapper {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .movie-title-wrapper h2 {
+    font-size: 1.2rem;
+    flex-shrink: 1;
+    margin-bottom: 0;
+  }
+
+  .movie-title-wrapper .btn,
+  .movie-title-wrapper .btn-visto {
+    flex-shrink: 0;
+  }
 }

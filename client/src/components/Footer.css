@@ -100,8 +100,57 @@
   transition: all 0.4s ease;
   display: block !important;
   min-height: 100px;
-  margin-top: auto;   /* 🔹 AÑADIR */
-  width: 100%;        /* 🔹 AÑADIR */
+  margin-top: auto; /* 🔹 AÑADIR */
+  width: 100%; /* 🔹 AÑADIR */
 }
 
+@media (max-width: 768px) {
+  .footer {
+    padding: 1.5rem 1rem;
+    text-align: center;
+  }
 
+  .footer .logo {
+    font-size: 1.5rem;
+  }
+
+  .footer .slogan {
+    font-size: 0.85rem;
+    margin: 0.4rem 0;
+  }
+
+  .footer-links {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    margin-top: 1rem;
+  }
+
+  .footer-links li {
+    margin: 0;
+  }
+
+  .footer .social-icons {
+    margin-top: 1rem;
+  }
+
+  .footer .social-icons a {
+    font-size: 1.3rem;
+    margin: 0 0.5rem;
+  }
+
+  .footer .text-muted {
+    font-size: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .footer .logo-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

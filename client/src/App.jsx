@@ -64,11 +64,15 @@ function AppContent() {
 
   useEffect(() => {
     const rutaActual = location.pathname;
-    const esRutaSinFooter = ["/login", "/register"].includes(rutaActual);
+    const sinSesion =
+      ["/login", "/register", "/recuperar-password"].some((ruta) =>
+        rutaActual.startsWith(ruta)
+      ) || !sessionStorage.getItem("token");
 
-    document.body.classList.toggle("sin-sesion", esRutaSinFooter);
-    document.body.classList.toggle("con-sesion", !esRutaSinFooter);
+    document.body.classList.remove("con-sesion", "sin-sesion");
+    document.body.classList.add(sinSesion ? "sin-sesion" : "con-sesion");
   }, [location.pathname]);
+
   const cambiarTema = () => {
     setModoClaro((prev) => {
       const nuevo = !prev;
