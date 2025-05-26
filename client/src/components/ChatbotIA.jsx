@@ -3,6 +3,9 @@ import "./ChatbotIA.css";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { FaCommentDots } from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Link } from "react-router-dom";
 
 const ChatbotIA = () => {
   const [abierto, setAbierto] = useState(false);
@@ -119,7 +122,28 @@ const ChatbotIA = () => {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   >
-                    {msg.texto}
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        a: ({ href, children }) => {
+                          const esInterno =
+                            href?.startsWith("/") && !href?.startsWith("//");
+                          return esInterno ? (
+                            <Link to={href}>{children}</Link>
+                          ) : (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {children}
+                            </a>
+                          );
+                        },
+                      }}
+                    >
+                      {msg.texto}
+                    </ReactMarkdown>
                   </motion.div>
                 ))}
                 {cargando && (

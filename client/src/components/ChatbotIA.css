@@ -185,3 +185,11 @@
     padding-bottom: env(safe-area-inset-bottom, 10px); /* ✅ para iOS */
   }
 }
+.chatbot-mensaje a {
+  color: #ffd700;
+  text-decoration: underline;
+}
+
+.chatbot-mensaje a:hover {
+  color: #fff;
+}

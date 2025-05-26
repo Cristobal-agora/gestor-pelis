@@ -28,6 +28,8 @@ import RutaPrivada from "./components/RutaPrivada";
 import RecuperarPassword from "./pages/RecuperarPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { toast } from "react-toastify";
+import Buscar from "./components/Buscar";
+
 
 function AppContent() {
   const location = useLocation();
@@ -188,6 +190,7 @@ function AppContent() {
             />
             <Route path="/recuperar-password" element={<RecuperarPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/buscar/:nombre" element={<Buscar />} />
           </Routes>
         </AnimatePresence>
       </main>

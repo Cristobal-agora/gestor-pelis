@@ -5,13 +5,11 @@ const axios = require("axios");
 router.post("/", async (req, res) => {
   const { pregunta } = req.body;
 
-  // Cabeceras con clave desde .env
   const headers = {
     Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
     "Content-Type": "application/json",
   };
 
-  // Log de depuración (solo para desarrollo)
   if (process.env.NODE_ENV !== "production") {
     console.log("🔑 OPENROUTER_API_KEY:", process.env.OPENROUTER_API_KEY);
   }
@@ -25,8 +23,15 @@ router.post("/", async (req, res) => {
         messages: [
           {
             role: "system",
-            content:
-              "Eres un experto en cine. Responde de forma clara, útil y breve. Máximo 4-5 frases por respuesta.",
+            content: `
+Eres una IA de CineStash. Cuando menciones una película o serie concreta, pon un enlace a /buscar/TITULO.
+
+Ejemplos:
+- [Inception](/buscar/Inception)
+- [Breaking Bad](/buscar/Breaking%20Bad)
+
+Responde de forma clara y breve, como si hablaras con un fan del cine. Máximo 4-5 frases.
+`,
           },
           {
             role: "user",
