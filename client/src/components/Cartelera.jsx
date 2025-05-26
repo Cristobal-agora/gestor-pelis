@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const Cartelera = () => {
   const [peliculas, setPeliculas] = useState([]);
   const contenedorRef = useRef(null);
+  const [pausado, setPausado] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -20,16 +21,21 @@ const Cartelera = () => {
 
   useEffect(() => {
     const contenedor = contenedorRef.current;
-    if (!contenedor || window.innerWidth < 768) return;
+    if (!contenedor || peliculas.length === 0) return;
 
     let animationFrameId;
-    const velocidad = 0.5; // píxeles por frame
+    const velocidad = 0.5;
+    let reanudarTimeout;
 
     const scrollContinuo = () => {
-      const maxScroll = contenedor.scrollWidth - contenedor.clientWidth;
+      if (pausado) {
+        animationFrameId = requestAnimationFrame(scrollContinuo);
+        return;
+      }
 
+      const maxScroll = contenedor.scrollWidth - contenedor.clientWidth;
       if (contenedor.scrollLeft >= maxScroll - 1) {
-        contenedor.scrollLeft = 0;
+        contenedor.scrollTo({ left: 0, behavior: "auto" });
       } else {
         contenedor.scrollLeft += velocidad;
       }
@@ -37,10 +43,31 @@ const Cartelera = () => {
       animationFrameId = requestAnimationFrame(scrollContinuo);
     };
 
+    const pausar = () => {
+      setPausado(true);
+      clearTimeout(reanudarTimeout);
+      reanudarTimeout = setTimeout(() => setPausado(false), 3000); // reanuda después de 3s
+    };
+
     animationFrameId = requestAnimationFrame(scrollContinuo);
 
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+    // Eventos para ratón y táctil
+    contenedor.addEventListener("mouseenter", () => setPausado(true));
+    contenedor.addEventListener("mouseleave", () => setPausado(false));
+    contenedor.addEventListener("touchstart", pausar);
+    contenedor.addEventListener("touchmove", pausar); // ← mientras desliza
+    contenedor.addEventListener("touchend", pausar); // ← tras terminar
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(reanudarTimeout);
+      contenedor.removeEventListener("mouseenter", () => setPausado(true));
+      contenedor.removeEventListener("mouseleave", () => setPausado(false));
+      contenedor.removeEventListener("touchstart", pausar);
+      contenedor.removeEventListener("touchmove", pausar);
+      contenedor.removeEventListener("touchend", pausar);
+    };
+  }, [peliculas, pausado]);
 
   return (
     <div className="text-light">

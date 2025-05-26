@@ -129,7 +129,9 @@ const ChatbotIA = () => {
                           const esInterno =
                             href?.startsWith("/") && !href?.startsWith("//");
                           return esInterno ? (
-                            <Link to={href}>{children}</Link>
+                            <Link to={href} onClick={() => setAbierto(false)}>
+                              {children}
+                            </Link>
                           ) : (
                             <a
                               href={href}

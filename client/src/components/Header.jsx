@@ -52,6 +52,8 @@ const Header = ({ modoClaro, cambiarTema }) => {
 
   const [showAvatars, setShowAvatars] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const menuRef = useRef(null);
+
   const avatarMenuRef = useRef(null);
 
   const isActive = (ruta) => location.pathname === ruta;
@@ -94,6 +96,24 @@ const Header = ({ modoClaro, cambiarTema }) => {
   }, [showAvatars]);
 
   useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuAbierto(false);
+      }
+    };
+
+    if (menuAbierto) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuAbierto]);
+
+  useEffect(() => {
     if (!token) {
       window.scrollTo(0, 0);
     }
@@ -121,6 +141,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
     sessionStorage.removeItem("cineStashState");
     window.location.href = "/";
   };
+  const cerrarMenu = () => setMenuAbierto(false);
 
   // 👉 Header SIN sesión
   if (!token) {
@@ -173,7 +194,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
     >
       <div className="container px-3 py-2">
         <div className="row align-items-center">
-          {/* IZQUIERDA: Logo + modo + hamburguesa */}
+          {/* IZQUIERDA: Logo + modo claro */}
           <div className="col d-flex align-items-center gap-2">
             <div
               onClick={() => {
@@ -214,9 +235,12 @@ const Header = ({ modoClaro, cambiarTema }) => {
             >
               {modoClaro ? <FiMoon size={20} /> : <FiSun size={20} />}
             </motion.button>
+          </div>
 
+          {/* BOTÓN HAMBURGUESA A LA DERECHA en móvil */}
+          <div className="col-auto d-md-none ms-auto">
             <motion.button
-              className="btn d-md-none sin-borde-icono"
+              className="btn sin-borde-icono"
               onClick={(e) => {
                 e.stopPropagation();
                 setMenuAbierto((prev) => !prev);
@@ -229,13 +253,9 @@ const Header = ({ modoClaro, cambiarTema }) => {
             </motion.button>
           </div>
 
-          {/* DERECHA: Navegación */}
-          <div
-            className={`col-12 col-lg-auto ${
-              menuAbierto ? "d-flex" : "d-none"
-            } flex-column flex-md-row align-items-start align-items-md-center gap-3 justify-content-start mt-3 mt-md-0 d-md-flex`}
-          >
-            <div className="d-flex align-items-center position-relative flex-wrap">
+          {/* NAVEGACIÓN EN ESCRITORIO (VISIBLE DE MD EN ADELANTE) */}
+          <div className="col-auto d-none d-md-flex align-items-center gap-3">
+            <div className="position-relative d-flex align-items-center">
               <img
                 src={avatar}
                 alt="avatar"
@@ -247,7 +267,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
                 }}
                 onClick={() => setShowAvatars(!showAvatars)}
               />
-              <strong className="ms-2 text-light">{nombre}</strong>
+              <strong className="text-light ms-2">{nombre}</strong>
 
               <AnimatePresence>
                 {showAvatars && (
@@ -257,8 +277,12 @@ const Header = ({ modoClaro, cambiarTema }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="position-absolute bg-dark p-2 rounded border"
-                    style={{ top: "40px", zIndex: 1050 }}
+                    className="avatar-selector position-absolute bg-dark p-2 rounded border"
+                    style={{
+                      top: "40px",
+                      left: 0,
+                      zIndex: 1050,
+                    }}
                   >
                     <div
                       className="d-grid gap-2"
@@ -328,6 +352,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
             >
               <BsClockHistory className="me-1" /> Historial
             </Link>
+
             <div className="dropdown">
               <button
                 className={`btn btn-sm text-light dropdown-toggle ${
@@ -365,6 +390,157 @@ const Header = ({ modoClaro, cambiarTema }) => {
                 </li>
               </ul>
             </div>
+          </div>
+        </div>
+        {/* MENÚ HAMBURGUESA (SOLO EN MÓVIL) */}
+        <div
+          ref={menuRef}
+          className={`menu-hamburguesa-content position-absolute end-0 mt-2 bg-dark p-3 rounded border shadow ${
+            menuAbierto ? "d-flex d-md-none" : "d-none"
+          } flex-column gap-3`}
+          style={{ top: "100%", zIndex: 1050, minWidth: "220px" }}
+        >
+          <div className="d-flex align-items-center position-relative flex-wrap">
+            <img
+              src={avatar}
+              alt="avatar"
+              style={{
+                height: "32px",
+                width: "32px",
+                borderRadius: "50%",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowAvatars(!showAvatars)}
+            />
+            <strong className="ms-2 text-light">{nombre}</strong>
+
+            <AnimatePresence>
+              {showAvatars && (
+                <motion.div
+                  ref={avatarMenuRef}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="avatar-selector position-absolute bg-dark p-2 rounded border"
+                  style={{ top: "40px", right: 0, zIndex: 1050 }}
+                >
+                  <div
+                    className="d-grid gap-2"
+                    style={{
+                      gridTemplateColumns: "repeat(2, 1fr)",
+                      justifyItems: "center",
+                    }}
+                  >
+                    {avatarList.map((src, index) => (
+                      <motion.img
+                        key={index}
+                        src={src}
+                        alt={`avatar-${index}`}
+                        initial={false}
+                        animate={{
+                          border:
+                            src === avatar
+                              ? "2px solid #1f8df5"
+                              : "2px solid transparent",
+                          boxShadow:
+                            src === avatar ? "0 0 6px #1f8df5" : "none",
+                          scale: src === avatar ? 1.1 : 1,
+                        }}
+                        whileHover={{ scale: 1.15 }}
+                        whileTap={{ scale: 0.9 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 20,
+                        }}
+                        style={{
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "50%",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleAvatarSelect(src)}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <Link
+            to="/favoritos"
+            onClick={cerrarMenu}
+            className={`btn btn-sm text-light ${
+              isActive("/favoritos") ? "fw-bold" : ""
+            }`}
+          >
+            <FaHeart className="me-1" /> Favoritos
+          </Link>
+          <Link
+            to="/mis-listas"
+            onClick={cerrarMenu}
+            className={`btn btn-sm text-light ${
+              isActive("/mis-listas") ? "fw-bold" : ""
+            }`}
+          >
+            <BsFolderFill className="me-1" /> Mis Listas
+          </Link>
+          <Link
+            to="/historial"
+            onClick={cerrarMenu}
+            className={`btn btn-sm text-light ${
+              isActive("/historial") ? "fw-bold" : ""
+            }`}
+          >
+            <BsClockHistory className="me-1" /> Historial
+          </Link>
+
+          <div className="dropdown">
+            <button
+              className={`btn btn-sm text-light dropdown-toggle ${
+                isActive("/perfil/editar") || isActive("/perfil/password")
+                  ? "fw-bold"
+                  : ""
+              }`}
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <BsGearFill className="me-1" /> Mi cuenta
+            </button>
+            <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+              <li>
+                <Link
+                  className="dropdown-item"
+                  to="/perfil/editar"
+                  onClick={cerrarMenu}
+                >
+                  <BsPencilFill className="me-2" /> Editar perfil
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="dropdown-item"
+                  to="/perfil/password"
+                  onClick={cerrarMenu}
+                >
+                  <BsKeyFill className="me-2" /> Cambiar contraseña
+                </Link>
+              </li>
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+              <li>
+                <button
+                  className="dropdown-item text-danger"
+                  onClick={cerrarSesion}
+                >
+                  <BsBoxArrowRight className="me-2" /> Cerrar sesión
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
