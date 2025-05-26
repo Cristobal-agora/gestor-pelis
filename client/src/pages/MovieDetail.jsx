@@ -550,7 +550,7 @@ const MovieDetail = () => {
                       href={plataformas.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="d-flex flex-wrap gap-2 align-items-center"
+                      className="d-flex flex-row flex-md-wrap gap-2 align-items-center"
                       style={{ textDecoration: "none" }}
                     >
                       {plataformas.items.map((p) => (
@@ -577,7 +577,7 @@ const MovieDetail = () => {
                   valor="No disponible en plataformas en España"
                 />
               )}
-
+              <br />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

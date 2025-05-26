@@ -484,7 +484,7 @@ const SerieDetail = () => {
                       href={plataformas.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="d-flex flex-wrap gap-2 align-items-center"
+                      className="d-flex flex-row flex-md-wrap gap-2 align-items-center"
                       style={{ textDecoration: "none" }}
                     >
                       {plataformas.items.map((p) => (
