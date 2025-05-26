@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./ChatbotIA.css";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,8 +9,32 @@ const ChatbotIA = () => {
   const [mensajes, setMensajes] = useState([]);
   const [entrada, setEntrada] = useState("");
   const [cargando, setCargando] = useState(false);
+  const mensajesRef = useRef(null);
 
   const toggleChat = () => setAbierto(!abierto);
+
+  useEffect(() => {
+    if (mensajesRef.current) {
+      mensajesRef.current.scrollTop = mensajesRef.current.scrollHeight;
+    }
+  }, [mensajes, cargando]);
+
+  useEffect(() => {
+    const textarea = document.querySelector(".chatbot-entrada textarea");
+    if (!textarea) return;
+
+    const handleFocus = () => {
+      setTimeout(() => {
+        mensajesRef.current?.scrollTo({
+          top: mensajesRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 300); // da tiempo a que aparezca el teclado
+    };
+
+    textarea.addEventListener("focus", handleFocus);
+    return () => textarea.removeEventListener("focus", handleFocus);
+  }, []);
 
   const enviarPregunta = async () => {
     if (!entrada.trim()) return;
@@ -82,7 +106,7 @@ const ChatbotIA = () => {
               </button>
             </div>
 
-            <div className="chatbot-mensajes">
+            <div className="chatbot-mensajes" ref={mensajesRef}>
               <AnimatePresence initial={false}>
                 {mensajes.map((msg, idx) => (
                   <motion.div

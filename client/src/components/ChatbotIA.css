@@ -57,6 +57,7 @@
   flex-direction: column;
   max-height: 420px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  height: auto; /* importante para desktop */
 }
 
 .chatbot-cabecera {
@@ -155,4 +156,32 @@
 
 .chatbot-cerrar:active {
   transform: scale(0.9);
+}
+
+@media (max-width: 768px) {
+  .chatbot-ventana {
+    width: 100vw;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 100dvh; /* ✅ Altura dinámica completa */
+    max-height: none;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chatbot-mensajes {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px 12px;
+    max-height: calc(
+      100dvh - 160px
+    ); /* ✅ altura para dejar sitio a textarea */
+  }
+
+  .chatbot-entrada {
+    padding: 10px;
+    padding-bottom: env(safe-area-inset-bottom, 10px); /* ✅ para iOS */
+  }
 }
