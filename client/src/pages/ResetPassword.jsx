@@ -1,48 +1,48 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmar, setConfirmar] = useState("");
-  const [mensaje, setMensaje] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMensaje("");
-    setError("");
 
     if (password !== confirmar) {
-      setError("Las contraseñas no coinciden.");
+      toast.error("Las contraseñas no coinciden.");
       return;
     }
 
     if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres.");
+      toast.error("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ token, nuevaPassword: password })
-,
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/reset-password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, nuevaPassword: password }),
+        }
+      );
 
       const data = await res.json();
 
       if (res.ok) {
-        setMensaje("Contraseña restablecida correctamente. Redirigiendo...");
+        toast.success("Contraseña restablecida correctamente. Redirigiendo...");
         setTimeout(() => navigate("/login"), 3000);
       } else {
-        setError(data.error || "Error al restablecer la contraseña.");
+        toast.error(data.error || "Error al restablecer la contraseña.");
       }
     } catch (err) {
       console.error(err);
-      setError("Error de conexión con el servidor.");
+      toast.error("Error de conexión con el servidor.");
     }
   };
 
@@ -60,10 +60,9 @@ const ResetPassword = () => {
             backgroundColor: "rgba(28, 28, 28, 0.85)",
           }}
         >
-          <h2 className="mb-4 text-center text-primary">Restablecer contraseña</h2>
-
-          {mensaje && <div className="alert alert-success">{mensaje}</div>}
-          {error && <div className="alert alert-danger">{error}</div>}
+          <h2 className="mb-4 text-center text-primary">
+            Restablecer contraseña
+          </h2>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -78,7 +77,9 @@ const ResetPassword = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label text-light">Confirmar nueva contraseña</label>
+              <label className="form-label text-light">
+                Confirmar nueva contraseña
+              </label>
               <input
                 type="password"
                 className="form-control bg-dark text-light border-secondary"
@@ -88,12 +89,17 @@ const ResetPassword = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100 py-2 fw-bold">
+            <button
+              type="submit"
+              className="btn btn-primary w-100 py-2 fw-bold"
+            >
               Cambiar contraseña
             </button>
           </form>
         </div>
       </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

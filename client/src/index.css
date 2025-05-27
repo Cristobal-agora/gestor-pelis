@@ -1561,3 +1561,20 @@ body.modo-claro .texto-expandible {
     height: 240px !important;
   }
 }
+/* Estilo del botón de cierre en modales */
+.modal .btn-close {
+  filter: invert(1); /* lo hace blanco en modo oscuro */
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.modal .btn-close:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Ajuste para modo claro */
+body.modo-claro .modal .btn-close {
+  filter: none; /* lo deja como está (negro por defecto) */
+  color: #000;
+}

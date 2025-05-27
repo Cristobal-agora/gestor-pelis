@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const CambiarPassword = () => {
   const [formData, setFormData] = useState({
@@ -7,7 +8,6 @@ const CambiarPassword = () => {
     nuevaPassword: "",
   });
 
-  const [mensaje, setMensaje] = useState("");
   const token = sessionStorage.getItem("token");
 
   const handleChange = (e) => {
@@ -45,7 +45,7 @@ const CambiarPassword = () => {
     }
 
     if (errores.length > 0) {
-      setMensaje(errores.join("\n"));
+      errores.forEach((err) => toast.error(err));
       return;
     }
 
@@ -58,17 +58,16 @@ const CambiarPassword = () => {
         }
       );
 
-      setMensaje(res.data.mensaje || "Contraseña actualizada correctamente.");
+      toast.success(
+        res.data.mensaje || "Contraseña actualizada correctamente."
+      );
       setFormData({ passwordActual: "", nuevaPassword: "" });
     } catch (error) {
       console.error(error);
       if (error.response?.data?.errores) {
-        const errores = error.response.data.errores
-          .map((err) => `- ${err.msg}`)
-          .join("\n");
-        setMensaje(errores);
+        error.response.data.errores.forEach((err) => toast.error(err.msg));
       } else {
-        setMensaje(
+        toast.error(
           error.response?.data?.mensaje || "Error al cambiar la contraseña."
         );
       }
@@ -78,14 +77,6 @@ const CambiarPassword = () => {
   return (
     <div className="container py-5">
       <h2 className="text-primary mb-4">Cambiar contraseña</h2>
-
-      {mensaje && (
-        <div className="alert alert-info text-start">
-          {mensaje.split("\n").map((linea, i) => (
-            <div key={i}>{linea}</div>
-          ))}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

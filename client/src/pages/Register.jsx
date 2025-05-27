@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./AuthBackground.css";
 
 const Register = ({ mostrarVideoFondo }) => {
@@ -11,8 +13,6 @@ const Register = ({ mostrarVideoFondo }) => {
     email: "",
     password: "",
   });
-
-  const [mensaje, setMensaje] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,7 +40,7 @@ const Register = ({ mostrarVideoFondo }) => {
     }
 
     if (errores.length > 0) {
-      setMensaje(errores.join("\n"));
+      errores.forEach((err) => toast.error(err));
       return;
     }
 
@@ -49,17 +49,17 @@ const Register = ({ mostrarVideoFondo }) => {
         `${import.meta.env.VITE_API_URL}/register`,
         formData
       );
-      setMensaje(res.data.mensaje);
+
+      toast.success(res.data.mensaje || "Registro exitoso");
       navigate("/login", { state: { registrado: true } });
     } catch (error) {
       console.error(error);
       if (error.response?.data?.errores) {
-        const errores = error.response.data.errores
-          .map((err) => `- ${err.msg}`)
-          .join("\n");
-        setMensaje(errores);
+        error.response.data.errores.forEach((err) =>
+          toast.error(`- ${err.msg}`)
+        );
       } else {
-        setMensaje(error.response?.data?.mensaje || "Error en el registro");
+        toast.error(error.response?.data?.mensaje || "Error en el registro");
       }
     }
   };
@@ -86,14 +86,6 @@ const Register = ({ mostrarVideoFondo }) => {
           }}
         >
           <h2 className="mb-4 text-center text-primary">Registro</h2>
-
-          {mensaje && (
-            <div className="alert alert-info text-start">
-              {mensaje.split("\n").map((linea, index) => (
-                <div key={index}>{linea}</div>
-              ))}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -153,6 +145,8 @@ const Register = ({ mostrarVideoFondo }) => {
           </form>
         </div>
       </div>
+
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./AuthBackground.css";
 
 const Login = ({ mostrarVideoFondo }) => {
@@ -13,21 +15,21 @@ const Login = ({ mostrarVideoFondo }) => {
     password: "",
   });
 
-  const [mensaje, setMensaje] = useState(
-    registrado ? "¡Registro exitoso! Inicia sesión para continuar." : ""
-  );
   useEffect(() => {
-    // Si vienes a /login, borra el token actual (simula cerrar sesión)
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("usuario");
-  }, []);
+
+    if (registrado) {
+      toast.success("¡Registro exitoso! Inicia sesión para continuar.");
+    }
+  }, [registrado]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const errores = [];
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,7 +46,7 @@ const Login = ({ mostrarVideoFondo }) => {
     }
 
     if (errores.length > 0) {
-      setMensaje(errores.join("\n"));
+      errores.forEach((err) => toast.error(err));
       return;
     }
 
@@ -54,19 +56,16 @@ const Login = ({ mostrarVideoFondo }) => {
         formData
       );
 
-      setMensaje(res.data.mensaje);
+      toast.success("Inicio de sesión exitoso");
       sessionStorage.setItem("token", res.data.token);
       sessionStorage.setItem("usuario", JSON.stringify(res.data.usuario));
       navigate("/home");
     } catch (error) {
       console.error(error);
       if (error.response?.data?.errores) {
-        const errores = error.response.data.errores
-          .map((err) => `- ${err.msg}`)
-          .join("\n");
-        setMensaje(errores);
+        error.response.data.errores.forEach((err) => toast.error(err.msg));
       } else {
-        setMensaje(error.response?.data?.mensaje || "Error al iniciar sesión");
+        toast.error(error.response?.data?.mensaje || "Error al iniciar sesión");
       }
     }
   };
@@ -93,14 +92,6 @@ const Login = ({ mostrarVideoFondo }) => {
           }}
         >
           <h2 className="mb-4 text-center text-primary">Iniciar Sesión</h2>
-
-          {mensaje && (
-            <div className="alert alert-info text-start">
-              {mensaje.split("\n").map((linea, index) => (
-                <div key={index}>{linea}</div>
-              ))}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -142,14 +133,13 @@ const Login = ({ mostrarVideoFondo }) => {
               Entrar
             </button>
             <div className="mt-3 d-flex justify-content-between">
-             <button
-  type="button" // ⬅️ Esto es obligatorio si está dentro del form
-  onClick={() => navigate("/recuperar-password")}
-  className="btn btn-link p-0 text-light"
->
-  ¿Has olvidado tu contraseña?
-</button>
-
+              <button
+                type="button"
+                onClick={() => navigate("/recuperar-password")}
+                className="btn btn-link p-0 text-light"
+              >
+                ¿Has olvidado tu contraseña?
+              </button>
 
               <button
                 type="button"

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const EditarPerfil = () => {
   const [formData, setFormData] = useState({
@@ -7,7 +8,6 @@ const EditarPerfil = () => {
     email: "",
   });
 
-  const [mensaje, setMensaje] = useState("");
   const token = sessionStorage.getItem("token");
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const EditarPerfil = () => {
         setFormData(res.data);
       } catch (error) {
         console.error(error);
-        setMensaje("Error al cargar el perfil.");
+        toast.error("Error al cargar el perfil.");
       }
     };
 
@@ -47,7 +47,7 @@ const EditarPerfil = () => {
     }
 
     if (errores.length > 0) {
-      setMensaje(errores.join("\n"));
+      errores.forEach((err) => toast.error(err));
       return;
     }
 
@@ -57,20 +57,17 @@ const EditarPerfil = () => {
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMensaje(res.data.mensaje || "Perfil actualizado correctamente.");
-      // Actualiza también en sessionStorage si quieres reflejar el nuevo nombre:
+      toast.success(res.data.mensaje || "Perfil actualizado correctamente.");
+
       const usuario = JSON.parse(sessionStorage.getItem("usuario"));
       usuario.nombre = formData.nombre;
       sessionStorage.setItem("usuario", JSON.stringify(usuario));
     } catch (error) {
       console.error(error);
       if (error.response?.data?.errores) {
-        const errores = error.response.data.errores
-          .map((err) => `- ${err.msg}`)
-          .join("\n");
-        setMensaje(errores);
+        error.response.data.errores.forEach((err) => toast.error(err.msg));
       } else {
-        setMensaje(
+        toast.error(
           error.response?.data?.mensaje || "Error al actualizar el perfil."
         );
       }
@@ -80,14 +77,6 @@ const EditarPerfil = () => {
   return (
     <div className="container py-5">
       <h2 className="text-primary mb-4">Editar perfil</h2>
-
-      {mensaje && (
-        <div className="alert alert-info text-start">
-          {mensaje.split("\n").map((linea, i) => (
-            <div key={i}>{linea}</div>
-          ))}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

@@ -1,25 +1,29 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RecuperarPassword = () => {
   const [email, setEmail] = useState("");
-  const [mensaje, setMensaje] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMensaje("");
-    setError("");
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/recuperar-password`, { email });
-      setMensaje(res.data.mensaje || "Si el correo está registrado, te hemos enviado un email con instrucciones.");
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/recuperar-password`,
+        { email }
+      );
+      toast.success(
+        res.data.mensaje ||
+          "Si el correo está registrado, te hemos enviado un email con instrucciones."
+      );
     } catch (err) {
       console.error(err);
-      setError(
+      toast.error(
         err.response?.data?.mensaje ||
-        "Error al procesar la solicitud. Inténtalo más tarde."
+          "Error al procesar la solicitud. Inténtalo más tarde."
       );
     }
   };
@@ -38,10 +42,9 @@ const RecuperarPassword = () => {
             backgroundColor: "rgba(28, 28, 28, 0.85)",
           }}
         >
-          <h2 className="mb-4 text-center text-primary">Recuperar contraseña</h2>
-
-          {mensaje && <div className="alert alert-success">{mensaje}</div>}
-          {error && <div className="alert alert-danger">{error}</div>}
+          <h2 className="mb-4 text-center text-primary">
+            Recuperar contraseña
+          </h2>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -58,7 +61,10 @@ const RecuperarPassword = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100 py-2 fw-bold">
+            <button
+              type="submit"
+              className="btn btn-primary w-100 py-2 fw-bold"
+            >
               Enviar instrucciones
             </button>
 
@@ -70,6 +76,7 @@ const RecuperarPassword = () => {
           </form>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
