@@ -276,7 +276,7 @@ const MovieDetail = () => {
         <div className="col-md-8">
           <div className="sin-fondo mb-3">
             <div className="movie-title-wrapper d-flex justify-content-between align-items-center flex-wrap">
-              <h2 className="text-azul-suave fw-bold me-2 mb-3">
+              <h2 className="text-azul-suave fw-bold me-2 mb-3 sin-fondo">
                 {pelicula.title}
               </h2>
 

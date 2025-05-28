@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import { FaFilm } from "react-icons/fa";
 
 const Cartelera = () => {
   const [peliculas, setPeliculas] = useState([]);
@@ -71,14 +72,15 @@ const Cartelera = () => {
 
   return (
     <div className="text-light">
-      <h3 className="text-azul-suave mb-3 d-flex align-items-center gap-2 sin-fondo">
-        <img
-          src="/favicon.ico"
-          alt="CineStash"
+      <h3
+        className="titulo-cartelera text-azul-suave mb-3 d-flex align-items-center gap-2 sin-fondo"
+        style={{ lineHeight: 1 }}
+      >
+        <FaFilm
+          size={22}
           style={{
-            height: "28px",
-            width: "28px",
-            objectFit: "contain",
+            position: "relative",
+            top: "-1px",
             filter: "drop-shadow(0 0 1px #1f8df5)",
           }}
         />

@@ -5,10 +5,11 @@
   border-radius: 12px;
   font-size: 1rem;
   margin-top: 1rem;
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
+  max-width: 100%; /* Evita desbordamiento si se encadena mucho contenido */
 }
 
 .valoraciones-bloque svg {

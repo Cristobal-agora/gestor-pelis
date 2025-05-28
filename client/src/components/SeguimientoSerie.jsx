@@ -212,11 +212,9 @@ const SeguimientoSerie = ({ tmdbId }) => {
               </h6>
               <div className="d-flex gap-2">
                 <button
-                  className="btn btn-sm btn-seguimiento fw-semibold"
-                  style={{
-                    backgroundColor:
-                      vistos < t.episodios.length ? "#28a745" : "#dc3545",
-                  }}
+                  className={`btn btn-sm fw-semibold d-flex align-items-center gap-2 px-3 py-1 rounded-pill shadow-sm transition-color ${
+                    vistos < t.episodios.length ? "btn-verde" : "btn-rojo"
+                  }`}
                   onClick={() =>
                     vistos < t.episodios.length
                       ? marcarTemporada(t.temporada)
@@ -233,8 +231,9 @@ const SeguimientoSerie = ({ tmdbId }) => {
                     </>
                   )}
                 </button>
+
                 <button
-                  className="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                  className="btn btn-sm btn-toggle-temporada d-flex align-items-center gap-2 px-3 py-1"
                   onClick={() => toggleTemporada(t.temporada)}
                 >
                   {visibles[t.temporada] ? (
@@ -269,7 +268,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
                       className={`btn btn-sm px-2 py-1 fw-bold rounded-pill d-flex align-items-center gap-2 ${
                         vista[`${t.temporada}-${e.episode_number}`]
                           ? "btn-success"
-                          : "btn-outline-danger"
+                          : "btn-outline-check"
                       }`}
                       onClick={(eBtn) => {
                         eBtn.preventDefault();
@@ -281,11 +280,13 @@ const SeguimientoSerie = ({ tmdbId }) => {
                           : "Marcar como visto"
                       }
                     >
-                      {vista[`${t.temporada}-${e.episode_number}`] ? (
-                        <FaCheck />
-                      ) : (
-                        <FaTimes />
-                      )}
+                      <FaCheck
+                        style={{
+                          color: vista[`${t.temporada}-${e.episode_number}`]
+                            ? "white"
+                            : "#bbb",
+                        }}
+                      />
                     </button>
                   </li>
                 ))}

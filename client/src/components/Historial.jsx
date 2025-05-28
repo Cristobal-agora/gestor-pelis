@@ -8,6 +8,8 @@ const Historial = () => {
   const [tipo, setTipo] = useState("todos");
   const [items, setItems] = useState([]);
   const token = sessionStorage.getItem("token");
+  const [serieSeleccionada, setSerieSeleccionada] = useState(null);
+  const [mostrarModal, setMostrarModal] = useState(false);
 
   useEffect(() => {
     const obtenerHistorial = async () => {
@@ -123,11 +125,22 @@ const Historial = () => {
       {items.length === 0 ? (
         <p className="text-light">No has marcado contenido como visto aún.</p>
       ) : (
-        <div className="row">
+        <div className="row g-3">
           {items.map((item) => (
-            <div key={item.id} className="col-md-6 col-lg-4 mb-4">
-              <div className="card bg-dark text-white border border-secondary h-100 shadow-sm">
-                <div className="card-body d-flex flex-column justify-content-between">
+            <div key={item.id} className="col-md-6 col-lg-6 mb-4">
+              <div
+                className="card bg-dark text-white border border-secondary shadow-sm"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                  minHeight: "220px",
+                }}
+              >
+                <div
+                  className="card-body d-flex flex-column"
+                  style={{ flexGrow: 1 }}
+                >
                   <div>
                     <div className="d-flex justify-content-between align-items-center">
                       <h5
@@ -151,19 +164,58 @@ const Historial = () => {
                     </p>
                   </div>
                   {item.media_type === "movie" ? (
-                    <Link
-                      to={`/pelicula/${item.id}`}
-                      className="btn btn-sm px-2 py-1 text-info bg-transparent border-0"
-                    >
-                      Ver detalles
-                    </Link>
+                    <div className="mt-3">
+                      <Link
+                        to={`/pelicula/${item.id}`}
+                        className="btn btn-sm px-2 py-1 text-info bg-transparent border-0"
+                      >
+                        Ver detalles
+                      </Link>
+                    </div>
                   ) : (
-                    <SeguimientoSerie tmdbId={item.id} />
+                    <div className="mt-3">
+                      <button
+                        className="btn btn-sm btn-outline-info"
+                        onClick={() => {
+                          setSerieSeleccionada(item.id);
+                          setMostrarModal(true);
+                        }}
+                      >
+                        Temporadas
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
             </div>
           ))}
+          {mostrarModal && (
+            <div
+              className="modal fade show"
+              style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+              tabIndex="-1"
+              onClick={() => setMostrarModal(false)}
+            >
+              <div
+                className="modal-dialog modal-dialog-centered modal-lg"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="modal-content bg-dark text-light">
+                  <div className="modal-header border-secondary">
+                    <h5 className="modal-title">Seguimiento de Temporadas</h5>
+                    <button
+                      type="button"
+                      className="btn-close btn-close-white"
+                      onClick={() => setMostrarModal(false)}
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <SeguimientoSerie tmdbId={serieSeleccionada} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

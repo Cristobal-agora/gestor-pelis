@@ -60,7 +60,7 @@ const MisListas = ({ modoClaro }) => {
 
   return (
     <div className={`container mt-4 ${modoClaro ? "text-dark" : "text-light"}`}>
-      <h2 className="mb-3 text-primary d-flex align-items-center gap-2">
+       <h2 className="mb-4 d-flex align-items-center gap-2 text-primary">
         <FaFolderOpen /> Mis Listas
       </h2>
 

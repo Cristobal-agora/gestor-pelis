@@ -1,10 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = ({ modo = "completo", className = "" }) => {
   const token = sessionStorage.getItem("token");
   const year = new Date().getFullYear();
+  const location = useLocation();
 
   const esSimple = modo === "simple";
 
@@ -40,8 +41,22 @@ const Footer = ({ modo = "completo", className = "" }) => {
             {token && (
               <ul className="footer-links list-unstyled d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mb-0">
                 <li>
-                  <Link to="/home">Inicio</Link>
+                  <Link
+                    to="/home"
+                    onClick={(e) => {
+                      if (
+                        location.pathname === "/home" ||
+                        location.pathname === "/"
+                      ) {
+                        e.preventDefault(); // evita que React Router recargue la misma ruta
+                        window.scrollTo({ top: 0, behavior: "smooth" }); // hace scroll suave
+                      }
+                    }}
+                  >
+                    Inicio
+                  </Link>
                 </li>
+
                 <li>
                   <Link to="/favoritos">Favoritos</Link>
                 </li>

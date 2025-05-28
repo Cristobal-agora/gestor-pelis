@@ -10,6 +10,7 @@ import {
   BsChevronDoubleRight,
 } from "react-icons/bs";
 import { toast } from "react-toastify";
+import { FaVideo, FaTv } from "react-icons/fa";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -373,9 +374,15 @@ const Home = () => {
           <hr className="my-5 text-secondary" />
         </div>
       )}
-      <h2 className="mb-2 text-azul-suave">
+      <h2 className="sin-fondo titulo-seccion d-flex align-items-center gap-2 mb-3">
+        {tipo === "movie" ? (
+          <FaVideo size={22} style={{ fontSize: "1.6rem" }} />
+        ) : (
+          <FaTv size={22} style={{ fontSize: "1.6rem" }} />
+        )}
         {tipo === "movie" ? "Películas" : "Series"}
       </h2>
+
       <br />
       <div className="input-group mb-2 sin-fondo">
         <input

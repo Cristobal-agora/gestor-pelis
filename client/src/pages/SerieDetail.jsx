@@ -254,23 +254,35 @@ const SerieDetail = () => {
         </div>
 
         <div className="col-md-8">
-          <div className="d-flex justify-content-between align-items-center flex-wrap mb-4 gap-2">
-            <h2 className="text-primary fw-bold mb-0">{serie.name}</h2>
+          <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+            <h2
+              className="text-azul-suave fw-bold mb-0 sin-fondo"
+              style={{ fontFamily: "Poppins, sans-serif", lineHeight: 1.2 }}
+            >
+              {serie.name}
+            </h2>
 
             <motion.button
               onClick={toggleFavorito}
-              className="btn border-0 p-0 ms-auto"
+              className="btn border-0 p-0 d-flex align-items-center justify-content-center"
               title={esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"}
               whileTap={{ scale: 0.9 }}
               whileHover={{ scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
+              style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "999px",
+                backgroundColor: "transparent",
+              }}
             >
               <motion.span
                 animate={{ rotate: esFavorito ? 360 : 0 }}
                 transition={{ duration: 0.4 }}
                 style={{
-                  fontSize: "2rem",
+                  fontSize: "1.6rem",
                   color: esFavorito ? "red" : "#6c757d",
+                  lineHeight: "1",
                 }}
               >
                 {esFavorito ? <FaHeart /> : <FaRegHeart />}

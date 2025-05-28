@@ -186,3 +186,135 @@ body.modo-claro .switch-slider {
 body.modo-claro .switch-toggle input:checked + .switch-slider {
   background-color: #1f8df5;
 }
+/* Botón moderno verde */
+.btn-verde {
+  background-color: #28a745 !important;
+  color: #fff !important;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-verde:hover {
+  background-color: #218838;
+  transform: scale(1.03);
+}
+
+/* Botón moderno rojo */
+.btn-rojo {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-rojo:hover {
+  background-color: #c82333;
+  transform: scale(1.03);
+}
+
+/* Transición general */
+.transition-color {
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+/* Mejora visual para botón Mostrar/Ocultar */
+.btn-outline-light {
+  border: 2px solid #1f8df5;
+  color: #1f8df5;
+  background-color: transparent;
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+}
+
+.btn-outline-light:hover {
+  background-color: #1f8df5;
+  color: #fff;
+  transform: scale(1.03);
+}
+
+/* ===== MODO CLARO ===== */
+body.modo-claro .btn-outline-light {
+  color: #1f8df5;
+  border-color: #1f8df5;
+}
+
+body.modo-claro .btn-outline-light:hover {
+  background-color: #1f8df5;
+  color: #fff;
+}
+
+body.modo-claro .btn-verde {
+  background-color: #3cc06f;
+}
+
+body.modo-claro .btn-verde:hover {
+  background-color: #32a85e;
+}
+
+body.modo-claro .btn-rojo {
+  background-color: #f35c5c;
+}
+
+body.modo-claro .btn-rojo:hover {
+  background-color: #d94848;
+}
+/* Temporada (modo claro mejorado) */
+h6.text-info {
+  color: #1f8df5 !important;
+}
+
+body.modo-claro h6.text-info {
+  color: #0084ff;
+}
+
+.btn-toggle-temporada {
+  background-color: #1f8df5 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 0.4rem 1rem !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
+}
+
+.btn-toggle-temporada:hover {
+  background-color: #0074e8 !important;
+  transform: scale(1.03) !important;
+  color: #fff !important;
+}
+
+body.modo-claro .btn-toggle-temporada {
+  background-color: #1f8df5 !important;
+  color: white !important;
+}
+
+body.modo-claro .btn-toggle-temporada:hover {
+  background-color: #0074e8 !important;
+}
+/* Estilo para episodio no visto (gris con hover suave verde) */
+.btn-outline-check {
+  background-color: transparent !important;
+  border: 2px solid #aaa !important;
+  color: #aaa !important;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-outline-check:hover {
+  background-color: #167f3e !important;
+  color: white !important;
+  transform: scale(1.03);
+}
+
+/* En modo claro */
+body.modo-claro .btn-outline-check {
+  border-color: #888 !important;
+  color: #555 !important;
+}
+
+body.modo-claro .btn-outline-check:hover {
+  background-color: #167f3e !important;
+  color: white !important;
+}
