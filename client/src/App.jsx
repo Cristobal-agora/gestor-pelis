@@ -30,7 +30,7 @@ import ResetPassword from "./pages/ResetPassword";
 import { toast } from "react-toastify";
 import Buscar from "./components/Buscar";
 import RedireccionRutaDesconocida from "./components/RedireccionRutaDesconocida";
-
+import Director from "./pages/Director";
 function AppContent() {
   const location = useLocation();
   const token = sessionStorage.getItem("token");
@@ -191,6 +191,7 @@ function AppContent() {
             <Route path="/recuperar-password" element={<RecuperarPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/buscar/:nombre" element={<Buscar />} />
+            <Route path="/director/:id" element={<Director />} />
            <Route path="*" element={<RedireccionRutaDesconocida />} />
 
           </Routes>

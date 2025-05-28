@@ -145,6 +145,17 @@ const Header = ({ modoClaro, cambiarTema }) => {
   };
   const cerrarMenu = () => setMenuAbierto(false);
 
+  const handleLogoClick = () => {
+    sessionStorage.removeItem("cineStashState");
+    if (token) {
+      location.pathname === "/home"
+        ? window.location.reload()
+        : navigate("/home");
+    } else {
+      navigate("/");
+    }
+  };
+
   // 👉 Header SIN sesión
   if (!token) {
     return (
@@ -155,8 +166,11 @@ const Header = ({ modoClaro, cambiarTema }) => {
         <div className="container px-0 pb-2">
           <div className="w-100 d-flex flex-column align-items-center justify-content-center">
             <div className="d-flex flex-column align-items-center">
-             <div className="d-flex align-items-center gap-2 mt-4 mb-2 sin-fondo">
-
+              <div
+                className="d-flex align-items-center gap-2 mt-4 mb-2 sin-fondo"
+                style={{ cursor: "pointer" }}
+                onClick={handleLogoClick}
+              >
                 <img
                   src="/favicon.ico"
                   alt="CineStash"
@@ -200,12 +214,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
           {/* IZQUIERDA: Logo + modo claro */}
           <div className="col d-flex align-items-center gap-2">
             <div
-              onClick={() => {
-                sessionStorage.removeItem("cineStashState");
-                location.pathname === "/home"
-                  ? window.location.reload()
-                  : navigate("/home");
-              }}
+              onClick={handleLogoClick}
               className="d-flex align-items-center gap-2 text-decoration-none"
               style={{ cursor: "pointer" }}
             >

@@ -1603,3 +1603,21 @@ body.modo-claro .titulo-seccion {
   color: #0074e8;
   text-shadow: none;
 }
+/* Animación para las tarjetas de películas */
+.pelicula-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pelicula-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.director-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.director-hover:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px #1f8df5;
+}
