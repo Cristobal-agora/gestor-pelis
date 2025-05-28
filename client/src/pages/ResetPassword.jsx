@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -65,7 +64,7 @@ const ResetPassword = () => {
           </h2>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-3 sin-fondo">
               <label className="form-label text-light">Nueva contraseña</label>
               <input
                 type="password"
@@ -76,7 +75,7 @@ const ResetPassword = () => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-3 sin-fondo">
               <label className="form-label text-light">
                 Confirmar nueva contraseña
               </label>
@@ -98,8 +97,6 @@ const ResetPassword = () => {
           </form>
         </div>
       </div>
-
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

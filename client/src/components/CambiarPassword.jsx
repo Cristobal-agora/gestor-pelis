@@ -6,6 +6,7 @@ const CambiarPassword = () => {
   const [formData, setFormData] = useState({
     passwordActual: "",
     nuevaPassword: "",
+    confirmarPassword: "",
   });
 
   const token = sessionStorage.getItem("token");
@@ -17,7 +18,7 @@ const CambiarPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { passwordActual, nuevaPassword } = formData;
+    const { passwordActual, nuevaPassword, confirmarPassword } = formData;
     const errores = [];
 
     if (!passwordActual.trim()) {
@@ -44,6 +45,10 @@ const CambiarPassword = () => {
       }
     }
 
+    if (nuevaPassword !== confirmarPassword) {
+      errores.push("Las contraseñas no coinciden.");
+    }
+
     if (errores.length > 0) {
       errores.forEach((err) => toast.error(err));
       return;
@@ -52,7 +57,10 @@ const CambiarPassword = () => {
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_API_URL}/usuarios/password`,
-        formData,
+        {
+          passwordActual,
+          nuevaPassword,
+        },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -61,7 +69,11 @@ const CambiarPassword = () => {
       toast.success(
         res.data.mensaje || "Contraseña actualizada correctamente."
       );
-      setFormData({ passwordActual: "", nuevaPassword: "" });
+      setFormData({
+        passwordActual: "",
+        nuevaPassword: "",
+        confirmarPassword: "",
+      });
     } catch (error) {
       console.error(error);
       if (error.response?.data?.errores) {
@@ -75,40 +87,57 @@ const CambiarPassword = () => {
   };
 
   return (
-    <div className="container py-5">
-      <h2 className="text-primary mb-4">Cambiar contraseña</h2>
+    <div className="container py-5 d-flex justify-content-center">
+      <div style={{ maxWidth: "500px", width: "100%" }}>
+        <h2 className="text-primary mb-4 text-center">Cambiar contraseña</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label text-light">Contraseña actual</label>
-          <input
-            type="password"
-            className="form-control bg-dark text-light border-secondary"
-            name="passwordActual"
-            value={formData.passwordActual}
-            onChange={handleChange}
-            required
-            autoComplete="current-password"
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3 sin-fondo">
+            <label className="form-label text-light">Contraseña actual</label>
+            <input
+              type="password"
+              className="form-control bg-dark text-light border-secondary"
+              name="passwordActual"
+              value={formData.passwordActual}
+              onChange={handleChange}
+              required
+              autoComplete="current-password"
+            />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label text-light">Nueva contraseña</label>
-          <input
-            type="password"
-            className="form-control bg-dark text-light border-secondary"
-            name="nuevaPassword"
-            value={formData.nuevaPassword}
-            onChange={handleChange}
-            required
-            autoComplete="new-password"
-          />
-        </div>
+          <div className="mb-3 sin-fondo">
+            <label className="form-label text-light">Nueva contraseña</label>
+            <input
+              type="password"
+              className="form-control bg-dark text-light border-secondary"
+              name="nuevaPassword"
+              value={formData.nuevaPassword}
+              onChange={handleChange}
+              required
+              autoComplete="new-password"
+            />
+          </div>
 
-        <button type="submit" className="btn btn-primary fw-bold">
-          Cambiar contraseña
-        </button>
-      </form>
+          <div className="mb-3 sin-fondo">
+            <label className="form-label text-light">
+              Confirmar nueva contraseña
+            </label>
+            <input
+              type="password"
+              className="form-control bg-dark text-light border-secondary"
+              name="confirmarPassword"
+              value={formData.confirmarPassword}
+              onChange={handleChange}
+              required
+              autoComplete="new-password"
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary fw-bold w-100">
+            Cambiar contraseña
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

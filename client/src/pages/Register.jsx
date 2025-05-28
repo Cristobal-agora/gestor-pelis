@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import "./AuthBackground.css";
 
 const Register = ({ mostrarVideoFondo }) => {
@@ -88,7 +87,7 @@ const Register = ({ mostrarVideoFondo }) => {
           <h2 className="mb-4 text-center text-primary">Registro</h2>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-3 sin-fondo">
               <label htmlFor="nombre" className="form-label text-light">
                 Nombre
               </label>
@@ -104,7 +103,7 @@ const Register = ({ mostrarVideoFondo }) => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-3 sin-fondo">
               <label htmlFor="email" className="form-label text-light">
                 Correo electrónico
               </label>
@@ -120,7 +119,7 @@ const Register = ({ mostrarVideoFondo }) => {
               />
             </div>
 
-            <div className="mb-4">
+            <div className="mb-3 sin-fondo">
               <label htmlFor="password" className="form-label text-light">
                 Contraseña
               </label>
@@ -145,8 +144,6 @@ const Register = ({ mostrarVideoFondo }) => {
           </form>
         </div>
       </div>
-
-      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

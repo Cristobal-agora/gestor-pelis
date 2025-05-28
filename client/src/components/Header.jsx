@@ -52,6 +52,8 @@ const Header = ({ modoClaro, cambiarTema }) => {
 
   const [showAvatars, setShowAvatars] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [menuCuentaAbierto, setMenuCuentaAbierto] = useState(false);
+
   const menuRef = useRef(null);
 
   const avatarMenuRef = useRef(null);
@@ -153,7 +155,8 @@ const Header = ({ modoClaro, cambiarTema }) => {
         <div className="container px-0 pb-2">
           <div className="w-100 d-flex flex-column align-items-center justify-content-center">
             <div className="d-flex flex-column align-items-center">
-              <div className="d-flex align-items-center gap-2">
+             <div className="d-flex align-items-center gap-2 mt-4 mb-2 sin-fondo">
+
                 <img
                   src="/favicon.ico"
                   alt="CineStash"
@@ -255,20 +258,91 @@ const Header = ({ modoClaro, cambiarTema }) => {
 
           {/* NAVEGACIÓN EN ESCRITORIO (VISIBLE DE MD EN ADELANTE) */}
           <div className="col-auto d-none d-md-flex align-items-center gap-3">
-            <div className="position-relative d-flex align-items-center">
+            <Link
+              to="/favoritos"
+              className={`btn btn-sm text-light ${
+                isActive("/favoritos") ? "fw-bold" : ""
+              }`}
+            >
+              <FaHeart className="me-1" /> Favoritos
+            </Link>
+            <Link
+              to="/mis-listas"
+              className={`btn btn-sm text-light ${
+                isActive("/mis-listas") ? "fw-bold" : ""
+              }`}
+            >
+              <BsFolderFill className="me-1" /> Mis Listas
+            </Link>
+            <Link
+              to="/historial"
+              className={`btn btn-sm text-light ${
+                isActive("/historial") ? "fw-bold" : ""
+              }`}
+            >
+              <BsClockHistory className="me-1" /> Historial
+            </Link>
+
+            <div className="dropdown position-relative d-flex align-items-center gap-2">
+              {/* Avatar clicable para cambiarlo */}
               <img
                 src={avatar}
                 alt="avatar"
                 style={{
-                  height: "32px",
-                  width: "32px",
+                  height: "28px",
+                  width: "28px",
                   borderRadius: "50%",
+                  objectFit: "cover",
                   cursor: "pointer",
                 }}
-                onClick={() => setShowAvatars(!showAvatars)}
+                onClick={(e) => {
+                  e.stopPropagation(); // Evita que abra el menú de Bootstrap
+                  setShowAvatars((prev) => !prev);
+                }}
               />
-              <strong className="text-light ms-2">{nombre}</strong>
 
+              {/* Botón con el nombre, abre el dropdown de cuenta */}
+              <button
+                className="btn btn-sm text-light dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style={{
+                  borderRadius: "30px",
+                  padding: "4px 10px",
+                  border: "1px solid #444",
+                  backgroundColor: "transparent",
+                }}
+              >
+                <span className="fw-bold">{nombre}</span>
+              </button>
+
+              {/* Menú de opciones de cuenta */}
+              <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end mt-2">
+                <li>
+                  <Link className="dropdown-item" to="/perfil/editar">
+                    <BsPencilFill className="me-2" /> Editar perfil
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/perfil/password">
+                    <BsKeyFill className="me-2" /> Cambiar contraseña
+                  </Link>
+                </li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item text-danger"
+                    onClick={cerrarSesion}
+                  >
+                    <BsBoxArrowRight className="me-2" /> Cerrar sesión
+                  </button>
+                </li>
+              </ul>
+
+              {/* Selector de avatares */}
               <AnimatePresence>
                 {showAvatars && (
                   <motion.div
@@ -279,7 +353,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
                     transition={{ duration: 0.2 }}
                     className="avatar-selector position-absolute bg-dark p-2 rounded border"
                     style={{
-                      top: "40px",
+                      top: "110%",
                       left: 0,
                       zIndex: 1050,
                     }}
@@ -327,71 +401,9 @@ const Header = ({ modoClaro, cambiarTema }) => {
                 )}
               </AnimatePresence>
             </div>
-
-            <Link
-              to="/favoritos"
-              className={`btn btn-sm text-light ${
-                isActive("/favoritos") ? "fw-bold" : ""
-              }`}
-            >
-              <FaHeart className="me-1" /> Favoritos
-            </Link>
-            <Link
-              to="/mis-listas"
-              className={`btn btn-sm text-light ${
-                isActive("/mis-listas") ? "fw-bold" : ""
-              }`}
-            >
-              <BsFolderFill className="me-1" /> Mis Listas
-            </Link>
-            <Link
-              to="/historial"
-              className={`btn btn-sm text-light ${
-                isActive("/historial") ? "fw-bold" : ""
-              }`}
-            >
-              <BsClockHistory className="me-1" /> Historial
-            </Link>
-
-            <div className="dropdown">
-              <button
-                className={`btn btn-sm text-light dropdown-toggle ${
-                  isActive("/perfil/editar") || isActive("/perfil/password")
-                    ? "fw-bold"
-                    : ""
-                }`}
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <BsGearFill className="me-1" /> Mi cuenta
-              </button>
-              <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li>
-                  <Link className="dropdown-item" to="/perfil/editar">
-                    <BsPencilFill className="me-2" /> Editar perfil
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/perfil/password">
-                    <BsKeyFill className="me-2" /> Cambiar contraseña
-                  </Link>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item text-danger"
-                    onClick={cerrarSesion}
-                  >
-                    <BsBoxArrowRight className="me-2" /> Cerrar sesión
-                  </button>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
+
         {/* MENÚ HAMBURGUESA (SOLO EN MÓVIL) */}
         <div
           ref={menuRef}
@@ -400,79 +412,11 @@ const Header = ({ modoClaro, cambiarTema }) => {
           } flex-column gap-3`}
           style={{ top: "100%", zIndex: 1050, minWidth: "220px" }}
         >
-          <div className="d-flex align-items-center position-relative flex-wrap">
-            <img
-              src={avatar}
-              alt="avatar"
-              style={{
-                height: "32px",
-                width: "32px",
-                borderRadius: "50%",
-                cursor: "pointer",
-              }}
-              onClick={() => setShowAvatars(!showAvatars)}
-            />
-            <strong className="ms-2 text-light">{nombre}</strong>
-
-            <AnimatePresence>
-              {showAvatars && (
-                <motion.div
-                  ref={avatarMenuRef}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="avatar-selector position-absolute bg-dark p-2 rounded border"
-                  style={{ top: "40px", right: 0, zIndex: 1050 }}
-                >
-                  <div
-                    className="d-grid gap-2"
-                    style={{
-                      gridTemplateColumns: "repeat(2, 1fr)",
-                      justifyItems: "center",
-                    }}
-                  >
-                    {avatarList.map((src, index) => (
-                      <motion.img
-                        key={index}
-                        src={src}
-                        alt={`avatar-${index}`}
-                        initial={false}
-                        animate={{
-                          border:
-                            src === avatar
-                              ? "2px solid #1f8df5"
-                              : "2px solid transparent",
-                          boxShadow:
-                            src === avatar ? "0 0 6px #1f8df5" : "none",
-                          scale: src === avatar ? 1.1 : 1,
-                        }}
-                        whileHover={{ scale: 1.15 }}
-                        whileTap={{ scale: 0.9 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 20,
-                        }}
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => handleAvatarSelect(src)}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
+          {/* Opciones principales */}
           <Link
             to="/favoritos"
             onClick={cerrarMenu}
-            className={`btn btn-sm text-light ${
+            className={`btn btn-sm text-light text-start ${
               isActive("/favoritos") ? "fw-bold" : ""
             }`}
           >
@@ -481,7 +425,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
           <Link
             to="/mis-listas"
             onClick={cerrarMenu}
-            className={`btn btn-sm text-light ${
+            className={`btn btn-sm text-light text-start ${
               isActive("/mis-listas") ? "fw-bold" : ""
             }`}
           >
@@ -490,57 +434,146 @@ const Header = ({ modoClaro, cambiarTema }) => {
           <Link
             to="/historial"
             onClick={cerrarMenu}
-            className={`btn btn-sm text-light ${
+            className={`btn btn-sm text-light text-start ${
               isActive("/historial") ? "fw-bold" : ""
             }`}
           >
             <BsClockHistory className="me-1" /> Historial
           </Link>
 
-          <div className="dropdown">
-            <button
-              className={`btn btn-sm text-light dropdown-toggle ${
-                isActive("/perfil/editar") || isActive("/perfil/password")
-                  ? "fw-bold"
-                  : ""
-              }`}
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+          {/* Última opción: avatar + nombre */}
+          <div className="w-100">
+            <motion.button
+              className="btn btn-sm text-light d-flex align-items-center gap-2 text-start w-100"
+              style={{ paddingLeft: "1rem", paddingRight: "0.75rem" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuCuentaAbierto((prev) => {
+                  setShowAvatars(false);
+                  return !prev;
+                });
+              }}
             >
-              <BsGearFill className="me-1" /> Mi cuenta
-            </button>
-            <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-              <li>
-                <Link
-                  className="dropdown-item"
-                  to="/perfil/editar"
-                  onClick={cerrarMenu}
-                >
-                  <BsPencilFill className="me-2" /> Editar perfil
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="dropdown-item"
-                  to="/perfil/password"
-                  onClick={cerrarMenu}
-                >
-                  <BsKeyFill className="me-2" /> Cambiar contraseña
-                </Link>
-              </li>
-              <li>
-                <hr className="dropdown-divider" />
-              </li>
-              <li>
-                <button
-                  className="dropdown-item text-danger"
-                  onClick={cerrarSesion}
-                >
-                  <BsBoxArrowRight className="me-2" /> Cerrar sesión
-                </button>
-              </li>
-            </ul>
+              <img
+                src={avatar}
+                alt="avatar"
+                style={{
+                  height: "24px",
+                  width: "24px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  flexShrink: 0,
+                  cursor: "pointer",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowAvatars((prev) => {
+                    setMenuCuentaAbierto(false);
+                    return !prev;
+                  });
+                }}
+              />
+              <strong className="text-light">{nombre}</strong>
+
+              {/* Selector de avatares (derecha) */}
+              <AnimatePresence>
+                {showAvatars && (
+                  <motion.div
+                    ref={avatarMenuRef}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    className="avatar-selector position-absolute bg-dark p-2 rounded border shadow"
+                    style={{
+                      top: "100%",
+                      left: 0,
+                      zIndex: 1060,
+                    }}
+                  >
+                    <div
+                      className="d-grid gap-2"
+                      style={{
+                        gridTemplateColumns: "repeat(2, 1fr)",
+                        justifyItems: "center",
+                      }}
+                    >
+                      {avatarList.map((src, index) => (
+                        <motion.img
+                          key={index}
+                          src={src}
+                          alt={`avatar-${index}`}
+                          initial={false}
+                          animate={{
+                            border:
+                              src === avatar
+                                ? "2px solid #1f8df5"
+                                : "2px solid transparent",
+                            boxShadow:
+                              src === avatar ? "0 0 6px #1f8df5" : "none",
+                            scale: src === avatar ? 1.1 : 1,
+                          }}
+                          whileHover={{ scale: 1.15 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 20,
+                          }}
+                          style={{
+                            width: "28px",
+                            height: "28px",
+                            borderRadius: "50%",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleAvatarSelect(src)}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Menú de cuenta (izquierda) */}
+              <AnimatePresence>
+                {menuCuentaAbierto && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2 }}
+                    className="position-absolute bg-dark p-2 rounded border shadow"
+                    style={{
+                      top: "100%",
+                      right: 0,
+                      zIndex: 1060,
+                      minWidth: "180px",
+                    }}
+                  >
+                    <Link
+                      to="/perfil/editar"
+                      onClick={cerrarMenu}
+                      className="btn btn-sm text-light text-start w-100 mb-2"
+                    >
+                      <BsPencilFill className="me-2" /> Editar perfil
+                    </Link>
+                    <Link
+                      to="/perfil/password"
+                      onClick={cerrarMenu}
+                      className="btn btn-sm text-light text-start w-100 mb-2"
+                    >
+                      <BsKeyFill className="me-2" /> Cambiar contraseña
+                    </Link>
+                    <button
+                      onClick={cerrarSesion}
+                      className="btn btn-sm text-danger text-start w-100"
+                    >
+                      <BsBoxArrowRight className="me-2" /> Cerrar sesión
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </div>

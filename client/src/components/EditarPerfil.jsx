@@ -75,40 +75,42 @@ const EditarPerfil = () => {
   };
 
   return (
-    <div className="container py-5">
-      <h2 className="text-primary mb-4">Editar perfil</h2>
+    <div className="container py-5 d-flex justify-content-center">
+      <div style={{ maxWidth: "500px", width: "100%" }}>
+        <h2 className="text-primary mb-4 text-center">Editar perfil</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label text-light">Nombre</label>
-          <input
-            type="text"
-            className="form-control bg-dark text-light border-secondary"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-            required
-            autoComplete="name"
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3 sin-fondo">
+            <label className="form-label text-light">Nombre</label>
+            <input
+              type="text"
+              className="form-control bg-dark text-light border-secondary"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              required
+              autoComplete="name"
+            />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label text-light">Correo electrónico</label>
-          <input
-            type="email"
-            className="form-control bg-dark text-light border-secondary"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            autoComplete="email"
-          />
-        </div>
+          <div className="mb-3 sin-fondo">
+            <label className="form-label text-light">Correo electrónico</label>
+            <input
+              type="email"
+              className="form-control bg-dark text-light border-secondary"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              autoComplete="email"
+            />
+          </div>
 
-        <button type="submit" className="btn btn-primary fw-bold">
-          Guardar cambios
-        </button>
-      </form>
+          <button type="submit" className="btn btn-primary fw-bold w-100">
+            Guardar cambios
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

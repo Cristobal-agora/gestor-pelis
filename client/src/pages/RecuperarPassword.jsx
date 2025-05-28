@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const RecuperarPassword = () => {
   const [email, setEmail] = useState("");
@@ -47,7 +46,7 @@ const RecuperarPassword = () => {
           </h2>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-3 sin-fondo">
               <label htmlFor="email" className="form-label text-light">
                 Correo electrónico
               </label>
@@ -76,7 +75,6 @@ const RecuperarPassword = () => {
           </form>
         </div>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

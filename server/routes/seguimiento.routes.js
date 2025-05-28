@@ -10,7 +10,7 @@ const {
 } = require("../controllers/seguimiento.controller");
 
 router.post("/", verificarToken, marcarVisto);
-router.get("/tv/:serie_tmdb_id", verificarToken, obtenerVistos); // <- aquí el cambio
+router.get("/tv/:serie_tmdb_id", verificarToken, obtenerVistos);
 router.delete("/", verificarToken, borrarVisto);
 router.post("/varios", verificarToken, marcarVariosVistos);
 router.delete("/varios", verificarToken, borrarVariosVistos);

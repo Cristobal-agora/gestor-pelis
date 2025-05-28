@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import "./AuthBackground.css";
 
 const Login = ({ mostrarVideoFondo }) => {
@@ -94,7 +93,7 @@ const Login = ({ mostrarVideoFondo }) => {
           <h2 className="mb-4 text-center text-primary">Iniciar Sesión</h2>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-3 sin-fondo">
               <label htmlFor="email" className="form-label text-light">
                 Correo electrónico
               </label>
@@ -110,7 +109,7 @@ const Login = ({ mostrarVideoFondo }) => {
               />
             </div>
 
-            <div className="mb-4">
+            <div className="mb-3 sin-fondo">
               <label htmlFor="password" className="form-label text-light">
                 Contraseña
               </label>
@@ -132,6 +131,7 @@ const Login = ({ mostrarVideoFondo }) => {
             >
               Entrar
             </button>
+
             <div className="mt-3 d-flex justify-content-between">
               <button
                 type="button"

@@ -12,7 +12,7 @@ function verificarToken(req, res, next) {
 
   try {
     const decoded = jwt.verify(tokenLimpio, process.env.JWT_SECRET);
-    req.usuario = decoded; // Lo puedes usar en controladores (por ejemplo, req.usuario.id)
+    req.usuario = decoded;
     next();
   } catch (error) {
     return res.status(401).json({ mensaje: 'Token inválido o expirado.' });

@@ -409,7 +409,7 @@ const MovieDetail = () => {
                       className="btn-crear-lista"
                       onClick={async () => {
                         if (!nuevaLista.trim()) {
-                          return toast.warn("⚠️ Escribe un nombre válido");
+                          return toast.warn("Escribe un nombre válido");
                         }
 
                         try {
