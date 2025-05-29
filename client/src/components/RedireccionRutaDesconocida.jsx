@@ -8,7 +8,7 @@ const RedireccionRutaDesconocida = () => {
   }, []);
 
   const token = sessionStorage.getItem("token");
-  return <Navigate to={token ? "/home" : "/login"} replace />;
+  return <Navigate to={token ? "/home" : "/"} replace />;
 };
 
 export default RedireccionRutaDesconocida;

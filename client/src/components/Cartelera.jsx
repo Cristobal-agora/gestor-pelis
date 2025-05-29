@@ -16,7 +16,7 @@ const Cartelera = () => {
       .then((res) => res.json())
       .then((data) => {
         const conPoster = data.results?.filter((p) => p.poster_path);
-        setPeliculas(conPoster.slice(0, 12)); // máximo 12 con imagen
+        setPeliculas(conPoster.slice(0, 12));
       });
   }, []);
 
@@ -56,8 +56,8 @@ const Cartelera = () => {
     contenedor.addEventListener("mouseenter", () => setPausado(true));
     contenedor.addEventListener("mouseleave", () => setPausado(false));
     contenedor.addEventListener("touchstart", pausar);
-    contenedor.addEventListener("touchmove", pausar); // ← mientras desliza
-    contenedor.addEventListener("touchend", pausar); // ← tras terminar
+    contenedor.addEventListener("touchmove", pausar);
+    contenedor.addEventListener("touchend", pausar);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
@@ -94,7 +94,7 @@ const Cartelera = () => {
           scrollbarWidth: "none",
           paddingBottom: "0.5rem",
           marginBottom: "0",
-          scrollBehavior: "auto", //  IMPORTANTE
+          scrollBehavior: "auto",
         }}
       >
         {peliculas.map((p) => (

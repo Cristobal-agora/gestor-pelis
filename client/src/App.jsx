@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import MisListas from "./pages/MisListas";
 import ListaDetalle from "./pages/ListaDetalle";
 import Historial from "./components/Historial";
-import Footer from "./components/Footer"; // asegúrate de que la ruta sea correcta
+import Footer from "./components/Footer";
 import Inicio from "./pages/Inicio";
 import EditarPerfil from "./components/EditarPerfil";
 import CambiarPassword from "./components/CambiarPassword";
@@ -41,7 +41,7 @@ function AppContent() {
   // 👇 Estado para modo claro
   const [modoClaro, setModoClaro] = useState(() => {
     const guardado = localStorage.getItem("modo");
-    return guardado ? guardado === "claro" : false; // oscuro por defecto
+    return guardado ? guardado === "claro" : false;
   });
   const [temaInicializado, setTemaInicializado] = useState(false);
 
@@ -192,8 +192,7 @@ function AppContent() {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/buscar/:nombre" element={<Buscar />} />
             <Route path="/director/:id" element={<Director />} />
-           <Route path="*" element={<RedireccionRutaDesconocida />} />
-
+            <Route path="*" element={<RedireccionRutaDesconocida />} />
           </Routes>
         </AnimatePresence>
       </main>

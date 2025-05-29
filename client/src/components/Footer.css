@@ -100,8 +100,8 @@
   transition: all 0.4s ease;
   display: block !important;
   min-height: 100px;
-  margin-top: auto; /* 🔹 AÑADIR */
-  width: 100%; /* 🔹 AÑADIR */
+  margin-top: auto;
+  width: 100%;
 }
 
 @media (max-width: 768px) {

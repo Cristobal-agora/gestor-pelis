@@ -19,7 +19,6 @@ import {
   BsController,
   BsClock,
   BsBroadcast,
-  BsChatDots,
   BsCheckLg,
 } from "react-icons/bs";
 
@@ -78,7 +77,6 @@ const SerieDetail = () => {
 
       setSerie(data);
 
-      // 🔽 Añadido aquí
       try {
         const resProv = await fetch(
           `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${
@@ -545,7 +543,7 @@ const SerieDetail = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="btn-comentarios w-100"
+                    className="btn-comentarios w-100 align-items-center justify-content-center"
                     data-bs-toggle="modal"
                     data-bs-target="#modalComentarios"
                   >

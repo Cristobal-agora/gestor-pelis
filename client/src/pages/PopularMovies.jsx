@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const PopularMovies = () => {
   const [peliculas, setPeliculas] = useState([]);
@@ -7,11 +7,15 @@ const PopularMovies = () => {
   useEffect(() => {
     const fetchPopulares = async () => {
       try {
-        const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=es-ES`);
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${
+            import.meta.env.VITE_TMDB_API_KEY
+          }&language=es-ES`
+        );
         const data = await res.json();
         setPeliculas(data.results);
       } catch (error) {
-        console.error('Error al cargar películas populares:', error);
+        console.error("Error al cargar películas populares:", error);
       }
     };
 
@@ -30,7 +34,7 @@ const PopularMovies = () => {
                   src={`https://image.tmdb.org/t/p/w500${peli.poster_path}`}
                   className="card-img-top"
                   alt={peli.title}
-                  style={{ borderRadius: '8px', objectFit: 'cover' }}
+                  style={{ borderRadius: "8px", objectFit: "cover" }}
                 />
                 <div className="card-body px-2 py-2">
                   <h6 className="card-title mb-1">{peli.title}</h6>

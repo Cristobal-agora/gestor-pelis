@@ -3,14 +3,13 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: process.env.EMAIL_FROM, // tu correo Gmail
-    pass: process.env.EMAIL_PASS, // tu contraseña o app password
+    user: process.env.EMAIL_FROM,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
 async function enviarEmailRecuperacion(destinatario, token) {
   const link = `${process.env.FRONTEND_URL}/reset-password/${token}`;
-
 
   const mailOptions = {
     from: `CineStash <${process.env.EMAIL_FROM}>`,

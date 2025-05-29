@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require("../config/db");
 
 exports.crearComentario = async (req, res) => {
   const usuarioId = req.usuario.id;
@@ -6,13 +6,13 @@ exports.crearComentario = async (req, res) => {
 
   try {
     await db.query(
-      'INSERT INTO comentarios (usuario_id, tmdb_id, tipo, contenido) VALUES ($1, $2, $3, $4)',
+      "INSERT INTO comentarios (usuario_id, tmdb_id, tipo, contenido) VALUES ($1, $2, $3, $4)",
       [usuarioId, tmdb_id, tipo, contenido]
     );
-    res.status(201).json({ mensaje: 'Comentario añadido.' });
+    res.status(201).json({ mensaje: "Comentario añadido." });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: 'Error al crear comentario.' });
+    res.status(500).json({ mensaje: "Error al crear comentario." });
   }
 };
 
@@ -31,6 +31,6 @@ exports.obtenerComentarios = async (req, res) => {
     res.json(result.rows);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: 'Error al obtener comentarios.' });
+    res.status(500).json({ mensaje: "Error al obtener comentarios." });
   }
 };

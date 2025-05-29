@@ -8,7 +8,7 @@
 .carrusel-wrapper {
   position: relative;
   width: 100%;
-  height: 65vh; /* ✅ Adaptativo al viewport */
+  height: 65vh;
   max-height: 500px;
   min-height: 280px;
   overflow: hidden;

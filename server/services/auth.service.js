@@ -90,7 +90,7 @@ module.exports = {
   compararPassword,
   obtenerUsuarioPorEmailId,
   guardarTokenRecuperacion,
-  obtenerUsuarioPorToken, // ✅ nuevo
-  actualizarPassword, // ✅ nuevo
+  obtenerUsuarioPorToken,
+  actualizarPassword,
   eliminarTokenRecuperacion,
 };

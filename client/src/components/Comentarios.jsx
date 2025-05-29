@@ -98,8 +98,7 @@ const Comentarios = ({ tmdbId, tipo, modoClaro }) => {
               aria-label="Cerrar"
             ></button>
           </div>
-         <div className="modal-body modal-body-scrollable">
-
+          <div className="modal-body modal-body-scrollable">
             {comentarios.length === 0 ? (
               <p>No hay comentarios todavía.</p>
             ) : (
@@ -168,8 +167,8 @@ const Comentarios = ({ tmdbId, tipo, modoClaro }) => {
               onChange={(e) => setNuevoComentario(e.target.value)}
               style={{
                 resize: "none",
-                backgroundColor: "#fff", // blanco en ambos modos
-                color: "#000", // texto negro siempre
+                backgroundColor: "#fff",
+                color: "#000",
                 borderColor: modoClaro ? "#ccc" : "#555",
               }}
             />

@@ -35,7 +35,6 @@ const Favoritos = ({ modoClaro }) => {
         return;
       }
 
-      // 🔄 Si es 'todos', no filtra. Si no, sí.
       const filtrados =
         tipo === "todos" ? favoritos : favoritos.filter((f) => f.tipo === tipo);
 
@@ -78,7 +77,6 @@ const Favoritos = ({ modoClaro }) => {
 
   return (
     <div className={`container mt-4 ${modoClaro ? "text-dark" : "text-light"}`}>
-
       <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <h2 className="text-primary d-flex align-items-center gap-2 m-0">
           <FaHeart style={{ color: "red" }} />
@@ -204,7 +202,7 @@ const Favoritos = ({ modoClaro }) => {
                         className="btn btn-sm p-0 border-0 bg-transparent"
                         title="Quitar de favoritos"
                         onClick={(e) => {
-                          e.preventDefault(); // evita que se active el <Link>
+                          e.preventDefault();
                           eliminarFavorito(item.id);
                         }}
                       >

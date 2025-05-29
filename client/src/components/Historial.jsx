@@ -142,22 +142,13 @@ const Historial = () => {
                   style={{ flexGrow: 1 }}
                 >
                   <div>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h5
-                        className="mb-2 m-0 d-flex align-items-center gap-2"
-                        style={{ color: "#1f8df5" }}
-                      >
-                        {item.media_type === "movie" ? <FaVideo /> : <FaTv />}
-                        {item.title || item.name}
-                      </h5>
-                      <button
-                        className="btn btn-sm p-0 border-0 bg-transparent text-danger"
-                        onClick={() => borrarDelHistorial(item.id)}
-                        title="Eliminar del historial"
-                      >
-                        <FaTrashAlt />
-                      </button>
-                    </div>
+                    <h5
+                      className="mb-2 m-0 d-flex align-items-center gap-2"
+                      style={{ color: "#1f8df5" }}
+                    >
+                      {item.media_type === "movie" ? <FaVideo /> : <FaTv />}
+                      {item.title || item.name}
+                    </h5>
 
                     <p className="text-light small mb-2">
                       {item.overview?.slice(0, 150) || "Sin descripción"}...
@@ -185,6 +176,15 @@ const Historial = () => {
                       </button>
                     </div>
                   )}
+                  <div className="mt-auto d-flex justify-content-end">
+                    <button
+                      className="btn btn-sm p-0 border-0 bg-transparent text-danger"
+                      onClick={() => borrarDelHistorial(item.id)}
+                      title="Eliminar del historial"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

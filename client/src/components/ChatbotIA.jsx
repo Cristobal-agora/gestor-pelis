@@ -32,7 +32,7 @@ const ChatbotIA = () => {
           top: mensajesRef.current.scrollHeight,
           behavior: "smooth",
         });
-      }, 300); // da tiempo a que aparezca el teclado
+      }, 300);
     };
 
     textarea.addEventListener("focus", handleFocus);
@@ -58,7 +58,7 @@ const ChatbotIA = () => {
       const respuestaIA = { rol: "ia", texto: data.respuesta };
       setMensajes((prev) => [...prev, respuestaIA]);
     } catch (err) {
-      console.error("Error al contactar con la IA:", err); // 👈 Añade esta línea
+      console.error("Error al contactar con la IA:", err);
       setMensajes((prev) => [
         ...prev,
         { rol: "ia", texto: "Error al contactar con la IA." },

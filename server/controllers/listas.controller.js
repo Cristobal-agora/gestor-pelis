@@ -43,7 +43,6 @@ exports.crearLista = async (req, res) => {
   }
 };
 
-
 exports.obtenerContenidoLista = async (req, res) => {
   try {
     const { id } = req.params;

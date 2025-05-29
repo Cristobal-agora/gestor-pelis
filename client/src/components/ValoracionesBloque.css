@@ -9,7 +9,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
-  max-width: 100%; /* Evita desbordamiento si se encadena mucho contenido */
+  max-width: 100%;
 }
 
 .valoraciones-bloque svg {

@@ -37,7 +37,7 @@
 .modal-cerrar-icono {
   position: absolute;
   top: 1rem;
-  right: 1.5rem; /* antes 1rem */
+  right: 1.5rem;
   background: transparent;
   border: none;
   color: #bbb;

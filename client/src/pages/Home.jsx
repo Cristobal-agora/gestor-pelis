@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Cartelera from "../components/Cartelera";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
@@ -74,7 +74,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (!estadoRestaurado) return; // 💥 solo guardar si ya se restauró
+    if (!estadoRestaurado) return;
 
     const state = {
       busqueda,
@@ -109,7 +109,7 @@ const Home = () => {
           ? paginaArgumento
           : Number.isInteger(pagina) && pagina > 0
           ? pagina
-          : 1; // fallback seguro
+          : 1;
 
       if (!API_KEY || !tipo || !pageParam) {
         console.warn("Petición inválida:", { API_KEY, tipo, pageParam });
@@ -186,7 +186,7 @@ const Home = () => {
                   item.media_type === tipoReal &&
                   item.id &&
                   !idsUnicos.has(item.id) &&
-                  idsUnicos.add(item.id) // ← esto añade y evita duplicados
+                  idsUnicos.add(item.id)
               );
             })
           );
@@ -197,7 +197,6 @@ const Home = () => {
           // Ordenar
           peliculasEncontradas.sort((a, b) => b.popularity - a.popularity);
 
-          // Finalmente, set
           setPeliculas(peliculasEncontradas);
 
           setTotalPaginas(1);
@@ -206,7 +205,7 @@ const Home = () => {
         }
 
         if (!texto) {
-          // ✅ discover: filtros nativos
+          // discover: filtros nativos
           url = `https://api.themoviedb.org/3/discover/${tipoReal}?api_key=${
             import.meta.env.VITE_TMDB_API_KEY
           }&language=es-ES&page=${pageParam}&sort_by=${ordenReal}${
@@ -216,7 +215,7 @@ const Home = () => {
           const res = await fetch(url);
           data = await res.json();
         } else {
-          // 🔎 search por título
+          // search por título
           url = `https://api.themoviedb.org/3/search/${tipoReal}?api_key=${
             import.meta.env.VITE_TMDB_API_KEY
           }&query=${encodeURIComponent(
@@ -228,7 +227,7 @@ const Home = () => {
 
           let resultados = Array.isArray(data.results) ? data.results : [];
 
-          // 🎯 Filtrado por género (solo si se seleccionó uno)
+          // Filtrado por género (solo si se seleccionó uno)
           if (generoReal) {
             resultados = resultados.filter(
               (item) =>
@@ -237,9 +236,9 @@ const Home = () => {
             );
           }
 
-          // 🔃 Orden manual
+          // Orden manual
           resultados.sort((a, b) => {
-            const campo = ordenReal.split(".")[0]; // e.g., 'popularity' o 'release_date'
+            const campo = ordenReal.split(".")[0];
             const ordenDesc = ordenReal.endsWith(".desc");
 
             let valA = a[campo];
@@ -303,7 +302,7 @@ const Home = () => {
     setModoBusqueda("titulo");
     setPagina(1);
     sessionStorage.removeItem("cineStashState");
-    fetchPopulares(1); // ✅ fuerza página 1
+    fetchPopulares(1); // fuerza página 1
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

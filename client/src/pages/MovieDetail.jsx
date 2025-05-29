@@ -292,9 +292,9 @@ const MovieDetail = () => {
                   transition={{ type: "spring", stiffness: 300 }}
                   style={{
                     width: "48px",
-                    height: "48px", // Igual altura que btn-visto
-                    borderRadius: "999px", // Redondeado
-                    backgroundColor: "transparent", // o color dinámico si quieres
+                    height: "48px",
+                    borderRadius: "999px",
+                    backgroundColor: "transparent",
                   }}
                 >
                   <motion.span
@@ -390,7 +390,7 @@ const MovieDetail = () => {
                       className="btn-nueva-lista"
                       onClick={() => {
                         setModoCrearLista(true);
-                        setListaSeleccionada(""); // opcional: reset selección
+                        setListaSeleccionada("");
                       }}
                     >
                       <BsFolderPlus className="me-1" /> Nueva lista
@@ -452,7 +452,7 @@ const MovieDetail = () => {
                                 "Lista creada y película añadida correctamente"
                               );
                               setListas((prev) => [...prev, data]);
-                              setListasIncluye((prev) => [...prev, data]); // 🔧 asegura que yaIncluida sea true
+                              setListasIncluye((prev) => [...prev, data]);
                               setListaSeleccionada(data.id.toString());
                               setModoCrearLista(false);
                               setNuevaLista("");

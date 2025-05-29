@@ -92,9 +92,7 @@ exports.restablecerPassword = async (req, res) => {
     const usuario = await authService.obtenerUsuarioPorToken(token);
 
     if (!usuario) {
-      return res
-        .status(400)
-        .json({ mensaje: "Token inválido o expirado." });
+      return res.status(400).json({ mensaje: "Token inválido o expirado." });
     }
 
     await authService.actualizarPassword(usuario.id, nuevaPassword);

@@ -12,7 +12,11 @@ const RutaPrivada = ({ children }) => {
     }
   }, [token]);
 
-  return token ? children : <Navigate to="/login" replace state={{ from: location }} />;
+  return token ? (
+    children
+  ) : (
+    <Navigate to="/login" replace state={{ from: location }} />
+  );
 };
 
 export default RutaPrivada;

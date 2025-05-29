@@ -9,7 +9,9 @@ const Buscar = () => {
     const buscar = async () => {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(nombre)}&language=es-ES&include_adult=false&page=1`,
+          `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+            nombre
+          )}&language=es-ES&include_adult=false&page=1`,
           {
             headers: {
               Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
@@ -23,12 +25,12 @@ const Buscar = () => {
 
         const resultadoValido = data.results?.find(
           (item) =>
-            (item.media_type === "movie" || item.media_type === "tv") &&
-            item.id
+            (item.media_type === "movie" || item.media_type === "tv") && item.id
         );
 
         if (resultadoValido) {
-          const tipo = resultadoValido.media_type === "tv" ? "serie" : "pelicula";
+          const tipo =
+            resultadoValido.media_type === "tv" ? "serie" : "pelicula";
           navigate(`/${tipo}/${resultadoValido.id}`);
         } else {
           navigate("/no-encontrado");

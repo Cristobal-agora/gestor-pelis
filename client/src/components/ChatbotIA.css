@@ -24,7 +24,7 @@
   width: 32px;
   height: 32px;
   object-fit: contain;
-  filter: brightness(0) invert(1); /* si tu icono es oscuro */
+  filter: brightness(0) invert(1);
 }
 
 @keyframes pulse {
@@ -57,7 +57,7 @@
   flex-direction: column;
   max-height: 420px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  height: auto; /* importante para desktop */
+  height: auto;
 }
 
 .chatbot-cabecera {
@@ -164,7 +164,7 @@
     right: 0;
     left: 0;
     bottom: 0;
-    height: 100dvh; /* ✅ Altura dinámica completa */
+    height: 100dvh;
     max-height: none;
     border-radius: 0;
     display: flex;
@@ -175,14 +175,12 @@
     flex-grow: 1;
     overflow-y: auto;
     padding: 10px 12px;
-    max-height: calc(
-      100dvh - 160px
-    ); /* ✅ altura para dejar sitio a textarea */
+    max-height: calc(100dvh - 160px);
   }
 
   .chatbot-entrada {
     padding: 10px;
-    padding-bottom: env(safe-area-inset-bottom, 10px); /* ✅ para iOS */
+    padding-bottom: env(safe-area-inset-bottom, 10px);
   }
 }
 .chatbot-mensaje a {

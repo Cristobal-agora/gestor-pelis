@@ -2,10 +2,10 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const app = express(); // ✅ Esto tiene que ir primero
+const app = express();
 const authRoutes = require("./routes/auth.routes");
 const usuarioRoutes = require("./routes/usuario.routes");
-const db = require("./config/db"); // Conexión a la base de datos
+const db = require("./config/db");
 const PORT = process.env.PORT || 5000;
 const favoritosRoutes = require("./routes/favoritos.routes");
 const listasRoutes = require("./routes/listas.routes");
@@ -21,7 +21,6 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-
 
 app.use(cors(corsOptions));
 
@@ -53,4 +52,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 });
-

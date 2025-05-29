@@ -247,7 +247,7 @@ select:focus {
 }
 main {
   flex: 1;
-  padding-bottom: 6rem; /* espacio para el footer */
+  padding-bottom: 6rem;
 }
 
 .btn-outline-primary.active {
@@ -313,7 +313,7 @@ main {
   cursor: not-allowed;
 }
 .btn-igual {
-  min-width: 120px; /* o ajusta el valor según el diseño */
+  min-width: 120px;
   text-align: center;
 }
 
@@ -867,7 +867,7 @@ main {
   cursor: not-allowed;
 }
 .btn-igual {
-  min-width: 120px; /* o ajusta el valor según el diseño */
+  min-width: 120px;
   text-align: center;
 }
 
@@ -1088,7 +1088,7 @@ body.modo-claro .sin-borde-icono:hover {
 }
 
 .btn-comentarios {
-  background-color: #1f8df5 !important; /* asegúrate de que se aplica siempre */
+  background-color: #1f8df5 !important;
   color: white;
   border: none;
   padding: 0.5rem 1.2rem;
@@ -1106,7 +1106,7 @@ body.modo-claro .sin-borde-icono:hover {
 }
 
 .btn-comentarios:disabled {
-  background-color: #1f8df5; /* mismo color para que no salte al habilitar */
+  background-color: #1f8df5;
   color: white;
   opacity: 0.5;
   cursor: not-allowed;
@@ -1133,12 +1133,12 @@ body.modo-claro .textarea-comentario {
   border: 1px solid #aaa;
 }
 .text-nombre-usuario {
-  color: #17a2b8; /* azul info para modo oscuro */
+  color: #17a2b8;
   font-weight: 600;
 }
 
 body.modo-claro .text-nombre-usuario {
-  color: #007080; /* azul más oscuro, buena visibilidad sobre fondo claro */
+  color: #007080;
 }
 
 .btn-seguimiento {
@@ -1157,7 +1157,7 @@ body.modo-claro .text-nombre-usuario {
   background-color: #167bdc;
 }
 .barra-seguimiento {
-  width: 180px; /* Puedes ajustar según el ancho del botón */
+  width: 180px;
   height: 6px;
   background-color: #2a2a2a;
   border-radius: 20px;
@@ -1363,18 +1363,18 @@ body.modo-claro select option {
   align-items: flex-end;
 }
 .icono-valoracion {
-  color: #f5b301; /* Amarillo dorado más visible */
+  color: #f5b301;
   font-size: 1.2rem;
 }
 
 .text-valoracion-titulo {
   font-weight: 600;
-  color: #f5b301; /* Color por defecto (modo oscuro) */
+  color: #f5b301;
 }
 
 /* Modo claro: color más oscuro para mejor contraste */
 body.modo-claro .text-valoracion-titulo {
-  color: #d48806; /* Un dorado más intenso */
+  color: #d48806;
 }
 
 /* Color adaptado para modo oscuro */
@@ -1390,10 +1390,10 @@ body.modo-claro .text-valoracion-titulo {
 
 /* Color adaptado para modo claro */
 body.modo-claro .texto-expandible {
-  color: #1a73e8; /* Azul legible y accesible */
+  color: #1a73e8;
 }
 .modal-body-scrollable {
-  max-height: calc(100vh - 250px); /* ajusta el 250px según header/footer */
+  max-height: calc(100vh - 250px);
   overflow-y: auto;
 }
 
@@ -1563,7 +1563,7 @@ body.modo-claro .texto-expandible {
 }
 /* Estilo del botón de cierre en modales */
 .modal .btn-close {
-  filter: invert(1); /* lo hace blanco en modo oscuro */
+  filter: invert(1);
   opacity: 0.8;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
@@ -1575,7 +1575,7 @@ body.modo-claro .texto-expandible {
 
 /* Ajuste para modo claro */
 body.modo-claro .modal .btn-close {
-  filter: none; /* lo deja como está (negro por defecto) */
+  filter: none;
   color: #000;
 }
 .titulo-cartelera {

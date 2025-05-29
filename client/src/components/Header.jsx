@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   BsFolderFill,
   BsClockHistory,
-  BsGearFill,
   BsBoxArrowRight,
   BsPencilFill,
   BsKeyFill,
@@ -156,7 +155,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
     }
   };
 
-  // 👉 Header SIN sesión
+  // Header SIN sesión
   if (!token) {
     return (
       <header
@@ -199,7 +198,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
     );
   }
 
-  // 👉 Header CON sesión
+  // Header CON sesión
   return (
     <header
       className="shadow-sm fixed-top bg-dark"
@@ -249,7 +248,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
             </motion.button>
           </div>
 
-          {/* BOTÓN HAMBURGUESA A LA DERECHA en móvil */}
+          {/* BOTÓN HAMBURGUESA A LA DERECHA */}
           <div className="col-auto d-md-none ms-auto">
             <motion.button
               className="btn sin-borde-icono"
@@ -265,7 +264,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
             </motion.button>
           </div>
 
-          {/* NAVEGACIÓN EN ESCRITORIO (VISIBLE DE MD EN ADELANTE) */}
+          {/* NAVEGACIÓN EN ESCRITORIO */}
           <div className="col-auto d-none d-md-flex align-items-center gap-3">
             <Link
               to="/favoritos"
@@ -305,7 +304,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
                   cursor: "pointer",
                 }}
                 onClick={(e) => {
-                  e.stopPropagation(); // Evita que abra el menú de Bootstrap
+                  e.stopPropagation();
                   setShowAvatars((prev) => !prev);
                 }}
               />
@@ -413,7 +412,7 @@ const Header = ({ modoClaro, cambiarTema }) => {
           </div>
         </div>
 
-        {/* MENÚ HAMBURGUESA (SOLO EN MÓVIL) */}
+        {/* MENÚ HAMBURGUESA */}
         <div
           ref={menuRef}
           className={`menu-hamburguesa-content position-absolute end-0 mt-2 bg-dark p-3 rounded border shadow ${

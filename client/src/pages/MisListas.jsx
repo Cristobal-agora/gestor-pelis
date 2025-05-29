@@ -52,7 +52,7 @@ const MisListas = ({ modoClaro }) => {
 
   useEffect(() => {
     if (!token) {
-      navigate("/login"); // Redirige si no hay sesión
+      navigate("/login");
       return;
     }
     obtenerListas();
@@ -60,7 +60,7 @@ const MisListas = ({ modoClaro }) => {
 
   return (
     <div className={`container mt-4 ${modoClaro ? "text-dark" : "text-light"}`}>
-       <h2 className="mb-4 d-flex align-items-center gap-2 text-primary">
+      <h2 className="mb-4 d-flex align-items-center gap-2 text-primary">
         <FaFolderOpen /> Mis Listas
       </h2>
 

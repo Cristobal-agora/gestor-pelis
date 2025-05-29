@@ -1,6 +1,11 @@
 const db = require("../config/db");
 
-async function crearOActualizarValoracion(usuario_id, tmdb_id, tipo, puntuacion) {
+async function crearOActualizarValoracion(
+  usuario_id,
+  tmdb_id,
+  tipo,
+  puntuacion
+) {
   const query = `
     INSERT INTO valoraciones (usuario_id, tmdb_id, tipo, puntuacion)
     VALUES ($1, $2, $3, $4)

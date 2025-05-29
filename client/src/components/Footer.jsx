@@ -48,8 +48,8 @@ const Footer = ({ modo = "completo", className = "" }) => {
                         location.pathname === "/home" ||
                         location.pathname === "/"
                       ) {
-                        e.preventDefault(); // evita que React Router recargue la misma ruta
-                        window.scrollTo({ top: 0, behavior: "smooth" }); // hace scroll suave
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }
                     }}
                   >

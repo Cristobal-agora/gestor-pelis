@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require("../config/db");
 
 async function marcarVista(req, res) {
   const usuarioId = req.usuario.id;
@@ -11,10 +11,10 @@ async function marcarVista(req, res) {
        ON CONFLICT DO NOTHING`,
       [usuarioId, tmdb_id, tipo]
     );
-    res.status(200).json({ mensaje: 'Contenido marcado como visto' });
+    res.status(200).json({ mensaje: "Contenido marcado como visto" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: 'Error al marcar como visto' });
+    res.status(500).json({ mensaje: "Error al marcar como visto" });
   }
 }
 
@@ -24,34 +24,33 @@ async function desmarcarVista(req, res) {
 
   try {
     await db.query(
-      'DELETE FROM historial WHERE usuario_id = $1 AND tmdb_id = $2 AND tipo = $3',
+      "DELETE FROM historial WHERE usuario_id = $1 AND tmdb_id = $2 AND tipo = $3",
       [usuarioId, tmdbId, tipo]
     );
-    res.status(200).json({ mensaje: 'Contenido desmarcado como visto' });
+    res.status(200).json({ mensaje: "Contenido desmarcado como visto" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: 'Error al desmarcar' });
+    res.status(500).json({ mensaje: "Error al desmarcar" });
   }
 }
 
 async function obtenerHistorial(req, res) {
   try {
     const { id } = req.usuario;
-    const tipo = req.query.tipo || 'movie';
+    const tipo = req.query.tipo || "movie";
 
     const result = await db.query(
-      'SELECT tmdb_id FROM historial WHERE usuario_id = $1 AND tipo = $2',
+      "SELECT tmdb_id FROM historial WHERE usuario_id = $1 AND tipo = $2",
       [id, tipo]
     );
 
-    res.json(result.rows.map(r => r.tmdb_id));
+    res.json(result.rows.map((r) => r.tmdb_id));
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al obtener historial' });
+    res.status(500).json({ error: "Error al obtener historial" });
   }
 }
 
-// ✅ Exporta las funciones correctamente
 module.exports = {
   marcarVista,
   desmarcarVista,

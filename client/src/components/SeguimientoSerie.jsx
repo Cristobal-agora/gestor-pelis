@@ -157,7 +157,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
         body: JSON.stringify(payload),
       });
 
-      await cargarVistos(); // Carga desde el backend
+      await cargarVistos();
       await marcarSerieComoVista();
     } catch (error) {
       console.error("Error al marcar temporada completa:", error);
@@ -184,7 +184,7 @@ const SeguimientoSerie = ({ tmdbId }) => {
         body: JSON.stringify(payload),
       });
 
-      await cargarVistos(); // Asegura consistencia con lo que hay en la base de datos
+      await cargarVistos();
       const totalVistos = Object.values(vista).filter(Boolean).length;
       if (totalVistos === 0) {
         await eliminarSerieDelHistorial();

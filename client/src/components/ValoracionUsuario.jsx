@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaStar } from "react-icons/fa";
 
-
 const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada }) => {
   const [miValoracion, setMiValoracion] = useState(null);
   const [puntuacion, setPuntuacion] = useState(0);
@@ -89,10 +88,9 @@ const ValoracionUsuario = ({ tmdb_id, tipo, onValoracionGuardada }) => {
   return (
     <div className="mt-3">
       <h6 className="mb-2 d-flex align-items-center gap-2 text-valoracion-titulo">
-  <FaStar className="icono-valoracion" />
-  Tu valoración:
-</h6>
-
+        <FaStar className="icono-valoracion" />
+        Tu valoración:
+      </h6>
 
       <div>
         <div className="d-flex align-items-center gap-1 flex-wrap mb-2">

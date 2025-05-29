@@ -56,7 +56,7 @@ h6.text-info {
   transition: background-color 0.2s ease;
 }
 
-/* Hover gris claro translúcido */
+/* Hover gris claro */
 .list-group-item:hover {
   background-color: rgba(197, 238, 252, 0.705);
   cursor: pointer;
@@ -81,8 +81,7 @@ h6.text-info {
   border-left: 4px solid transparent;
 }
 
-/* Checkbox personalizado estilo CineStash */
-/* Checkbox personalizado uniforme */
+/* Checkbox personalizado */
 .list-group-item input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
@@ -113,7 +112,7 @@ h6.text-info {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-48%, -50%); /* leve ajuste más fino */
+  transform: translate(-48%, -50%);
   line-height: 1;
 }
 
@@ -186,7 +185,7 @@ body.modo-claro .switch-slider {
 body.modo-claro .switch-toggle input:checked + .switch-slider {
   background-color: #1f8df5;
 }
-/* Botón moderno verde */
+/* Botón verde */
 .btn-verde {
   background-color: #28a745 !important;
   color: #fff !important;
@@ -198,7 +197,7 @@ body.modo-claro .switch-toggle input:checked + .switch-slider {
   transform: scale(1.03);
 }
 
-/* Botón moderno rojo */
+/* Botón rojo */
 .btn-rojo {
   background-color: #dc3545 !important;
   color: #fff !important;
@@ -215,7 +214,7 @@ body.modo-claro .switch-toggle input:checked + .switch-slider {
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
-/* Mejora visual para botón Mostrar/Ocultar */
+/* Botón Mostrar/Ocultar */
 .btn-outline-light {
   border: 2px solid #1f8df5;
   color: #1f8df5;
@@ -256,7 +255,7 @@ body.modo-claro .btn-rojo {
 body.modo-claro .btn-rojo:hover {
   background-color: #d94848;
 }
-/* Temporada (modo claro mejorado) */
+/* Temporada */
 h6.text-info {
   color: #1f8df5 !important;
 }
@@ -294,7 +293,7 @@ body.modo-claro .btn-toggle-temporada {
 body.modo-claro .btn-toggle-temporada:hover {
   background-color: #0074e8 !important;
 }
-/* Estilo para episodio no visto (gris con hover suave verde) */
+/* Estilo para episodio no visto */
 .btn-outline-check {
   background-color: transparent !important;
   border: 2px solid #aaa !important;
