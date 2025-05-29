@@ -44,12 +44,8 @@ const Register = ({ mostrarVideoFondo }) => {
     }
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/register`,
-        formData
-      );
+      await axios.post(`${import.meta.env.VITE_API_URL}/register`, formData);
 
-      toast.success(res.data.mensaje || "Registro exitoso");
       navigate("/login", { state: { registrado: true } });
     } catch (error) {
       console.error(error);

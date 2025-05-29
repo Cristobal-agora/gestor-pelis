@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -7,21 +7,25 @@ import "./AuthBackground.css";
 const Login = ({ mostrarVideoFondo }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const registrado = location.state?.registrado || false;
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  const toastMostrado = useRef(false);
+
   useEffect(() => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("usuario");
 
-    if (registrado) {
+    if (location.state?.registrado && !toastMostrado.current) {
+      toastMostrado.current = true;
       toast.success("¡Registro exitoso! Inicia sesión para continuar.");
+
+      navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [registrado]);
+  }, [location, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,11 +58,10 @@ const Login = ({ mostrarVideoFondo }) => {
         `${import.meta.env.VITE_API_URL}/login`,
         formData
       );
-
-      toast.success("Inicio de sesión exitoso");
       sessionStorage.setItem("token", res.data.token);
       sessionStorage.setItem("usuario", JSON.stringify(res.data.usuario));
-      navigate("/home");
+
+      window.location.replace("/home");
     } catch (error) {
       console.error(error);
       if (error.response?.data?.errores) {

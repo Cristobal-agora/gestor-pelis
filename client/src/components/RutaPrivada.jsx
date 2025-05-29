@@ -1,18 +1,28 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const RutaPrivada = ({ children }) => {
-  const token = sessionStorage.getItem("token");
+  const [comprobando, setComprobando] = useState(true);
+  const [tokenValido, setTokenValido] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    if (!token) {
-      toast.error("Debes iniciar sesión.");
-    }
-  }, [token]);
+    const timeout = setTimeout(() => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        toast.error("Debes iniciar sesión.");
+      }
+      setTokenValido(!!token);
+      setComprobando(false);
+    }, 100);
 
-  return token ? (
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (comprobando) return null;
+
+  return tokenValido ? (
     children
   ) : (
     <Navigate to="/login" replace state={{ from: location }} />
