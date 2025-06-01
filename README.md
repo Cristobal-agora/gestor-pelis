@@ -1,82 +1,93 @@
-# Gestor de Películas y Series 🎬
+# CineStash 🎬
 
-Este proyecto es una aplicación web full-stack para gestionar, valorar y descubrir películas y series. Incluye autenticación con JWT, conexión con la API de TMDb, y una interfaz moderna y temática inspirada en el cine.
+CineStash es una aplicación web full-stack moderna y visualmente atractiva que permite gestionar, descubrir, valorar y seguir películas y series. Integra autenticación segura con JWT, conexión con la API de TMDb, comentarios, favoritos, listas personalizadas, historial y mucho más.
 
 ## 🛠 Tecnologías Utilizadas
 
 ### Frontend
-- React
+- React + Vite
 - Bootstrap 5
 - Axios
-- HTML5 + CSS3
+- React Router DOM
+- React Toastify
+- Framer Motion
+- React Icons
 
 ### Backend
 - Node.js
 - Express.js
+- PostgreSQL (Railway)
 - JWT (Json Web Token)
 - Bcrypt
+- DTOs (Data Transfer Objects)
 
-### Base de Datos
-- MySQL
+### API Externa
+- [TMDb API](https://www.themoviedb.org/documentation/api) para películas, series y metadatos
 
-## 🚀 Funcionalidades Principales
+## 🚀 Funcionalidades Finales
 
-- Registro e inicio de sesión seguro con JWT
-- Búsqueda de películas y series mediante la API de TMDb (futuro)
-- Carrusel visual con temática cinematográfica (pendiente de mejora)
-- Valoración, comentarios, listas personalizadas y favoritos (en desarrollo)
-- Sistema de etiquetas propias
-- Visualización de contenido público de otros usuarios
+- ✅ Registro e inicio de sesión con autenticación JWT
+- ✅ Recuperación y restablecimiento de contraseña por email
+- ✅ Visualización y búsqueda de películas y series
+- ✅ Marcado de películas como vistas (historial)
+- ✅ Seguimiento de series y episodios vistos
+- ✅ Comentarios y valoraciones propias
+- ✅ Gestión de favoritos
+- ✅ Creación de listas personalizadas con películas y series
+- ✅ Plataforma responsive con modo claro/oscuro
+- ✅ Selector de avatar personalizado
+- ✅ Chatbot IA integrado con GPT-4o
+- ✅ Información de plataformas donde ver el contenido
+- ✅ Estilo inspirado en JustWatch
 
 ## 🔐 Seguridad
 
 - Contraseñas cifradas con bcrypt
-- Validaciones en frontend y backend
-- Autenticación con JWT
-- Protección de rutas privadas
+- Validaciones robustas en frontend y backend
+- Autenticación segura con JWT (protegida en rutas y peticiones)
+- Protección de rutas con tokens y control de acceso
+
+## 🌐 Despliegue
+
+- **Frontend** desplegado en [Vercel](https://vercel.com)
+- **Backend** desplegado en [Railway](https://railway.app)
+- Variables de entorno gestionadas con `.env` y `import.meta.env`
 
 ## 🧩 Estructura del Proyecto
 
-```
-/client        → Frontend en React
-/server        → Backend en Node.js + Express
-/db            → Scripts y estructura de base de datos
-```
+/client → Frontend en React
+/server → Backend en Node.js + Express
 
-## 🖥 Instrucciones de Uso
+## 📦 Instrucciones de Uso
 
 ### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/Cristobal-agora/gestor-pelis.git
 cd gestor-pelis
-```
-
-### 2. Configurar el backend
-
-```bash
+2. Configurar el backend
+bash
+Copiar
+Editar
 cd server
 npm install
-# Crea un archivo .env con los datos de conexión a MySQL y JWT_SECRET
+# Crear archivo .env con las variables
 npm run dev
-```
-
-### 3. Configurar el frontend
-
-```bash
+3. Configurar el frontend
+bash
+Copiar
+Editar
 cd ../client
 npm install
+# Crear archivo .env con las variables
 npm run dev
-```
 
-## 📁 Estructura Actual (Primera entrega)
+📸 Capturas y Manual de Usuario
+Incluye animaciones, vistas responsivas y experiencia personalizada. Puedes consultar el manual de usuario en la carpeta de documentación
 
-- Proyecto dividido en frontend y backend
-- Registro e inicio de sesión funcional
-- Diseño visual con cabecera personalizada y carrusel
-- Proyecto subido a GitHub
+📅 Estado del Proyecto
+✔️ Proyecto finalizado — tercera entrega completa
+📁 Entregado como parte del TFG de Desarrollo de Aplicaciones Web (2025)
 
----
-
-🧠 Autor: Cristóbal  
-📅 Estado actual: Primera entrega completada (8 de abril)
+👨‍💻 Autor: Cristóbal Muñoz Granado
+🎓 Proyecto final de DAW — IES Agora
